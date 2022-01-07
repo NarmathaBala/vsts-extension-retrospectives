@@ -206,12 +206,63 @@ class ItemDataService {
     {
       feedbackItem.timerSecs = 0;
     }
-    else 
+    else
     {
       feedbackItem.timerSecs++;
     }
     const updatedFeedbackItem = await this.updateFeedbackItem(boardId, feedbackItem);
     return updatedFeedbackItem;
+  }
+
+  /**
+   * If the number of votes for user is < 0 or > the number of maximum votes assigned for the board,
+   * update the board vote total, and update the feedback item(s) with excess or missing votes.
+   */
+  public updateExcessVotes = async (boardId: string, teamId: string, userId: string): Promise<IFeedbackBoardDocument> => {
+    const boardItem: IFeedbackBoardDocument = await this.getBoardItem(teamId, boardId);
+    if(!boardItem){
+      console.log(`Cannot retrieve the current board. Board: ${boardId}`);
+      return undefined;
+    }
+    if(boardItem.hasNormalizedVotes){
+      console.log(`Vote count has already been normalized on the board. Board: ${boardId}`);
+      return undefined;
+    }
+
+    if(!boardItem.boardVoteCollection || boardItem.boardVoteCollection.length < 1) {
+      console.log(`There are no votes assigned to the board. Board: ${boardId}`);
+      return undefined;
+    }
+
+    if(!boardItem.boardVoteCollection[userId]){
+      console.log(`The current user has no votes assigned to the board. Board: ${boardId}`);
+      return undefined;
+    }
+
+    const feedbackItems = await this.getFeedbackItemsForBoard(boardId);
+    if(!feedbackItems) {
+      console.log(`Cannot retrieve any feedback items for the board. Board: ${boardId}`);
+      return undefined;
+    }
+
+    const currentUserVoteTally = 0;
+    for(const feedbackItem of feedbackItems.sort((a, b) => a.modifedDate <= b.modifedDate ? 1 : 0)){
+      if(currentUserVoteTally === boardItem.maxVotesPerUser){
+        if(feedbackItem.voteCollection &&
+          feedbackItem.voteCollection[userId] &&
+          feedbackItem.voteCollection[userId] > 0)
+        {
+          feedbackItem.upvotes -= feedbackItem.voteCollection[userId];
+          feedbackItem.voteCollection[userId] = 0;
+        }
+      }
+
+      await this.updateFeedbackItem(boardId, feedbackItem);
+    }
+
+    boardItem.hasNormalizedVotes = true;
+    const updatedBoardItem = await this.updateBoardItem(teamId, boardItem);
+    return updatedBoardItem;
   }
 
   /**
@@ -257,23 +308,28 @@ class ItemDataService {
       if (boardItem.boardVoteCollection === undefined) {
         boardItem.boardVoteCollection = {};
       }
+
       if (boardItem.boardVoteCollection[userId] === undefined || boardItem.boardVoteCollection[userId] === null) {
         boardItem.boardVoteCollection[userId] = 0;
       }
 
       if (boardItem.boardVoteCollection[userId] >= boardItem.maxVotesPerUser) {
         console.log(`User has reached max votes for the board. Board: ${boardId}, Max Votes: ${boardItem.maxVotesPerUser}`);
-
         return undefined;
       }
 
       boardItem.boardVoteCollection[userId]++;
-
       feedbackItem.voteCollection[userId]++;
       feedbackItem.upvotes++;
     }
-    await this.updateBoardItem(teamId, boardItem);
     const updatedFeedbackItem = await this.updateFeedbackItem(boardId, feedbackItem);
+
+    if(!updatedFeedbackItem) {
+      console.log(`The feedback item was not incremented or decremented. Board: ${boardId}, Item: ${feedbackItemId}`);
+      return undefined;
+    }
+
+    await this.updateBoardItem(teamId, boardItem);
     return updatedFeedbackItem;
   }
 
@@ -324,9 +380,9 @@ class ItemDataService {
    * Add a feedback item as a child feedback item of another feedback item.
    * This method also ensures that
    *   1) an existing parent-child association is removed from the old parent if the childFeedbackItem already had one.
-   *   2) the existing children of the child feedback item (if any) become children of the specified parent 
+   *   2) the existing children of the child feedback item (if any) become children of the specified parent
    *   feedback item as well.
-   *   3) that the child feedback item and the existing children of the child feedback item (if any) are 
+   *   3) that the child feedback item and the existing children of the child feedback item (if any) are
    *   assigned the same columnId as the parent feedback item.
    */
   public addFeedbackItemAsChild = async (boardId: string, parentFeedbackItemId: string, childFeedbackItemId: string):
@@ -340,8 +396,8 @@ class ItemDataService {
     const childFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, childFeedbackItemId);
 
     if (!parentFeedbackItem || !childFeedbackItem) {
-      console.log(`Cannot add child for a non-existent feedback item. 
-                Board: ${boardId}, 
+      console.log(`Cannot add child for a non-existent feedback item.
+                Board: ${boardId},
                 Parent Item: ${parentFeedbackItemId},
                 Child Item: ${childFeedbackItemId}`);
       return undefined;
@@ -350,7 +406,7 @@ class ItemDataService {
     // The parent feedback item must not be a child of another group.
     if (parentFeedbackItem.parentFeedbackItemId) {
       console.log(`Cannot add child if parent is already a child in another group.
-                Board: ${boardId}, 
+                Board: ${boardId},
                 Parent Item: ${parentFeedbackItemId}`);
       return undefined;
     }
@@ -425,8 +481,8 @@ class ItemDataService {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
-      console.log(`Cannot move a non-existent feedback item. 
-              Board: ${boardId}, 
+      console.log(`Cannot move a non-existent feedback item.
+              Board: ${boardId},
               Parent Item: ${feedbackItem.parentFeedbackItemId},
               Child Item: ${feedbackItemId}`);
       return undefined;
@@ -437,8 +493,8 @@ class ItemDataService {
     if (feedbackItem.parentFeedbackItemId) {
       const parentFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItem.parentFeedbackItemId);
       if (!parentFeedbackItem) {
-        console.log(`The given feedback item has a non-existent parent. 
-                Board: ${boardId}, 
+        console.log(`The given feedback item has a non-existent parent.
+                Board: ${boardId},
                 Parent Item: ${feedbackItem.parentFeedbackItemId},
                 Child Item: ${feedbackItemId}`);
         return undefined;
@@ -466,7 +522,7 @@ class ItemDataService {
 
       const updatedChildFeedbackItemPromises: Promise<IFeedbackItemDocument>[] = childFeedbackItems.map((childFeedbackItem) =>
         this.updateFeedbackItem(boardId, childFeedbackItem));
-  
+
       updatedChildFeedbackItems =
         await Promise.all(updatedChildFeedbackItemPromises).then((promiseResults) => {
           return promiseResults.map((updatedChildFeedbackItem) => updatedChildFeedbackItem)
@@ -572,7 +628,7 @@ class ItemDataService {
    * Checks if the work item exists in VSTS and if not, removes it.
    * This handles the special case for when a work item is deleted in VSTS. Currently, when a work item is updated using the navigation form service
    * there is no way to determine if the item was deleted.
-   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545 
+   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545
    */
   public removeAssociatedItemIfNotExistsInVsts = async (boardId: string, feedbackItemId: string, associatedWorkItemId: number): Promise<IFeedbackItemDocument> => {
     let workItems: WorkItem[];

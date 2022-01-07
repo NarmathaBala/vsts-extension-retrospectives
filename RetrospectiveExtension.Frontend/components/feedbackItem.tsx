@@ -488,9 +488,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
       this.props.addFeedbackItems(
         this.props.columnId,
-        [newFeedbackItem], 
+        [newFeedbackItem],
         /*shouldBroadcast*/ true,
-        /*newlyCreated*/ false, 
+        /*newlyCreated*/ false,
         /*showAddedAnimation*/ false,
         /*shouldHaveFocus*/ true,
         /*hideFeedbackItems*/ false);
@@ -610,7 +610,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     const isNotGroupedItem = !this.props.groupedItemProps;
     const isMainItem = isNotGroupedItem || this.props.groupedItemProps.isMainItem;
     const groupItemsCount = this.props && this.props.groupedItemProps && this.props.groupedItemProps.groupedCount + 1;
-    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.'); 
+    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.createdBy ? this.props.userIdRef !== getUserIdentity().id : false);
     const curTimerState = this.props.timerState;
 
@@ -671,7 +671,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                     aria-live="polite"
                     aria-label={'Click to vote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
-                    disabled={!isMainItem || !showVoteButton}
+                    disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
                       'feedback-action-button',
                       'feedback-add-vote',
@@ -697,7 +697,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                     aria-live="polite"
                     aria-label={'Click to unvote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
-                    disabled={!isMainItem || !showVoteButton}
+                    disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
                       'feedback-action-button',
                       'feedback-add-vote',
@@ -713,7 +713,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                       this.setState({ showVotedAnimation: false });
                     }}>
                     <i className="fas fa-arrow-circle-down" />
-                    
+
                   </button>
                 }
                 {!this.props.newlyCreated && this.props.isInteractable &&
