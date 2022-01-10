@@ -206,7 +206,7 @@ class ItemDataService {
     {
       feedbackItem.timerSecs = 0;
     }
-    else
+    else 
     {
       feedbackItem.timerSecs++;
     }
@@ -257,17 +257,18 @@ class ItemDataService {
       if (boardItem.boardVoteCollection === undefined) {
         boardItem.boardVoteCollection = {};
       }
-
       if (boardItem.boardVoteCollection[userId] === undefined || boardItem.boardVoteCollection[userId] === null) {
         boardItem.boardVoteCollection[userId] = 0;
       }
 
       if (boardItem.boardVoteCollection[userId] >= boardItem.maxVotesPerUser) {
         console.log(`User has reached max votes for the board. Board: ${boardId}, Max Votes: ${boardItem.maxVotesPerUser}`);
+
         return undefined;
       }
 
       boardItem.boardVoteCollection[userId]++;
+
       feedbackItem.voteCollection[userId]++;
       feedbackItem.upvotes++;
     }
@@ -329,9 +330,9 @@ class ItemDataService {
    * Add a feedback item as a child feedback item of another feedback item.
    * This method also ensures that
    *   1) an existing parent-child association is removed from the old parent if the childFeedbackItem already had one.
-   *   2) the existing children of the child feedback item (if any) become children of the specified parent
+   *   2) the existing children of the child feedback item (if any) become children of the specified parent 
    *   feedback item as well.
-   *   3) that the child feedback item and the existing children of the child feedback item (if any) are
+   *   3) that the child feedback item and the existing children of the child feedback item (if any) are 
    *   assigned the same columnId as the parent feedback item.
    */
   public addFeedbackItemAsChild = async (boardId: string, parentFeedbackItemId: string, childFeedbackItemId: string):
@@ -346,7 +347,7 @@ class ItemDataService {
 
     if (!parentFeedbackItem || !childFeedbackItem) {
       console.log(`Cannot add child for a non-existent feedback item.
-                Board: ${boardId},
+                Board: ${boardId}, 
                 Parent Item: ${parentFeedbackItemId},
                 Child Item: ${childFeedbackItemId}`);
       return undefined;
@@ -431,7 +432,7 @@ class ItemDataService {
 
     if (!feedbackItem) {
       console.log(`Cannot move a non-existent feedback item.
-              Board: ${boardId},
+              Board: ${boardId}, 
               Parent Item: ${feedbackItem.parentFeedbackItemId},
               Child Item: ${feedbackItemId}`);
       return undefined;
@@ -443,7 +444,7 @@ class ItemDataService {
       const parentFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItem.parentFeedbackItemId);
       if (!parentFeedbackItem) {
         console.log(`The given feedback item has a non-existent parent.
-                Board: ${boardId},
+                Board: ${boardId}, 
                 Parent Item: ${feedbackItem.parentFeedbackItemId},
                 Child Item: ${feedbackItemId}`);
         return undefined;
@@ -577,7 +578,7 @@ class ItemDataService {
    * Checks if the work item exists in VSTS and if not, removes it.
    * This handles the special case for when a work item is deleted in VSTS. Currently, when a work item is updated using the navigation form service
    * there is no way to determine if the item was deleted.
-   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545
+   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545 
    */
   public removeAssociatedItemIfNotExistsInVsts = async (boardId: string, feedbackItemId: string, associatedWorkItemId: number): Promise<IFeedbackItemDocument> => {
     let workItems: WorkItem[];
