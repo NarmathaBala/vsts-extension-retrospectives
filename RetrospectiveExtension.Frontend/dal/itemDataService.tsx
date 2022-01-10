@@ -279,7 +279,22 @@ class ItemDataService {
       return undefined;
     }
 
-    await this.updateBoardItem(teamId, boardItem);
+    const updatedBoard = await this.updateBoardItem(teamId, boardItem);
+    if(!updatedBoard) {
+      console.log(`Could not update board, votes will be removed from or added to the feedback item. 
+        Board: ${boardId}, Item: ${feedbackItemId}`);
+
+      updatedFeedbackItem.voteCollection[userId] = decrement ?
+        updatedFeedbackItem.voteCollection[userId]++ : updatedFeedbackItem.voteCollection[userId]--;
+      updatedFeedbackItem.upvotes = decrement ? updatedFeedbackItem.upvotes++ : updatedFeedbackItem.upvotes--;
+
+      const feedbackItemWithOriginalVotes = await this.updateFeedbackItem(boardId, updatedFeedbackItem);
+      if (feedbackItemWithOriginalVotes) {
+        return feedbackItemWithOriginalVotes;
+      }
+      console.log(`Cannot remove or add votes from feedback item. Board ${boardId}, Item: ${updatedFeedbackItem.id}`);
+    }
+
     return updatedFeedbackItem;
   }
 
@@ -346,7 +361,7 @@ class ItemDataService {
     const childFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, childFeedbackItemId);
 
     if (!parentFeedbackItem || !childFeedbackItem) {
-      console.log(`Cannot add child for a non-existent feedback item.
+      console.log(`Cannot add child for a non-existent feedback item. 
                 Board: ${boardId}, 
                 Parent Item: ${parentFeedbackItemId},
                 Child Item: ${childFeedbackItemId}`);
@@ -356,7 +371,7 @@ class ItemDataService {
     // The parent feedback item must not be a child of another group.
     if (parentFeedbackItem.parentFeedbackItemId) {
       console.log(`Cannot add child if parent is already a child in another group.
-                Board: ${boardId},
+                Board: ${boardId}, 
                 Parent Item: ${parentFeedbackItemId}`);
       return undefined;
     }
@@ -431,7 +446,7 @@ class ItemDataService {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
-      console.log(`Cannot move a non-existent feedback item.
+      console.log(`Cannot move a non-existent feedback item. 
               Board: ${boardId}, 
               Parent Item: ${feedbackItem.parentFeedbackItemId},
               Child Item: ${feedbackItemId}`);
@@ -443,7 +458,7 @@ class ItemDataService {
     if (feedbackItem.parentFeedbackItemId) {
       const parentFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItem.parentFeedbackItemId);
       if (!parentFeedbackItem) {
-        console.log(`The given feedback item has a non-existent parent.
+        console.log(`The given feedback item has a non-existent parent. 
                 Board: ${boardId}, 
                 Parent Item: ${feedbackItem.parentFeedbackItemId},
                 Child Item: ${feedbackItemId}`);
@@ -472,7 +487,7 @@ class ItemDataService {
 
       const updatedChildFeedbackItemPromises: Promise<IFeedbackItemDocument>[] = childFeedbackItems.map((childFeedbackItem) =>
         this.updateFeedbackItem(boardId, childFeedbackItem));
-
+  
       updatedChildFeedbackItems =
         await Promise.all(updatedChildFeedbackItemPromises).then((promiseResults) => {
           return promiseResults.map((updatedChildFeedbackItem) => updatedChildFeedbackItem)
