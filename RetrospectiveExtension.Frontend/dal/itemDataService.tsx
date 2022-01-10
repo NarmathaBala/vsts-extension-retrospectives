@@ -215,57 +215,6 @@ class ItemDataService {
   }
 
   /**
-   * If the number of votes for user is < 0 or > the number of maximum votes assigned for the board,
-   * update the board vote total, and update the feedback item(s) with excess or missing votes.
-   */
-  public updateExcessVotes = async (boardId: string, teamId: string, userId: string): Promise<IFeedbackBoardDocument> => {
-    const boardItem: IFeedbackBoardDocument = await this.getBoardItem(teamId, boardId);
-    if(!boardItem){
-      console.log(`Cannot retrieve the current board. Board: ${boardId}`);
-      return undefined;
-    }
-    if(boardItem.hasNormalizedVotes){
-      console.log(`Vote count has already been normalized on the board. Board: ${boardId}`);
-      return undefined;
-    }
-
-    if(!boardItem.boardVoteCollection || boardItem.boardVoteCollection.length < 1) {
-      console.log(`There are no votes assigned to the board. Board: ${boardId}`);
-      return undefined;
-    }
-
-    if(!boardItem.boardVoteCollection[userId]){
-      console.log(`The current user has no votes assigned to the board. Board: ${boardId}`);
-      return undefined;
-    }
-
-    const feedbackItems = await this.getFeedbackItemsForBoard(boardId);
-    if(!feedbackItems) {
-      console.log(`Cannot retrieve any feedback items for the board. Board: ${boardId}`);
-      return undefined;
-    }
-
-    const currentUserVoteTally = 0;
-    for(const feedbackItem of feedbackItems.sort((a, b) => a.modifedDate <= b.modifedDate ? 1 : 0)){
-      if(currentUserVoteTally === boardItem.maxVotesPerUser){
-        if(feedbackItem.voteCollection &&
-          feedbackItem.voteCollection[userId] &&
-          feedbackItem.voteCollection[userId] > 0)
-        {
-          feedbackItem.upvotes -= feedbackItem.voteCollection[userId];
-          feedbackItem.voteCollection[userId] = 0;
-        }
-      }
-
-      await this.updateFeedbackItem(boardId, feedbackItem);
-    }
-
-    boardItem.hasNormalizedVotes = true;
-    const updatedBoardItem = await this.updateBoardItem(teamId, boardItem);
-    return updatedBoardItem;
-  }
-
-  /**
    * Increment/Decrement the vote of the feedback item.
    */
   public updateVote = async (boardId: string, teamId: string, userId: string, feedbackItemId: string, decrement: boolean = false): Promise<IFeedbackItemDocument> => {
