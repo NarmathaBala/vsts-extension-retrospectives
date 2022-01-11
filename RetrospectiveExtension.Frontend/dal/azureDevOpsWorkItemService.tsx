@@ -1,21 +1,21 @@
-import { Wiql, WorkItemExpand, WorkItemRelation, WorkItemErrorPolicy } from 'TFS/WorkItemTracking/Contracts';
-import { WorkItemTrackingHttpClient4_1, getClient } from 'TFS/WorkItemTracking/RestClient';
-import { JsonPatchDocument, Operation } from 'VSS/WebApi/Contracts';
+import { Wiql, WorkItemExpand, WorkItemRelation, WorkItemErrorPolicy } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
+import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
+import { JsonPatchDocument, Operation } from 'azure-devops-extension-api/WebApi';
 import { IRetrospectiveItemCreate, IRetrospectiveItemsQuery, RelationshipType } from '../interfaces/workItem';
+
+import { getClient } from 'azure-devops-extension-api/Common';
+import { getProjectId } from '../utilities/servicesHelper';
 
 class WorkItemService {
   public static readonly retrospective_type = 'Retrospective';
   public static readonly task_type = 'Task';
-  public ProjectId = '';
 
-  private _httpClient: WorkItemTrackingHttpClient4_1;
+  private _httpClient: WorkItemTrackingRestClient;
 
   constructor() {
     if (!this._httpClient) {
-      this._httpClient = getClient();
+      this._httpClient = getClient(WorkItemTrackingRestClient);
     }
-
-    this.ProjectId = VSS.getWebContext().project.id;
   }
 
   public getAllFields = () => {
@@ -26,22 +26,27 @@ class WorkItemService {
    * Gets the work item states for the given work item type in the current project.
    */
   public getWorkItemStates = async (workItemType: string) => {
-    return await this._httpClient.getWorkItemTypeStates(VSS.getWebContext().project.id, workItemType);
+    const projectId = await getProjectId();
+
+    return await this._httpClient.getWorkItemTypeStates(projectId, workItemType);
   }
 
   /**
    * Gets the work item types for the current project.
    */
   public getWorkItemTypesForCurrentProject = async () => {
-    return await this._httpClient.getWorkItemTypes(VSS.getWebContext().project.id);
+    const projectId = await getProjectId();
+
+    return await this._httpClient.getWorkItemTypes(projectId);
   }
 
   /**
    * Gets the list of work item type references for hidden work item types
    */
   public getHiddenWorkItemTypes = async () => {
+    const projectId = await getProjectId();
     const hiddenWorkItemTypeCategory = await this._httpClient.getWorkItemTypeCategory(
-      VSS.getWebContext().project.id,
+      projectId,
       'Microsoft.HiddenCategory');
 
     return hiddenWorkItemTypeCategory.workItemTypes;
@@ -85,7 +90,8 @@ class WorkItemService {
       },
     ];
 
-    return this._httpClient.createWorkItem(operation, VSS.getWebContext().project.id, WorkItemService.retrospective_type);
+    return getProjectId()
+      .then(projectId => this._httpClient.createWorkItem(operation, projectId, WorkItemService.retrospective_type));
   }
 
   /**
@@ -235,7 +241,8 @@ class WorkItemService {
    * @param ids The ids of the work items to fetch.
    */
   public async getWorkItemsByIds(ids: number[]) {
-    const workItems = await this._httpClient.getWorkItems(ids, undefined, undefined, WorkItemExpand.All, WorkItemErrorPolicy.Omit, VSS.getWebContext().project.id);
+    const projectId = await getProjectId();
+    const workItems = await this._httpClient.getWorkItems(ids, projectId, undefined, undefined, WorkItemExpand.All, WorkItemErrorPolicy.Omit);
     return workItems.filter(wi => wi != null);
   }
 
@@ -327,7 +334,8 @@ class WorkItemService {
         + "AND [System.AreaPath] = '" + queryFields.areaPath + "' "
     };
 
-    return this._httpClient.queryByWiql(wiqlQuery, VSS.getWebContext().project.id)
+    return getProjectId()
+      .then(projectId => this._httpClient.queryByWiql(wiqlQuery, projectId))
       .then((queryResult) => {
         const workItems = queryResult.workItems;
         const ids = new Array<number>();
@@ -338,7 +346,8 @@ class WorkItemService {
       })
       .then((workItemIds) => {
         if (workItemIds.length > 0) {
-          return this._httpClient.getWorkItems(workItemIds, undefined, undefined, WorkItemExpand.All, undefined, VSS.getWebContext().project.id)
+          return getProjectId()
+            .then(projectId => this._httpClient.getWorkItems(workItemIds, projectId, undefined, undefined, WorkItemExpand.All, undefined))
             .then((workItems) => workItems);
         } else {
           return [];
@@ -355,11 +364,13 @@ class WorkItemService {
       },
     ];
 
-    return this._httpClient.createWorkItem(operation, VSS.getWebContext().project.id, WorkItemService.task_type);
+    return getProjectId()
+      .then(projectId => this._httpClient.createWorkItem(operation, projectId, WorkItemService.task_type));
   }
 
   private UpdateRetrospectiveItem(patchDocument: JsonPatchDocument, id: number) {
-    return this._httpClient.updateWorkItem(patchDocument, id, VSS.getWebContext().project.id);
+    return getProjectId()
+      .then(projectId => this._httpClient.updateWorkItem(patchDocument, id, projectId));
   }
 }
 

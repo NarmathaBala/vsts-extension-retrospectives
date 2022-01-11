@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
-import { WebApiTeam } from 'TFS/Core/Contracts';
-import { WorkItem, WorkItemType } from 'TFS/WorkItemTracking/Contracts';
+import { WebApiTeam } from 'azure-devops-extension-api/Core';
+import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 
 import { workService } from '../dal/azureDevOpsWorkService';
 import { workItemService } from '../dal/azureDevOpsWorkItemService';
@@ -56,7 +56,8 @@ export interface FeedbackBoardState {
   currentVoteCount: string;
 }
 
-const userId: string = getUserIdentity().id;
+// Phong Cao: TODO Re-add getUserIdentity().id by fixing initialization issues
+const userId: string = '089ddd83-56da-4e7b-9c32-6d5db4d18a2d'; // getUserIdentity().id;
 
 export default class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardState> {
   constructor(props: FeedbackBoardProps) {

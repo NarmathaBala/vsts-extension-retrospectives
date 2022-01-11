@@ -5,7 +5,7 @@ import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import * as React from 'react';
-import * as vssClipboard from 'VSS/Utils/Clipboard';
+// import * as vssClipboard from 'VSS/Utils/Clipboard'; // Phong Cao: TODO Re-add clipboard function
 
 import { ViewMode, MobileWidthBreakpoint } from '../config/constants';
 import { WorkflowPhase } from '../interfaces/workItem';
@@ -19,7 +19,7 @@ import FeedbackBoard from '../components/feedbackBoard';
 
 import { azureDevOpsCoreService } from '../dal/azureDevOpsCoreService';
 import { workItemService } from '../dal/azureDevOpsWorkItemService';
-import { WebApiTeam } from 'TFS/Core/Contracts';
+import { WebApiTeam } from 'azure-devops-extension-api/Core';
 import { getBoardUrl } from '../utilities/boardUrlHelper';
 import NoFeedbackBoardsView from './noFeedbackBoardsView';
 // TODO (enpolat) : import { appInsightsClient, TelemetryEvents, TelemetryEventProperties } from '../utilities/appInsightsClient';
@@ -28,12 +28,12 @@ import ExtensionSettingsMenu from './extensionSettingsMenu';
 import SelectorCombo, { ISelectorList } from './selectorCombo';
 import FeedbackBoardPreviewEmail from './feedbackBoardPreviewEmail';
 import { ToastContainer, toast, Slide } from 'react-toastify';
-import { WorkItemType, WorkItemTypeReference } from 'TFS/WorkItemTracking/Contracts';
+import { WorkItemType, WorkItemTypeReference } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip';
 import { isHostedAzureDevOps } from '../utilities/azureDevOpsContextHelper';
 import { shareBoardHelper } from '../utilities/shareBoardHelper';
 import { itemDataService } from '../dal/itemDataService';
-import { TeamMember } from 'VSS/WebApi/Contracts';
+import { TeamMember } from 'azure-devops-extension-api/WebApi';
 import EffectivenessMeasurementRow from './effectivenessMeasurementRow';
 
 import { getUserIdentity } from '../utilities/userIdentityHelper';
@@ -85,6 +85,7 @@ export interface FeedbackBoardContainerState {
   actionItemIds: number[];
   members: TeamMember[];
   castedVoteCount: number;
+  isHostedAzureDevOps: boolean;
 }
 
 export default class FeedbackBoardContainer extends React.Component<FeedbackBoardContainerProps, FeedbackBoardContainerState> {
@@ -132,6 +133,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
       actionItemIds: [],
       members: [],
       castedVoteCount: 0,
+      isHostedAzureDevOps: true,
     };
   }
 
@@ -181,6 +183,9 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
         setTimeout(this.tryReconnectToBackend, 2000);
       });
 
+      const isHosted = await isHostedAzureDevOps();
+      this.setState({ isHostedAzureDevOps: isHosted });
+
       // Listen for signals for board updates.
       reflectBackendService.onReceiveNewBoard(this.handleNewBoardAvailable);
       reflectBackendService.onReceiveDeletedBoard(this.handleBoardDeleted);
@@ -219,7 +224,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
 
   private toggleAndFixResolution = () => {
     const newView = !this.state.isDesktop;
-    
+
     this.setState({
       isAutoResizeEnabled: false,
       isDesktop: newView,
@@ -278,7 +283,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
     const hiddenWorkItemTypes: WorkItemTypeReference[] = await workItemService.getHiddenWorkItemTypes();
 
     const hiddenWorkItemTypeNames = hiddenWorkItemTypes.map((workItemType) => workItemType.name);
-    
+
     const nonHiddenWorkItemTypes = allWorkItemTypes.filter(workItemType => hiddenWorkItemTypeNames.indexOf(workItemType.name) === -1);
 
     this.setState({
@@ -400,12 +405,12 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
 
     // Attempt to use query params to pre-select a specific team and board.
     let queryParams: URLSearchParams;
-    
+
     try {
       queryParams = (new URL(document.location.href)).searchParams;
 
       if (!queryParams) {
-        if (!isHostedAzureDevOps)
+        if (!this.state.isHostedAzureDevOps)
         {
           throw new Error("URL-related issue occurred with on-premise Azure DevOps");
         }
@@ -718,8 +723,8 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
   }
 
   private createBoard = async (title: string, maxvotesPerUser: number, columns: IFeedbackColumn[], isIncludeTeamEffectivenessMeasurement: boolean, isBoardAnonymous: boolean, shouldShowFeedbackAfterCollect: boolean, displayPrimeDirective: boolean) => {
-const createdBoard = await BoardDataService.createBoardForTeam(this.state.currentTeam.id, title, maxvotesPerUser, columns, isIncludeTeamEffectivenessMeasurement, isBoardAnonymous, shouldShowFeedbackAfterCollect, displayPrimeDirective);
-console.log(createdBoard);
+    const createdBoard = await BoardDataService.createBoardForTeam(this.state.currentTeam.id, title, maxvotesPerUser, columns, isIncludeTeamEffectivenessMeasurement, isBoardAnonymous, shouldShowFeedbackAfterCollect, displayPrimeDirective);
+    console.log(createdBoard);
     await this.reloadBoardsForCurrentTeam();
     this.hideBoardCreationDialog();
     reflectBackendService.broadcastNewBoard(this.state.currentTeam.id, createdBoard.id);
@@ -769,7 +774,7 @@ console.log(createdBoard);
   private updateBoardMetadata = async (title: string, maxvotesPerUser: number, columns: IFeedbackColumn[]) => {
     const updatedBoard =
       await BoardDataService.updateBoardMetadata(this.state.currentTeam.id, this.state.currentBoard.id, maxvotesPerUser, title, columns);
-    
+
     this.updateBoardAndBroadcast(updatedBoard);
   }
 
@@ -837,8 +842,9 @@ console.log(createdBoard);
   }
 
   private copyBoardUrl = () => {
-    const boardDeepLinkUrl = getBoardUrl(this.state.currentTeam.id, this.state.currentBoard.id);
-    vssClipboard.copyToClipboard(boardDeepLinkUrl);
+    // Phong Cao: TODO Re-add clipboard function
+    // const boardDeepLinkUrl = getBoardUrl(this.state.currentTeam.id, this.state.currentBoard.id);
+    // vssClipboard.copyToClipboard(boardDeepLinkUrl);
   }
 
   private renderBoardUpdateMetadataFormDialog = (
@@ -1301,7 +1307,7 @@ console.log(createdBoard);
                     }
                   </div>
                   {
-                    !isHostedAzureDevOps() && this.state.isLiveSyncInTfsIssueMessageBarVisible && !this.state.isBackendServiceConnected &&
+                    !this.state.isHostedAzureDevOps && this.state.isLiveSyncInTfsIssueMessageBarVisible && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.info}
@@ -1320,7 +1326,7 @@ console.log(createdBoard);
                     </MessageBar>
                   }
                   {
-                    !isHostedAzureDevOps() && this.state.isDropIssueInEdgeMessageBarVisible && !this.state.isBackendServiceConnected &&
+                    !this.state.isHostedAzureDevOps && this.state.isDropIssueInEdgeMessageBarVisible && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.warning}
@@ -1332,7 +1338,7 @@ console.log(createdBoard);
                     </MessageBar>
                   }
                   {
-                    isHostedAzureDevOps() && !this.state.isBackendServiceConnected &&
+                    this.state.isHostedAzureDevOps && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.warning}
