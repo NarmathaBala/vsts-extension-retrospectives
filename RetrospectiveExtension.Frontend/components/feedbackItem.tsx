@@ -852,7 +852,11 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
               className: 'retrospectives-dialog-modal',
             }}>
             <DialogFooter>
-              <PrimaryButton onClick={this.onConfirmDeleteFeedbackItem} text="Delete" />
+              <PrimaryButton
+                onClick={this.onConfirmDeleteFeedbackItem}
+                disabled={this.props.upvotes > 0}
+                title="This feedback item can be deleted if it has zero upvotes."
+                text="Delete" />
               <DefaultButton onClick={this.hideDeleteItemConfirmationDialog} text="Cancel" />
             </DialogFooter>
           </Dialog>
