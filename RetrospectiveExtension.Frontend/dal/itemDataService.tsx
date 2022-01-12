@@ -5,6 +5,7 @@ import { workItemService } from './azureDevOpsWorkItemService';
 // TODO (enpolat) : import { appInsightsClient, TelemetryExceptions } from '../utilities/appInsightsClient';
 import { v4 as uuid } from 'uuid';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
+import { Mutex } from 'async-mutex';
 
 class ItemDataService {
   /**
@@ -213,11 +214,16 @@ class ItemDataService {
     const updatedFeedbackItem = await this.updateFeedbackItem(boardId, feedbackItem);
     return updatedFeedbackItem;
   }
-
+  private static mutex:Mutex = new Mutex();
   /**
    * Increment/Decrement the vote of the feedback item.
    */
   public updateVote = async (boardId: string, teamId: string, userId: string, feedbackItemId: string, decrement: boolean = false): Promise<IFeedbackItemDocument> => {
+    const release = await ItemDataService.mutex.acquire();
+    //mhassanin: Debug only TODO: remove later
+    console.log(`acquired mutex`);
+    try
+    {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
@@ -296,6 +302,18 @@ class ItemDataService {
     }
 
     return updatedFeedbackItem;
+  }
+  catch(ex)
+  {
+    console.error(`Error ${ex} caught performing updateVotes()`);
+    return undefined;
+  }
+  finally
+  {
+    //mhassanin: Debug only TODO: remove later
+    console.log(`released mutex`);
+    release();
+  }
   }
 
   /**
