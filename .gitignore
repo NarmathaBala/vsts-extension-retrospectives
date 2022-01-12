@@ -254,6 +254,3 @@ paket-files/
 
 # VSTS Extension package
 *.vsix
-
-# dev copy of the extension
-vss-extension-dev.json

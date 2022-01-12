@@ -26,7 +26,7 @@ Retrospectives is an Azure DevOps extension. Visit [this link](https://docs.micr
 
 ### Clone repo
 
-- Clone the repository to your local machine from the Azure DevOps endpoint.
+Clone the repository to your local machine from the Azure DevOps endpoint.
 
 ### Build and Test
 
