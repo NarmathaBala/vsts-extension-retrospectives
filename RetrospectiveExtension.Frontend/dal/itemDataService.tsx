@@ -220,10 +220,8 @@ class ItemDataService {
    */
   public updateVote = async (boardId: string, teamId: string, userId: string, feedbackItemId: string, decrement: boolean = false): Promise<IFeedbackItemDocument> => {
     const release = await ItemDataService.mutex.acquire();
-    //mhassanin: Debug only TODO: remove later
-    console.log(`acquired mutex`);
-    try
-    {
+
+    try {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
@@ -238,6 +236,13 @@ class ItemDataService {
      }
 
     if (decrement) {
+      if(boardItem.boardVoteCollection &&
+        boardItem.boardVoteCollection[userId] &&
+        boardItem.boardVoteCollection[userId] <= 0){
+        console.log(`Cannot decrement as user has no votes on the board. Board: ${boardId}`);
+        return undefined;
+      }
+
       if (feedbackItem.upvotes <= 0) {
         console.log(`Cannot decrement upvote as votes must be > 0 to decrement. Board: ${boardId}, Item: ${feedbackItemId}`);
         return undefined;
@@ -278,6 +283,7 @@ class ItemDataService {
       feedbackItem.voteCollection[userId]++;
       feedbackItem.upvotes++;
     }
+
     const updatedFeedbackItem = await this.updateFeedbackItem(boardId, feedbackItem);
 
     if(!updatedFeedbackItem) {
@@ -285,9 +291,9 @@ class ItemDataService {
       return undefined;
     }
 
-    const updatedBoard = await this.updateBoardItem(teamId, boardItem);
-    if(!updatedBoard) {
-      console.log(`Could not update board, votes will be removed from or added to the feedback item. 
+    const updatedBoardItem = await this.updateBoardItem(teamId, boardItem);
+    if(!updatedBoardItem) {
+      console.log(`Could not update board, votes will be removed from or added to the feedback item.
         Board: ${boardId}, Item: ${feedbackItemId}`);
 
       updatedFeedbackItem.voteCollection[userId] = decrement ?
@@ -303,15 +309,11 @@ class ItemDataService {
 
     return updatedFeedbackItem;
   }
-  catch(ex)
-  {
-    console.error(`Error ${ex} caught performing updateVotes()`);
+  catch(ex) {
+    console.error(`Caught error${ex} while performing updateVotes().`);
     return undefined;
   }
-  finally
-  {
-    //mhassanin: Debug only TODO: remove later
-    console.log(`released mutex`);
+  finally {
     release();
   }
   }
