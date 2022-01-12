@@ -26,9 +26,7 @@ Retrospectives is an Azure DevOps extension. Visit [this link](https://docs.micr
 
 ### Clone repo
 
-1. Clone the repository to your local machine from the Azure DevOps endpoint.
-2. Copy `vss-extension-dev.json.template` into `vss-extension-dev`. This will be your local(dev) copy of the extension where you can modify it to build a dev copy of the extension (See [Build and Test](#build-and-test))
-3. You local copy of `vss-extension-dev.json` is gitignored.
+- Clone the repository to your local machine from the Azure DevOps endpoint.
 
 ### Build and Test
 
