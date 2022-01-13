@@ -104,6 +104,7 @@ interface FeedbackItemEllipsisMenuItem {
   workflowPhases: WorkflowPhase[];
   hideMobile?: boolean;
   hideMainItem?: boolean;
+  isDisabled?: boolean;
 }
 
 export default class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemState> {
@@ -350,8 +351,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
         iconProps: { iconName: 'Delete' },
         onClick: this.deleteFeedbackItem,
         text: 'Delete feedback',
-        title: 'Delete feedback',
+        title: 'Delete feedback (disabled when there are active votes)',
       },
+      isDisabled: this.props.upvotes > 0,
       workflowPhases: [ WorkflowPhase.Collect, WorkflowPhase.Group, WorkflowPhase.Vote, WorkflowPhase.Act ],
     },
     {
@@ -726,7 +728,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                         items: this.feedbackItemEllipsisMenuItems
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
-                            menuItem.menuItem.disabled = menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
+                            menuItem.menuItem.disabled =
+                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1 ||
+                              menuItem.isDisabled;
                             return menuItem.menuItem;
                           })
                       }}
@@ -745,7 +749,8 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
                             menuItem.menuItem.disabled =
-                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
+                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1 ||
+                              menuItem.isDisabled;
 
                             return <ActionButton
                               key={menuItem.menuItem.key}
