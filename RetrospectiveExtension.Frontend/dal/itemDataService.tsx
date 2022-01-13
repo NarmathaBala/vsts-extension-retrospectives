@@ -5,7 +5,6 @@ import { workItemService } from './azureDevOpsWorkItemService';
 // TODO (enpolat) : import { appInsightsClient, TelemetryExceptions } from '../utilities/appInsightsClient';
 import { v4 as uuid } from 'uuid';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
-import { Mutex } from 'async-mutex';
 
 class ItemDataService {
   /**
@@ -207,21 +206,18 @@ class ItemDataService {
     {
       feedbackItem.timerSecs = 0;
     }
-    else 
+    else
     {
       feedbackItem.timerSecs++;
     }
     const updatedFeedbackItem = await this.updateFeedbackItem(boardId, feedbackItem);
     return updatedFeedbackItem;
   }
-  private static mutex:Mutex = new Mutex();
+
   /**
    * Increment/Decrement the vote of the feedback item.
    */
   public updateVote = async (boardId: string, teamId: string, userId: string, feedbackItemId: string, decrement: boolean = false): Promise<IFeedbackItemDocument> => {
-    const release = await ItemDataService.mutex.acquire();
-
-    try {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
@@ -236,13 +232,6 @@ class ItemDataService {
      }
 
     if (decrement) {
-      if(boardItem.boardVoteCollection &&
-        boardItem.boardVoteCollection[userId] &&
-        boardItem.boardVoteCollection[userId] <= 0){
-        console.log(`Cannot decrement as user has no votes on the board. Board: ${boardId}`);
-        return undefined;
-      }
-
       if (feedbackItem.upvotes <= 0) {
         console.log(`Cannot decrement upvote as votes must be > 0 to decrement. Board: ${boardId}, Item: ${feedbackItemId}`);
         return undefined;
@@ -309,14 +298,6 @@ class ItemDataService {
 
     return updatedFeedbackItem;
   }
-  catch(ex) {
-    console.error(`Caught error${ex} while performing updateVotes().`);
-    return undefined;
-  }
-  finally {
-    release();
-  }
-  }
 
   /**
    * Update the team effectiveness measurement.
@@ -365,9 +346,9 @@ class ItemDataService {
    * Add a feedback item as a child feedback item of another feedback item.
    * This method also ensures that
    *   1) an existing parent-child association is removed from the old parent if the childFeedbackItem already had one.
-   *   2) the existing children of the child feedback item (if any) become children of the specified parent 
+   *   2) the existing children of the child feedback item (if any) become children of the specified parent
    *   feedback item as well.
-   *   3) that the child feedback item and the existing children of the child feedback item (if any) are 
+   *   3) that the child feedback item and the existing children of the child feedback item (if any) are
    *   assigned the same columnId as the parent feedback item.
    */
   public addFeedbackItemAsChild = async (boardId: string, parentFeedbackItemId: string, childFeedbackItemId: string):
@@ -381,8 +362,8 @@ class ItemDataService {
     const childFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, childFeedbackItemId);
 
     if (!parentFeedbackItem || !childFeedbackItem) {
-      console.log(`Cannot add child for a non-existent feedback item. 
-                Board: ${boardId}, 
+      console.log(`Cannot add child for a non-existent feedback item.
+                Board: ${boardId},
                 Parent Item: ${parentFeedbackItemId},
                 Child Item: ${childFeedbackItemId}`);
       return undefined;
@@ -391,7 +372,7 @@ class ItemDataService {
     // The parent feedback item must not be a child of another group.
     if (parentFeedbackItem.parentFeedbackItemId) {
       console.log(`Cannot add child if parent is already a child in another group.
-                Board: ${boardId}, 
+                Board: ${boardId},
                 Parent Item: ${parentFeedbackItemId}`);
       return undefined;
     }
@@ -466,8 +447,8 @@ class ItemDataService {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
-      console.log(`Cannot move a non-existent feedback item. 
-              Board: ${boardId}, 
+      console.log(`Cannot move a non-existent feedback item.
+              Board: ${boardId},
               Parent Item: ${feedbackItem.parentFeedbackItemId},
               Child Item: ${feedbackItemId}`);
       return undefined;
@@ -478,8 +459,8 @@ class ItemDataService {
     if (feedbackItem.parentFeedbackItemId) {
       const parentFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItem.parentFeedbackItemId);
       if (!parentFeedbackItem) {
-        console.log(`The given feedback item has a non-existent parent. 
-                Board: ${boardId}, 
+        console.log(`The given feedback item has a non-existent parent.
+                Board: ${boardId},
                 Parent Item: ${feedbackItem.parentFeedbackItemId},
                 Child Item: ${feedbackItemId}`);
         return undefined;
@@ -507,7 +488,7 @@ class ItemDataService {
 
       const updatedChildFeedbackItemPromises: Promise<IFeedbackItemDocument>[] = childFeedbackItems.map((childFeedbackItem) =>
         this.updateFeedbackItem(boardId, childFeedbackItem));
-  
+
       updatedChildFeedbackItems =
         await Promise.all(updatedChildFeedbackItemPromises).then((promiseResults) => {
           return promiseResults.map((updatedChildFeedbackItem) => updatedChildFeedbackItem)
@@ -613,7 +594,7 @@ class ItemDataService {
    * Checks if the work item exists in VSTS and if not, removes it.
    * This handles the special case for when a work item is deleted in VSTS. Currently, when a work item is updated using the navigation form service
    * there is no way to determine if the item was deleted.
-   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545 
+   * https://github.com/MicrosoftDocs/vsts-docs/issues/1545
    */
   public removeAssociatedItemIfNotExistsInVsts = async (boardId: string, feedbackItemId: string, associatedWorkItemId: number): Promise<IFeedbackItemDocument> => {
     let workItems: WorkItem[];
