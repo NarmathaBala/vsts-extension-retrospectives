@@ -105,7 +105,6 @@ interface FeedbackItemEllipsisMenuItem {
   workflowPhases: WorkflowPhase[];
   hideMobile?: boolean;
   hideMainItem?: boolean;
-  isDisabled?: boolean;
 }
 
 export default class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemState> {
@@ -138,6 +137,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
   public async componentDidMount() {
     await this.isVoted(this.props.id);
+    await this.setDisabledFeedbackItemDeletion(this.props.boardId, this.props.id);
     if (this.props.groupedItemProps && this.props.groupedItemProps.isMainItem) {
       this.updateFeedbackItemGroupShadowCardHeight();
     }
@@ -256,13 +256,13 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     this.hideRemoveFeedbackItemFromGroupConfirmationDialog();
   }
 
-  private setDisabledFeedbackItemDeletion = (boardId: string, id: string) => {
-    itemDataService.getFeedbackItem(boardId, id).then(feedbackItem => {
-        if (feedbackItem && feedbackItem.upvotes > 0) {
-          this.setState({isDeletionDisabled: true});
-        }
-        this.setState({isDeletionDisabled: false});
-      });
+  private setDisabledFeedbackItemDeletion = async (boardId: string, id: string) => {
+    const feedbackItem = await itemDataService.getFeedbackItem(boardId, id);
+    if (feedbackItem && feedbackItem.upvotes > 0) {
+      this.setState({isDeletionDisabled: true});
+    } else {
+      this.setState({isDeletionDisabled: false});
+    }
   }
 
   private onConfirmDeleteFeedbackItem = async () => {
@@ -868,11 +868,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
               className: 'retrospectives-dialog-modal',
             }}>
             <DialogFooter>
-              <PrimaryButton
-                onClick={this.onConfirmDeleteFeedbackItem}
-                disabled={this.props.upvotes > 0}
-                title="This feedback item can be deleted if it has zero upvotes."
-                text="Delete" />
+              <PrimaryButton onClick={this.onConfirmDeleteFeedbackItem} text="Delete" />
               <DefaultButton onClick={this.hideDeleteItemConfirmationDialog} text="Cancel" />
             </DialogFooter>
           </Dialog>
