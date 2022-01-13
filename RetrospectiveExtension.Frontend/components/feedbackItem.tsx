@@ -91,6 +91,7 @@ export interface IFeedbackItemState {
   isMobileFeedbackItemActionsDialogHidden: boolean;
   isMoveFeedbackItemDialogHidden: boolean;
   isRemoveFeedbackItemFromGroupConfirmationDialogHidden: boolean;
+  isDeletionDisabled: boolean;
   showVotedAnimation: boolean;
   itemElementHeight: number;
   searchedFeedbackItems: IColumnItem[];
@@ -123,6 +124,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
       isMobileFeedbackItemActionsDialogHidden: true,
       isMoveFeedbackItemDialogHidden: true,
       isRemoveFeedbackItemFromGroupConfirmationDialogHidden: true,
+      isDeletionDisabled: false,
       itemElementHeight: 0,
       searchTerm: '',
       searchedFeedbackItems: [],
@@ -254,6 +256,15 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     this.hideRemoveFeedbackItemFromGroupConfirmationDialog();
   }
 
+  private setDisabledFeedbackItemDeletion = (boardId: string, id: string) => {
+    itemDataService.getFeedbackItem(boardId, id).then(feedbackItem => {
+        if (feedbackItem && feedbackItem.upvotes > 0) {
+          this.setState({isDeletionDisabled: true});
+        }
+        this.setState({isDeletionDisabled: false});
+      });
+  }
+
   private onConfirmDeleteFeedbackItem = async () => {
     this.markFeedbackItemForDelete(true);
     await this.initiateDeleteFeedbackItem();
@@ -353,7 +364,6 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
         text: 'Delete feedback',
         title: 'Delete feedback (disabled when there are active votes)',
       },
-      isDisabled: this.props.upvotes > 0,
       workflowPhases: [ WorkflowPhase.Collect, WorkflowPhase.Group, WorkflowPhase.Vote, WorkflowPhase.Act ],
     },
     {
@@ -399,6 +409,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     if (updatedFeedbackItem) {
       await this.isVoted(this.props.id);
       this.props.refreshFeedbackItems([updatedFeedbackItem], true);
+      await this.setDisabledFeedbackItemDeletion(this.props.boardId, this.props.id);
     } else {
       // TODO: Show pop-up indicating voting failed. This can be a common scenario due to race condition.
     }
@@ -729,8 +740,8 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
                             menuItem.menuItem.disabled =
-                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1 ||
-                              menuItem.isDisabled;
+                              this.state.isDeletionDisabled ||
+                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
                             return menuItem.menuItem;
                           })
                       }}
@@ -749,8 +760,8 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
                             menuItem.menuItem.disabled =
-                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1 ||
-                              menuItem.isDisabled;
+                              this.state.isDeletionDisabled ||
+                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
 
                             return <ActionButton
                               key={menuItem.menuItem.key}
