@@ -354,7 +354,7 @@ class ItemDataService {
     // The parent feedback item must not be a child of another group.
     if (parentFeedbackItem.parentFeedbackItemId) {
       console.log(`Cannot add child if parent is already a child in another group.
-                Board: ${boardId},
+                Board: ${boardId}, 
                 Parent Item: ${parentFeedbackItemId}`);
       return undefined;
     }
