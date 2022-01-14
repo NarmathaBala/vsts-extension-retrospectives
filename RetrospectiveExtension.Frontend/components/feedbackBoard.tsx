@@ -29,6 +29,7 @@ export interface FeedbackBoardProps {
 
   isCarouselDialogHidden: boolean;
   hideCarouselDialog: () => void;
+  userId: string;
 }
 
 export interface IColumn {
@@ -56,9 +57,6 @@ export interface FeedbackBoardState {
   currentVoteCount: string;
 }
 
-// Phong Cao: TODO Re-add getUserIdentity().id by fixing initialization issues
-const userId: string = '089ddd83-56da-4e7b-9c32-6d5db4d18a2d'; // getUserIdentity().id;
-
 export default class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardState> {
   constructor(props: FeedbackBoardProps) {
     super(props);
@@ -70,7 +68,7 @@ export default class FeedbackBoard extends React.Component<FeedbackBoardProps, F
       defaultActionItemIteration: '',
       hasItems: false,
       isDataLoaded: false,
-      currentVoteCount: (props.board.boardVoteCollection === undefined || props.board.boardVoteCollection === null) ? "0" : (props.board.boardVoteCollection[userId] === undefined || props.board.boardVoteCollection[userId] === null) ? "0" : props.board.boardVoteCollection[userId]?.toString()
+      currentVoteCount: (props.board.boardVoteCollection === undefined || props.board.boardVoteCollection === null) ? "0" : (props.board.boardVoteCollection[this.props.userId] === undefined || props.board.boardVoteCollection[this.props.userId] === null) ? "0" : props.board.boardVoteCollection[this.props.userId]?.toString()
     };
   }
 
@@ -423,7 +421,7 @@ export default class FeedbackBoard extends React.Component<FeedbackBoardProps, F
           itemDataService.getBoardItem(this.props.team.id, this.props.board.id).then((boardItem: IFeedbackBoardDocument) => {
             const voteCollection = boardItem.boardVoteCollection;
 
-            this.setState({ currentVoteCount: voteCollection === undefined ? "0" : voteCollection[userId] === undefined ? "0" : voteCollection[userId].toString() });
+            this.setState({ currentVoteCount: voteCollection === undefined ? "0" : voteCollection[this.props.userId] === undefined ? "0" : voteCollection[this.props.userId].toString() });
           });
         }
       };

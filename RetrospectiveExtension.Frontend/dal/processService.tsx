@@ -44,9 +44,8 @@ export class ProcessService {
         return this.workItemTrackingProcessHttpClient.getListOfProcesses(GetProcessExpandLevel.Projects);
     }
 
-    public getFieldsForProcess = (processId:string) => {
-        // Phong Cao: TODO Not sure what is witRefName
-        return this.workItemTrackingProcessHttpClient.getAllWorkItemTypeFields(processId, '');
+    public getFieldsForProcess = (processId: string, witRefName: string) => {
+        return this.workItemTrackingProcessDefinitionsHttpClient.getWorkItemTypeFields(processId, witRefName);
     }
 
     public getWorkItemTypes = (processId: string) => {

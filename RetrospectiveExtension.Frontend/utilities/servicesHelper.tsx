@@ -12,18 +12,6 @@ const getProjectInfo = async (): Promise<IProjectInfo> => {
 }
 
 /**
- * Get the host base URL
- */
-const getHostBaseUrl = async (): Promise<string> => {
-  const locationService = await SDK.getService<ILocationService>(CommonServiceIds.LocationService);
-  const hostBaseUrl = await locationService.getResourceAreaLocation(
-    CoreRestClient.RESOURCE_AREA_ID
-  );
-
-  return hostBaseUrl;
-}
-
-/**
  * Get the project id
  */
 export const getProjectId = async (): Promise<string> => {
@@ -39,6 +27,18 @@ export const getProjectId = async (): Promise<string> => {
   const projectInfo = await getProjectInfo();
 
   return projectInfo.name;
+}
+
+/**
+ * Get the host base URL
+ */
+ export const getHostBaseUrl = async (): Promise<string> => {
+  const locationService = await SDK.getService<ILocationService>(CommonServiceIds.LocationService);
+  const hostBaseUrl = await locationService.getResourceAreaLocation(
+    CoreRestClient.RESOURCE_AREA_ID
+  );
+
+  return hostBaseUrl;
 }
 
 /**

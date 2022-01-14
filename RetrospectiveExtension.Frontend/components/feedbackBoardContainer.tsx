@@ -5,7 +5,6 @@ import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import * as React from 'react';
-// import * as vssClipboard from 'VSS/Utils/Clipboard'; // Phong Cao: TODO Re-add clipboard function
 
 import { ViewMode, MobileWidthBreakpoint } from '../config/constants';
 import { WorkflowPhase } from '../interfaces/workItem';
@@ -841,10 +840,9 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
     // TODO (enpolat) : appInsightsClient.trackEvent(TelemetryEvents.FeedbackBoardDeleted);
   }
 
-  private copyBoardUrl = () => {
-    // Phong Cao: TODO Re-add clipboard function
-    // const boardDeepLinkUrl = getBoardUrl(this.state.currentTeam.id, this.state.currentBoard.id);
-    // vssClipboard.copyToClipboard(boardDeepLinkUrl);
+  private copyBoardUrl = async () => {
+    const boardDeepLinkUrl = await getBoardUrl(this.state.currentTeam.id, this.state.currentBoard.id);
+    navigator.clipboard.writeText(boardDeepLinkUrl);
   }
 
   private renderBoardUpdateMetadataFormDialog = (
@@ -917,8 +915,8 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
     {
       key: 'copyLink',
       iconProps: { iconName: 'Link' },
-      onClick: () => {
-        this.copyBoardUrl();
+      onClick: async () => {
+        await this.copyBoardUrl();
         this.showBoardUrlCopiedToast();
       },
       text: 'Copy retrospective link',
@@ -1386,6 +1384,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                         this.state.currentBoard.activePhase == WorkflowPhase.Collect && this.state.currentBoard.shouldShowFeedbackAfterCollect : 
                         false
                       }
+                      userId={this.state.currentUserId}
                     />
                   </div>
                   <Dialog

@@ -1,5 +1,4 @@
-import { getHostAuthority, getProjectName } from '../utilities/servicesHelper';
-
+import { getHostBaseUrl, getProjectName } from '../utilities/servicesHelper';
 
 /**
  * Generates a URL-safe deep link for board.
@@ -10,7 +9,7 @@ import { getHostAuthority, getProjectName } from '../utilities/servicesHelper';
  * @returns the URL-safe (encoded) URL
  */
 export const getBoardUrl = async (teamId: string, boardId: string): Promise<string> => {
-  const hostAuthority = await getHostAuthority();
+  const hostBase = await getHostBaseUrl();
   const projectName = await getProjectName();
 
   const queryParams = new URLSearchParams();
@@ -18,7 +17,7 @@ export const getBoardUrl = async (teamId: string, boardId: string): Promise<stri
   queryParams.append('teamId', teamId);
   queryParams.append('boardId', boardId);
 
-  const boardDeepLinkUrl = `https://${hostAuthority}/${projectName}/_apps/hub/ms-devlabs.team-retrospectives.home?${queryParams.toString()}`;
+  const boardDeepLinkUrl = `${hostBase}${projectName}/_apps/hub/ms-devlabs.team-retrospectives.home?${queryParams.toString()}`;
 
   return encodeURI(boardDeepLinkUrl);
 }

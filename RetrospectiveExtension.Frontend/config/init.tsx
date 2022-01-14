@@ -149,8 +149,6 @@ export const initializeRetrospectiveWorkItemType = () => {
   });
 
   const isInherited = getCurrentProcess.then(curProcess => {
-    // Phong Cao: TODO Confirm that this is a valid port
-    // return curProcess && (curProcess.properties.class != ProcessClass.System);
     return curProcess && (curProcess.customizationType != CustomizationType.System);
   });
 
