@@ -232,6 +232,13 @@ class ItemDataService {
      }
 
     if (decrement) {
+      if(!boardItem.boardVoteCollection ||
+        !boardItem.boardVoteCollection[userId] ||
+        boardItem.boardVoteCollection[userId] <= 0) {
+          console.log(`Cannot decrement item with zero or less votes. Board ${boardId}, Item: ${feedbackItemId}`);
+          return undefined;
+      }
+
       if (feedbackItem.upvotes <= 0) {
         console.log(`Cannot decrement upvote as votes must be > 0 to decrement. Board: ${boardId}, Item: ${feedbackItemId}`);
         return undefined;
@@ -362,7 +369,7 @@ class ItemDataService {
     const childFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, childFeedbackItemId);
 
     if (!parentFeedbackItem || !childFeedbackItem) {
-      console.log(`Cannot add child for a non-existent feedback item.
+      console.log(`Cannot add child for a non-existent feedback item. 
                 Board: ${boardId}, 
                 Parent Item: ${parentFeedbackItemId},
                 Child Item: ${childFeedbackItemId}`);
@@ -447,7 +454,7 @@ class ItemDataService {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);
 
     if (!feedbackItem) {
-      console.log(`Cannot move a non-existent feedback item.
+      console.log(`Cannot move a non-existent feedback item. 
               Board: ${boardId}, 
               Parent Item: ${feedbackItem.parentFeedbackItemId},
               Child Item: ${feedbackItemId}`);
@@ -488,7 +495,7 @@ class ItemDataService {
 
       const updatedChildFeedbackItemPromises: Promise<IFeedbackItemDocument>[] = childFeedbackItems.map((childFeedbackItem) =>
         this.updateFeedbackItem(boardId, childFeedbackItem));
-
+  
       updatedChildFeedbackItems =
         await Promise.all(updatedChildFeedbackItemPromises).then((promiseResults) => {
           return promiseResults.map((updatedChildFeedbackItem) => updatedChildFeedbackItem)
@@ -615,4 +622,4 @@ class ItemDataService {
   }
 }
 
-export const itemDataService = new ItemDataService(); 
+export const itemDataService = new ItemDataService();
