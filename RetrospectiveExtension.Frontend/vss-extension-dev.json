@@ -57,9 +57,6 @@
       "targets": [
         "ms.vss-work-web.work-hub-group"
       ],
-      "includes": [
-        "ms.vss-tfs-web.tfs-page-data-service"
-      ],
       "properties": {
         "name": "Retrospectives (Dev)",
         "uri": "src/index.html",
@@ -73,10 +70,6 @@
   "files": [
     {
       "path": "src",
-      "addressable": true
-    },
-    {
-      "path": "node_modules/azure-devops-extension-sdk",
       "addressable": true
     },
     {

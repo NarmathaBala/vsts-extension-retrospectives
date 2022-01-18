@@ -24,7 +24,6 @@
     "applicationinsights-js": "1.0.21",
     "azure-devops-extension-api": "~1.157.0",
     "azure-devops-extension-sdk": "~2.0.11",
-    "azure-devops-ui": "~2.164.0",
     "classnames": "2.3.1",
     "copy-to-clipboard": "3.3.1",
     "file-saver": "2.0.5",
