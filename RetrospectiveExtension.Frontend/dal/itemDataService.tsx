@@ -466,7 +466,7 @@ class ItemDataService {
     if (feedbackItem.parentFeedbackItemId) {
       const parentFeedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItem.parentFeedbackItemId);
       if (!parentFeedbackItem) {
-        console.log(`The given feedback item has a non-existent parent.
+        console.log(`The given feedback item has a non-existent parent. 
                 Board: ${boardId}, 
                 Parent Item: ${feedbackItem.parentFeedbackItemId},
                 Child Item: ${feedbackItemId}`);
