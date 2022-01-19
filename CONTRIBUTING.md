@@ -68,38 +68,49 @@ Clone the repository to your local machine from the Azure DevOps endpoint.
 
 ### Test using Hot Reload and Debug
 
-Test changes by directly load changes locally without having to re-package and re-publish the extension in the marketplace. 
+Test changes by directly load changes locally without having to re-package and re-publish the extension in the marketplace.
 
 **Note:** You will need [Visual Studio Code](https://code.visualstudio.com/download), [Firefox](https://www.mozilla.org/en-US/firefox/) and the [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) VS Code extension.
 
-- In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template. 
+- In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template.
 
-- Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. You will also want to set devServer.https to true and devServer.port to 3000.
+- Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. Also set devServer.https to true and devServer.port to 3000.
 
   ```js
-      module.exports = {
-        devtool: 'inline-source-map',
-        devServer: {
-          https: true,
-          port: 3000,
-          static: {
-            directory: path.join(__dirname),
-          }
-        },
-      ...
+  module.exports = {
+    devtool: 'inline-source-map',
+    devServer: {
+      https: true,
+      port: 3000,
+      static: {
+        directory: path.join(__dirname),
+      }
+    },
+  ...
   ```
 
-- By default, webpack serves its compiled, in-memory files directly under `localhost:3000` but the extension is looking for files in the `dist` path. To fix this discrepancy, set `output.publicPath` to `/dist/` in the webpack config. Now webpack will serve files from `localhost:3000/dist` and your extension should load correctly.
+- Set `output.publicPath` to `/dist/` in the webpack.config.json file. This will allow webpack to serve files from `localhost:3000/dist`.
 
-```js
-    module.exports = {
-        output: {
-          publicPath: "/dist/"
-          // ...
-        }
-        // ..
-    };
-```
+  ```js
+  module.exports = {
+      output: {
+        publicPath: "/dist/"
+        // ...
+      }
+      // ..
+  };
+  ```
+
+- In order for webpack to copy HTML files from the `src` folder to the `dist` folder, add the following lines to the webpack.config.json file.
+
+  ```js
+  module.exports = {
+    plugins: [new CopyWebpackPlugin({
+      patterns: [{from: "**/*.html", context: "src"}]
+    }),
+    // ...
+  };
+  ```
 
 - Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install` to download all the dependent packages listed in 'package.json'.
 
