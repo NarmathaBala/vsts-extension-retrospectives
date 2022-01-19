@@ -2,14 +2,23 @@
 const path = require('path');
 
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const BUILD_DIR = path.resolve(__dirname, 'dist');
 const APP_DIR = path.resolve(__dirname, '');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
+  devServer: {
+    https: true,
+    port: 3000,
+    static: {
+      directory: path.join(__dirname),
+    }
+  },
   entry: `${APP_DIR}/index.tsx`,
   output: {
+    publicPath: "/dist/",
     path: BUILD_DIR,
     filename: './reflect-bundle.js',
     libraryTarget: 'amd'

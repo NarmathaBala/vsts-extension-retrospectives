@@ -4,12 +4,13 @@
   "description": "Azure DevOps Retrospective Extension",
   "main": "index.tsx",
   "scripts": {
-    "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=production",
+    "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=development",
     "lint": "eslint . --ext .ts,.tsx",
     "pack:d": "tfx extension create --manifests vss-extension-dev.json --rev-version --output-path ./dist/",
     "pack:p": "tfx extension create --manifests vss-extension-prod.json --rev-version --output-path ./dist/",
     "publish:d": "npm run build && npm run pack:d && tfx extension publish --manifests vss-extension-dev.json --vsix ./dist/*.vsix",
-    "publish:p": "npm run build && npm run pack:p && tfx extension publish --manifests vss-extension-prod.json --vsix ./dist/*.vsix"
+    "publish:p": "npm run build && npm run pack:p && tfx extension publish --manifests vss-extension-prod.json --vsix ./dist/*.vsix",
+    "start:dev": "webpack-dev-server --mode development"
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "@types/uuid": "8.3.1",
     "@typescript-eslint/eslint-plugin": "4.28.3",
     "@typescript-eslint/parser": "4.28.3",
+    "copy-webpack-plugin": "^6.4.1",
     "css-loader": "5.0.1",
     "eslint": "7.30.0",
     "eslint-loader": "4.0.2",
@@ -64,6 +66,7 @@
     "typescript": "4.3.5",
     "url-loader": "4.1.1",
     "webpack": "4.44.2",
-    "webpack-cli": "4.7.2"
+    "webpack-cli": "4.7.2",
+    "webpack-dev-server": "^4.7.2"
   }
 }

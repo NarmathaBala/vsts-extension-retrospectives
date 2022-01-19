@@ -66,6 +66,61 @@ Clone the repository to your local machine from the Azure DevOps endpoint.
 
 - For the real time live syncing to work, our service needs to know your publisher id and your extension's unique key. To enable real time updates for your test extension, please [reach out to us](https://github.com/microsoft/vsts-extension-retrospectives/issues) with your publisher id and the unique key of your extension. [Instructions on how to download the unique key](https://docs.microsoft.com/en-us/azure/devops/extend/develop/auth?view=vsts#get-your-extensions-key).
 
+### Test using Hot Reload and Debug
+
+Test changes by directly load changes locally without having to re-package and re-publish the extension in the marketplace. 
+
+**Note:** You will need [Visual Studio Code](https://code.visualstudio.com/download), [Firefox](https://www.mozilla.org/en-US/firefox/) and the [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) VS Code extension.
+
+- In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template. 
+
+- Update the 'package.json' file for the webpack to be in developement mode.
+
+  ```json
+      "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=development"
+  ```
+
+- Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. You will also want to set devServer.https to true and devServer.port to 3000.
+
+  ```js
+      module.exports = {
+        devtool: 'inline-source-map',
+        devServer: {
+          https: true,
+          port: 3000,
+          static: {
+            directory: path.join(__dirname),
+          }
+        },
+      ...
+  ```
+
+- By default, webpack serves its compiled, in-memory files directly under `localhost:3000` but the extension is looking for files in the `dist` path. To fix this discrepancy, set `output.publicPath` to `/dist/` in the webpack config. Now webpack will serve files from `localhost:3000/dist` and your extension should load correctly.
+
+```js
+    module.exports = {
+        output: {
+          publicPath: "/dist/"
+          // ...
+        }
+        // ..
+    };
+```
+
+- Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install` to download all the dependent packages listed in 'package.json'.
+
+- Run `npm run build` to build the project.
+
+- Run `npm run start:dev`to start the webpack-dev-server
+
+- Start debugger (making sure the webpack-dev-server is still running). The default launch configuration should be set to Launch Firefox.
+
+- Once Firefox starts up, you should get an untrusted certificate error page. Select Advanced and then select **Accept the Risk and Continue** and log into your Azure DevOps account. From now on, if you leave this Firefox window open, the debugger will reattach instead of starting a clean Firefox instance each time.
+
+- Once you are logged in to Azure DevOps, your extension should be running. Set a breakpoint in a method in VS Code and you should see that breakpoint hit when that method executes.
+
+Reference: [Azure DevOps Extension Hot Reload and Debug](https://github.com/microsoft/azure-devops-extension-hot-reload-and-debug)
+
 ### Storage
 
 The Retrospectives tool uses the [Azure DevOps data service](https://docs.microsoft.com/en-us/azure/devops/extend/develop/data-storage?view=vsts) for handling all its storage.
