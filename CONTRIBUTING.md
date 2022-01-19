@@ -74,12 +74,6 @@ Test changes by directly load changes locally without having to re-package and r
 
 - In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template. 
 
-- Update the 'package.json' file for the webpack to be in developement mode.
-
-  ```json
-      "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=development"
-  ```
-
 - Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. You will also want to set devServer.https to true and devServer.port to 3000.
 
   ```js
@@ -109,7 +103,7 @@ Test changes by directly load changes locally without having to re-package and r
 
 - Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install` to download all the dependent packages listed in 'package.json'.
 
-- Run `npm run build` to build the project.
+- Run `npm run build:dev` to build the project.
 
 - Run `npm run start:dev`to start the webpack-dev-server
 

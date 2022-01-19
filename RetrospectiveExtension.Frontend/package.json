@@ -4,7 +4,8 @@
   "description": "Azure DevOps Retrospective Extension",
   "main": "index.tsx",
   "scripts": {
-    "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=development",
+    "build": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=production",
+    "build:dev": "set NODE_ENV=production && rm -rf ./dist && webpack --mode=development",
     "lint": "eslint . --ext .ts,.tsx",
     "pack:d": "tfx extension create --manifests vss-extension-dev.json --rev-version --output-path ./dist/",
     "pack:p": "tfx extension create --manifests vss-extension-prod.json --rev-version --output-path ./dist/",
