@@ -56,7 +56,7 @@ class WorkItemService {
    * Creates a new item of type 'Retrospective'.
    * @param title The title of the work item.
    */
-  public createRetrospectiveItemOfType = (createFields: IRetrospectiveItemCreate) => {
+  public createRetrospectiveItemOfType = async (createFields: IRetrospectiveItemCreate) => {
     const operation = [
       {
         op: Operation.Add,
@@ -90,8 +90,9 @@ class WorkItemService {
       },
     ];
 
-    return getProjectId()
-      .then(projectId => this._httpClient.createWorkItem(operation, projectId, WorkItemService.retrospective_type));
+    const projectId = await getProjectId();
+
+    return this._httpClient.createWorkItem(operation, projectId, WorkItemService.retrospective_type);
   }
 
   /**
@@ -243,6 +244,7 @@ class WorkItemService {
   public async getWorkItemsByIds(ids: number[]) {
     const projectId = await getProjectId();
     const workItems = await this._httpClient.getWorkItems(ids, projectId, undefined, undefined, WorkItemExpand.All, WorkItemErrorPolicy.Omit);
+
     return workItems.filter(wi => wi != null);
   }
 
@@ -323,7 +325,7 @@ class WorkItemService {
   /**
    * Gets the ids of items of type Retrospective.
    */
-  public getRetrospectiveItems = (queryFields: IRetrospectiveItemsQuery) => {
+  public getRetrospectiveItems = async (queryFields: IRetrospectiveItemsQuery) => {
     // TODO: Handle case for dynamic type name i.e. replace the static [AgilewithRetrospective.FeedbackType] with dynamic content.
     const wiqlQuery: Wiql = {
       query: "SELECT [System.Id], [System.Title], [System.CreatedBy], [System.IterationPath] "
@@ -334,28 +336,23 @@ class WorkItemService {
         + "AND [System.AreaPath] = '" + queryFields.areaPath + "' "
     };
 
-    return getProjectId()
-      .then(projectId => this._httpClient.queryByWiql(wiqlQuery, projectId))
-      .then((queryResult) => {
-        const workItems = queryResult.workItems;
-        const ids = new Array<number>();
-        workItems.forEach((item) => {
-          ids.push(item.id);
-        });
-        return ids;
-      })
-      .then((workItemIds) => {
-        if (workItemIds.length > 0) {
-          return getProjectId()
-            .then(projectId => this._httpClient.getWorkItems(workItemIds, projectId, undefined, undefined, WorkItemExpand.All, undefined))
-            .then((workItems) => workItems);
-        } else {
-          return [];
-        }
-      });
+    const projectId = await getProjectId();
+    const queryResult = await this._httpClient.queryByWiql(wiqlQuery, projectId);
+    const workItems = queryResult.workItems;
+
+    const workItemIds = new Array<number>();
+    workItems.forEach((item) => {
+      workItemIds.push(item.id);
+    });
+
+    if (workItemIds.length > 0) {
+      return this._httpClient.getWorkItems(workItemIds, projectId, undefined, undefined, WorkItemExpand.All, undefined);
+    } else {
+      return [];
+    }
   }
 
-  private createTaskItem = (title: string) => {
+  private createTaskItem = async (title: string) => {
     const operation = [
       {
         op: Operation.Add,
@@ -364,13 +361,15 @@ class WorkItemService {
       },
     ];
 
-    return getProjectId()
-      .then(projectId => this._httpClient.createWorkItem(operation, projectId, WorkItemService.task_type));
+    const projectId = await getProjectId();
+
+    return this._httpClient.createWorkItem(operation, projectId, WorkItemService.task_type);
   }
 
-  private UpdateRetrospectiveItem(patchDocument: JsonPatchDocument, id: number) {
-    return getProjectId()
-      .then(projectId => this._httpClient.updateWorkItem(patchDocument, id, projectId));
+  private async UpdateRetrospectiveItem(patchDocument: JsonPatchDocument, id: number) {
+    const projectId = await getProjectId();
+
+    return this._httpClient.updateWorkItem(patchDocument, id, projectId);
   }
 }
 

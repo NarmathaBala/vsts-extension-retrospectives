@@ -1,4 +1,4 @@
-import * as SDK from 'azure-devops-extension-sdk';
+import { getHost } from 'azure-devops-extension-sdk';
 import { getHostAuthority } from '../utilities/servicesHelper';
 
 const internalOrgNames = [
@@ -15,7 +15,7 @@ const internalOrgNames = [
  * Returns whether the current org in VSTS context is a recognized internal org.
  */
 export const isInternalOrg = () => {
-  const host = SDK.getHost();
+  const host = getHost();
   const isInternal = internalOrgNames.indexOf(host.name.toLowerCase().trim()) !== -1;
 
   return isInternal;

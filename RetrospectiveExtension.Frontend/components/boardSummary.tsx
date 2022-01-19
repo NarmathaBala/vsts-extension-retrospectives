@@ -1,5 +1,5 @@
 ﻿import * as React from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
+import { getService } from 'azure-devops-extension-sdk';
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import {
   DocumentCard,
@@ -173,7 +173,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
         id: workItem.id,
         onActionItemClick: async (id: number) => {
           // TODO: Update specific table summary after work item is updated.
-          const workItemNavSvc = await SDK.getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
+          const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
           await workItemNavSvc.openWorkItem(id);
         }
       };
@@ -210,7 +210,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
   }
 
   private onItemInvoked = async (item: { id: number }) => {
-    const workItemNavSvc = await SDK.getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
+    const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
     await workItemNavSvc.openWorkItem(item.id);
   }
 

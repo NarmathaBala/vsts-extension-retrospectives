@@ -1,7 +1,7 @@
 import * as SignalR from '@aspnet/signalr';
 import * as jsonwebtoken from 'jsonwebtoken';
 import * as moment from 'moment';
-import * as SDK from 'azure-devops-extension-sdk';
+import { getAppToken } from 'azure-devops-extension-sdk';
 
 import Environment from '../config/environment';
 import { isHostedAzureDevOps } from '../utilities/azureDevOpsContextHelper';
@@ -79,7 +79,7 @@ class ReflectBackendService {
       return that._appToken;
     }
 
-    return Promise.resolve(SDK.getAppToken().then((appToken) => {
+    return Promise.resolve(getAppToken().then((appToken) => {
       that._appToken = appToken;
 
       const tokenData = jsonwebtoken.decode(that._appToken, {json: true});

@@ -54,7 +54,7 @@ class WorkService {
     const projectId = await getProjectId();
     const teamContext = {
       project: '',
-      projectId: projectId,
+      projectId,
       team: '',
       teamId
     };

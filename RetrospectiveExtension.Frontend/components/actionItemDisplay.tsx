@@ -1,7 +1,7 @@
 import { DefaultButton, IButtonProps, ActionButton, Button, BaseButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Image } from 'office-ui-fabric-react/lib/Image';
 import * as React from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
+import { getService, getUser } from 'azure-devops-extension-sdk';
 import { WebApiTeam } from 'azure-devops-extension-api/Core';
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import { WorkItemTrackingServiceIds, IWorkItemFormNavigationService } from 'azure-devops-extension-api/WorkItemTracking';
@@ -66,9 +66,9 @@ export default class ActionItemDisplay extends React.Component<ActionItemDisplay
 
   private createAndLinkActionItem = async (workItemTypeName: string) => {
     const boardUrl = await getBoardUrl(this.props.team.id, this.props.boardId);
-    const workItemNavSvc = await SDK.getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
+    const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
     const workItem = await workItemNavSvc.openNewWorkItem(workItemTypeName, {
-      'System.AssignedTo': SDK.getUser().name,
+      'System.AssignedTo': getUser().name,
       'Tags': 'feedback;reflect-hub',
       'Title': '',
       'Description': `${this.props.feedbackItemTitle}`,

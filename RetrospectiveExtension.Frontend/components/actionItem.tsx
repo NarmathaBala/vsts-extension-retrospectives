@@ -8,7 +8,7 @@ import {
   IDocumentCardPreviewProps
 } from 'office-ui-fabric-react/lib/DocumentCard';
 import * as React from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
+import { getService } from 'azure-devops-extension-sdk';
 import { WorkItem, WorkItemType, WorkItemStateColor } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import { WorkItemTrackingServiceIds, IWorkItemFormNavigationService } from 'azure-devops-extension-api/WorkItemTracking';
 
@@ -77,7 +77,7 @@ export default class ActionItem extends React.Component<ActionItemProps, ActionI
   }
 
   private onActionItemClick = async (workItemId: number) => {
-    const workItemNavSvc = await SDK.getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
+    const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
 
     await workItemNavSvc.openWorkItem(workItemId);
 

@@ -1,4 +1,4 @@
-import * as SDK from 'azure-devops-extension-sdk';
+import { getService } from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IProjectPageService, IProjectInfo, ILocationService } from 'azure-devops-extension-api';
 import { CoreRestClient } from 'azure-devops-extension-api/Core';
 
@@ -6,7 +6,7 @@ import { CoreRestClient } from 'azure-devops-extension-api/Core';
  * Get the project info
  */
 const getProjectInfo = async (): Promise<IProjectInfo> => {
-  const projectPageService = await SDK.getService<IProjectPageService>(CommonServiceIds.ProjectPageService);
+  const projectPageService = await getService<IProjectPageService>(CommonServiceIds.ProjectPageService);
 
   return projectPageService.getProject();
 }
@@ -33,7 +33,7 @@ export const getProjectId = async (): Promise<string> => {
  * Get the host base URL
  */
  export const getHostBaseUrl = async (): Promise<string> => {
-  const locationService = await SDK.getService<ILocationService>(CommonServiceIds.LocationService);
+  const locationService = await getService<ILocationService>(CommonServiceIds.LocationService);
   const hostBaseUrl = await locationService.getResourceAreaLocation(
     CoreRestClient.RESOURCE_AREA_ID
   );

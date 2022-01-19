@@ -29,7 +29,6 @@ import FeedbackBoardPreviewEmail from './feedbackBoardPreviewEmail';
 import { ToastContainer, toast, Slide } from 'react-toastify';
 import { WorkItemType, WorkItemTypeReference } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import { TooltipHost } from 'office-ui-fabric-react/lib/Tooltip';
-import { isHostedAzureDevOps } from '../utilities/azureDevOpsContextHelper';
 import { shareBoardHelper } from '../utilities/shareBoardHelper';
 import { itemDataService } from '../dal/itemDataService';
 import { TeamMember } from 'azure-devops-extension-api/WebApi';
@@ -39,6 +38,7 @@ import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { getQuestionName } from '../utilities/effectivenessMeasurementQuestionHelper';
 
 export interface FeedbackBoardContainerProps {
+  isHostedAzureDevOps: boolean;
   projectId: string;
 }
 
@@ -84,7 +84,6 @@ export interface FeedbackBoardContainerState {
   actionItemIds: number[];
   members: TeamMember[];
   castedVoteCount: number;
-  isHostedAzureDevOps: boolean;
 }
 
 export default class FeedbackBoardContainer extends React.Component<FeedbackBoardContainerProps, FeedbackBoardContainerState> {
@@ -132,7 +131,6 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
       actionItemIds: [],
       members: [],
       castedVoteCount: 0,
-      isHostedAzureDevOps: true,
     };
   }
 
@@ -181,9 +179,6 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
         });
         setTimeout(this.tryReconnectToBackend, 2000);
       });
-
-      const isHosted = await isHostedAzureDevOps();
-      this.setState({ isHostedAzureDevOps: isHosted });
 
       // Listen for signals for board updates.
       reflectBackendService.onReceiveNewBoard(this.handleNewBoardAvailable);
@@ -409,7 +404,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
       queryParams = (new URL(document.location.href)).searchParams;
 
       if (!queryParams) {
-        if (!this.state.isHostedAzureDevOps)
+        if (!this.props.isHostedAzureDevOps)
         {
           throw new Error("URL-related issue occurred with on-premise Azure DevOps");
         }
@@ -723,7 +718,6 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
 
   private createBoard = async (title: string, maxvotesPerUser: number, columns: IFeedbackColumn[], isIncludeTeamEffectivenessMeasurement: boolean, isBoardAnonymous: boolean, shouldShowFeedbackAfterCollect: boolean, displayPrimeDirective: boolean) => {
     const createdBoard = await BoardDataService.createBoardForTeam(this.state.currentTeam.id, title, maxvotesPerUser, columns, isIncludeTeamEffectivenessMeasurement, isBoardAnonymous, shouldShowFeedbackAfterCollect, displayPrimeDirective);
-    console.log(createdBoard);
     await this.reloadBoardsForCurrentTeam();
     this.hideBoardCreationDialog();
     reflectBackendService.broadcastNewBoard(this.state.currentTeam.id, createdBoard.id);
@@ -1305,7 +1299,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                     }
                   </div>
                   {
-                    !this.state.isHostedAzureDevOps && this.state.isLiveSyncInTfsIssueMessageBarVisible && !this.state.isBackendServiceConnected &&
+                    !this.props.isHostedAzureDevOps && this.state.isLiveSyncInTfsIssueMessageBarVisible && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.info}
@@ -1324,7 +1318,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                     </MessageBar>
                   }
                   {
-                    !this.state.isHostedAzureDevOps && this.state.isDropIssueInEdgeMessageBarVisible && !this.state.isBackendServiceConnected &&
+                    !this.props.isHostedAzureDevOps && this.state.isDropIssueInEdgeMessageBarVisible && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.warning}
@@ -1336,7 +1330,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                     </MessageBar>
                   }
                   {
-                    this.state.isHostedAzureDevOps && !this.state.isBackendServiceConnected &&
+                    this.props.isHostedAzureDevOps && !this.state.isBackendServiceConnected &&
                     <MessageBar
                       className="info-message-bar"
                       messageBarType={MessageBarType.warning}
