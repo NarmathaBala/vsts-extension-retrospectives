@@ -1,9 +1,9 @@
 import * as SignalR from '@aspnet/signalr';
-import * as jsonwebtoken from 'jsonwebtoken';
 import * as moment from 'moment';
 import { getAppToken } from 'azure-devops-extension-sdk';
 
 import Environment from '../config/environment';
+import { decodeJwt } from '../utilities/tokenHelper';
 import { isHostedAzureDevOps } from '../utilities/azureDevOpsContextHelper';
 
 const enum ReflectBackendSignals {
@@ -82,8 +82,8 @@ class ReflectBackendService {
     return Promise.resolve(getAppToken().then((appToken) => {
       that._appToken = appToken;
 
-      const tokenData = jsonwebtoken.decode(that._appToken, {json: true});
-      if (typeof tokenData === 'object') {
+      const tokenData = decodeJwt(that._appToken);
+      if (tokenData) {
         that._tokenExpiry = moment.unix(tokenData.exp).toDate();
         return that._appToken;
       }
