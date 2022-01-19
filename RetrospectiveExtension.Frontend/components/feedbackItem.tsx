@@ -258,10 +258,8 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
   private setDisabledFeedbackItemDeletion = async (boardId: string, id: string) => {
     const feedbackItem = await itemDataService.getFeedbackItem(boardId, id);
-    if (feedbackItem && feedbackItem.upvotes > 0) {
-      this.setState({isDeletionDisabled: true});
-    } else {
-      this.setState({isDeletionDisabled: false});
+    if (feedbackItem) {
+      this.setState({isDeletionDisabled: feedbackItem.upvotes > 0});
     }
   }
 
