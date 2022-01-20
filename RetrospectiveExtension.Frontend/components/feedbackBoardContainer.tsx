@@ -1,4 +1,4 @@
-import { ActionButton, DefaultButton, IconButton, MessageBarButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+﻿import { ActionButton, DefaultButton, IconButton, MessageBarButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Dialog, DialogType, DialogFooter, DialogContent } from 'office-ui-fabric-react/lib/Dialog';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
@@ -1060,7 +1060,7 @@ console.log(createdBoard);
           <SelectorCombo<WebApiTeam>
             className="team-selector"
             currentValue={this.state.currentTeam}
-            iconName="users"
+            iconName="People"
             nameGetter={(team) => team.name}
             selectorList={teamSelectorList}
             selectorListItemOnClick={this.changeSelectedTeam}
@@ -1081,7 +1081,7 @@ console.log(createdBoard);
                         <SelectorCombo<IFeedbackBoardDocument>
                           className="board-selector"
                           currentValue={this.state.currentBoard}
-                          iconName="sitemap"
+                          iconName="BacklogBoard"
                           nameGetter={(feedbackBoard) => feedbackBoard.title}
                           selectorList={boardSelectorList}
                           selectorListItemOnClick={this.changeSelectedBoard}
@@ -1091,14 +1091,13 @@ console.log(createdBoard);
                         <DefaultButton
                           className="contextual-menu-button hide-mobile"
                           aria-label="Board Actions Menu"
+                          iconProps={{ iconName: 'More' }}
                           title="Board actions"
                           menuProps={{
                             className: "board-actions-menu",
                             items: this.boardActionContexualMenuItems,
                           }}
-                        >
-                          <span className="ms-Button-icon"><i className="fas fa-ellipsis-h"></i></span>&nbsp;
-                        </DefaultButton>
+                        />
                         <Dialog
                           hidden={this.state.isMobileBoardActionsDialogHidden}
                           onDismiss={this.hideMobileBoardActionsDialog}
@@ -1217,9 +1216,9 @@ console.log(createdBoard);
                           calloutProps={{ gapSpace: 0 }}>
                           <ActionButton
                             className="toggle-carousel-button"
+                            text="Measure Team Effectiveness"
+                            iconProps={{ iconName: 'Financial' }}
                             onClick={() => { this.setState({ isIncludeTeamEffectivenessMeasurementDialogHidden: false }); }}>
-                            <span className="ms-Button-icon"><i className="fas fa-chart-line"></i></span>&nbsp;
-                            <span className="ms-Button-label">Measure Team Effectiveness</span> 
                           </ActionButton>
                         </TooltipHost>
                       </>
@@ -1353,11 +1352,10 @@ console.log(createdBoard);
                               text="Reconnect" />
                             <IconButton
                               className="info-message-bar-action-button"
+                              iconProps={{ iconName: 'Clear' }}
                               onClick={() => { this.setState({ isBackendServiceConnected: true }) }}
                               disabled={this.state.isReconnectingToBackendService}
-                              title="Hide">
-                                <span className="ms-Button-icon"><i className="fas fa-times"></i></span>
-                              </IconButton>
+                              title="Hide" />
                             </>
                           }
                         </div>

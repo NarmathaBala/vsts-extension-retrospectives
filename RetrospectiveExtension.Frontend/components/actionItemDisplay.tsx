@@ -12,6 +12,7 @@ import { IFeedbackItemDocument } from '../interfaces/feedback';
 import { FocusTrapCallout, DirectionalHint } from 'office-ui-fabric-react/lib/Callout';
 import { List } from 'office-ui-fabric-react/lib/List';
 import { getBoardUrl } from '../utilities/boardUrlHelper';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import Dialog, { DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import ActionItem from './actionItem';
@@ -242,7 +243,7 @@ export default class ActionItemDisplay extends React.Component<ActionItemDisplay
                       }
                     }}
                   >
-                    <i className="work-item-icon fas fa-link"></i>
+                    <Icon iconName="Link" className="work-item-icon" />
                     <div className="add-action-item-list-item-text">
                       Link existing work item
                     </div>

@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 import { WorkItem, WorkItemType } from 'TFS/WorkItemTracking/Contracts';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import {
   DocumentCard,
   DocumentCardTitle,
@@ -245,21 +246,21 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
             <DocumentCardTitle title={this.props.boardName} shouldTruncate={false} aria-label="Retrospective name" />
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <i className="stats-icon fas fa-comment-dots"></i>
+            <Icon iconName="Feedback" className="stats-icon" />
             <div className="count-and-text" aria-label="count and text container">
               <div className="count" aria-label="feedback item count">{this.props.feedbackItemsCount}</div>
               <div className="text">Feedback items created.</div>
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <i className="stats-icon fas fa-clipboard"></i>
+            <Icon iconName="ClipboardSolid" className="stats-icon" />
             <div className="count-and-text" aria-label="count and text container">
               <div className="count" aria-label="total work items count">{this.props.actionItems.length}</div>
               <div className="text">Work items created.</div>
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <i className="stats-icon pending-action-item-color fas fa-bug"></i>
+            <Icon iconName="WorkItemBug" className="stats-icon pending-action-item-color" />
             <div className="count-and-text" aria-label="count and text container">
               <div className={`count ${this.props.pendingWorkItemsCount > 0 ? 'pending-action-item-color' : ''}`} aria-label="pending work items count">
                 {this.props.pendingWorkItemsCount}</div>
@@ -267,7 +268,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <i className="stats-icon resolved-green fas fa-file"></i>
+            <Icon iconName="WorkItem" className="stats-icon resolved-green" />
             <div className="count-and-text" aria-label="count and text container">
               <div className={`count ${this.props.resolvedActionItemsCount > 0 ? 'resolved-green' : ''}`} aria-label="resolved work items count">
                 {this.props.resolvedActionItemsCount}</div>
