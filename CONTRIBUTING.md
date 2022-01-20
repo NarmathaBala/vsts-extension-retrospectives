@@ -105,11 +105,35 @@ Test changes by directly load changes locally without having to re-package and r
 
   ```js
   module.exports = {
-    plugins: [new CopyWebpackPlugin({
+    plugins: [
+      new CopyWebpackPlugin({
       patterns: [{from: "**/*.html", context: "src"}]
     }),
     // ...
   };
+  ```
+  
+- Set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Add a path mapping with `url` set to `webpack:///` and path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Fiefox every time you debug
+  
+  ```json
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch Firefox",
+        "type": "firefox",
+        "request": "launch",
+        "url": "https://localhost:3000/",
+        "reAttach": true,
+        "pathMappings": [
+          {
+            "url": "webpack:///",
+            "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/"
+          }
+        ]
+      }
+    ]
+  }
   ```
 
 - Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install` to download all the dependent packages listed in 'package.json'.
