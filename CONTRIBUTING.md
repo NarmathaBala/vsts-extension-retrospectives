@@ -68,11 +68,13 @@ Clone the repository to your local machine from the Azure DevOps endpoint.
 
 ### Test using Hot Reload and Debug
 
-Test changes by directly load changes locally without having to re-package and re-publish the extension in the marketplace.
+Test changes by directly loading changes locally, without having to re-package and re-publish the extension in the marketplace.
+
+Reference: [Azure DevOps Extension Hot Reload and Debug](https://github.com/microsoft/azure-devops-extension-hot-reload-and-debug)
 
 **Note:** You will need [Visual Studio Code](https://code.visualstudio.com/download), [Firefox](https://www.mozilla.org/en-US/firefox/) and the [Debugger for Firefox](https://marketplace.visualstudio.com/items?itemName=firefox-devtools.vscode-firefox-debug) VS Code extension.
 
-- In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template.
+- In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template file `vss-extension-dev.json.template` for reference.
 
 - Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. Also set devServer.https to true and devServer.port to 3000.
 
@@ -89,7 +91,7 @@ Test changes by directly load changes locally without having to re-package and r
   ...
   ```
 
-- Set `output.publicPath` to `/dist/` in the webpack.config.json file. This will allow webpack to serve files from `localhost:3000/dist`.
+- Set `output.publicPath` to `/dist/` in the webpack.config.json file. This will allow webpack to serve files from `https://localhost:3000/dist`.
 
   ```js
   module.exports = {
@@ -99,21 +101,9 @@ Test changes by directly load changes locally without having to re-package and r
       }
       // ..
   };
-  ```
+    ```
 
-- In order for webpack to copy HTML files from the `src` folder to the `dist` folder, add the following lines to the webpack.config.json file.
-
-  ```js
-  module.exports = {
-    plugins: [
-      new CopyWebpackPlugin({
-      patterns: [{from: "**/*.html", context: "src"}]
-    }),
-    // ...
-  };
-  ```
-  
-- Set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Add a path mapping with `url` set to `webpack:///` and path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Fiefox every time you debug
+- In the root of the project, create a folder named `.vscode`. In there, create a file named `launch.json`, which will help to set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Inside of this file, you will add a path mapping with `url` set to `webpack:///` and have the path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Fiefox every time you debug.
   
   ```json
   {
@@ -140,15 +130,13 @@ Test changes by directly load changes locally without having to re-package and r
 
 - Run `npm run build:dev` to build the project.
 
-- Run `npm run start:dev`to start the webpack-dev-server
+- Run `npm run start:dev` to start the webpack-dev-server
 
 - Start debugger (making sure the webpack-dev-server is still running). The default launch configuration should be set to Launch Firefox.
 
 - Once Firefox starts up, you should get an untrusted certificate error page. Select Advanced and then select **Accept the Risk and Continue** and log into your Azure DevOps account. From now on, if you leave this Firefox window open, the debugger will reattach instead of starting a clean Firefox instance each time.
 
 - Once you are logged in to Azure DevOps, your extension should be running. Set a breakpoint in a method in VS Code and you should see that breakpoint hit when that method executes.
-
-Reference: [Azure DevOps Extension Hot Reload and Debug](https://github.com/microsoft/azure-devops-extension-hot-reload-and-debug)
 
 ### Storage
 
