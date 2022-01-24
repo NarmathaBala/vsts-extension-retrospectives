@@ -102,7 +102,7 @@ namespace CollaborationStateService
 
       app.UseWebSockets();
 
-      app.UseAuthentication();
+      app.UseAuthentication();s
 
       app.UseAzureSignalR(routes => { routes.MapHub<ReflectBackend.ReflectHub>("/collaborationUpdates"); });
 
