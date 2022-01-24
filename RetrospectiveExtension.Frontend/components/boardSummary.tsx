@@ -1,13 +1,13 @@
 ﻿import * as React from 'react';
-import { WorkItem, WorkItemType } from 'TFS/WorkItemTracking/Contracts';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { getService } from 'azure-devops-extension-sdk';
+import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import {
   DocumentCard,
   DocumentCardTitle,
   DocumentCardType,
 } from 'office-ui-fabric-react/lib/DocumentCard';
 import { Image } from 'office-ui-fabric-react/lib/Image';
-import { WorkItemFormNavigationService } from 'TFS/WorkItemTracking/Services';
+import { WorkItemTrackingServiceIds, IWorkItemFormNavigationService } from 'azure-devops-extension-api/WorkItemTracking';
 import {
   DetailsList,
   DetailsListLayoutMode,
@@ -173,7 +173,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
         id: workItem.id,
         onActionItemClick: async (id: number) => {
           // TODO: Update specific table summary after work item is updated.
-          const workItemNavSvc = await WorkItemFormNavigationService.getService();
+          const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
           await workItemNavSvc.openWorkItem(id);
         }
       };
@@ -210,7 +210,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
   }
 
   private onItemInvoked = async (item: { id: number }) => {
-    const workItemNavSvc = await WorkItemFormNavigationService.getService();
+    const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
     await workItemNavSvc.openWorkItem(item.id);
   }
 
@@ -246,21 +246,21 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
             <DocumentCardTitle title={this.props.boardName} shouldTruncate={false} aria-label="Retrospective name" />
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <Icon iconName="Feedback" className="stats-icon" />
+            <i className="stats-icon fas fa-comment-dots"></i>
             <div className="count-and-text" aria-label="count and text container">
               <div className="count" aria-label="feedback item count">{this.props.feedbackItemsCount}</div>
               <div className="text">Feedback items created.</div>
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <Icon iconName="ClipboardSolid" className="stats-icon" />
+            <i className="stats-icon fas fa-clipboard"></i>
             <div className="count-and-text" aria-label="count and text container">
               <div className="count" aria-label="total work items count">{this.props.actionItems.length}</div>
               <div className="text">Work items created.</div>
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <Icon iconName="WorkItemBug" className="stats-icon pending-action-item-color" />
+            <i className="stats-icon pending-action-item-color fas fa-bug"></i>
             <div className="count-and-text" aria-label="count and text container">
               <div className={`count ${this.props.pendingWorkItemsCount > 0 ? 'pending-action-item-color' : ''}`} aria-label="pending work items count">
                 {this.props.pendingWorkItemsCount}</div>
@@ -268,7 +268,7 @@ export default class BoardSummary extends React.Component<IBoardSummaryProps, IB
             </div>
           </div>
           <div className="items-stats-container" aria-label="feedback items statistics container">
-            <Icon iconName="WorkItem" className="stats-icon resolved-green" />
+            <i className="stats-icon resolved-green fas fa-file"></i>
             <div className="count-and-text" aria-label="count and text container">
               <div className={`count ${this.props.resolvedActionItemsCount > 0 ? 'resolved-green' : ''}`} aria-label="resolved work items count">
                 {this.props.resolvedActionItemsCount}</div>

@@ -11,10 +11,10 @@ import ActionItemDisplay from './actionItemDisplay';
 import EditableDocumentCardTitle from './editableDocumentCardTitle';
 import { IFeedbackItemDocument } from '../interfaces/feedback';
 import { itemDataService } from '../dal/itemDataService';
-import { WorkItem, WorkItemType } from 'TFS/WorkItemTracking/Contracts';
+import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import localStorageHelper from '../utilities/localStorageHelper';
 import { reflectBackendService } from '../dal/reflectBackendService';
-import { WebApiTeam } from 'TFS/Core/Contracts';
+import { WebApiTeam } from 'azure-devops-extension-api/Core';
 // TODO (enpolat) : import { appInsightsClient, TelemetryEvents } from '../utilities/appInsightsClient';
 import { IColumn, IColumnItem } from './feedbackBoard';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
@@ -91,6 +91,7 @@ export interface IFeedbackItemState {
   isMobileFeedbackItemActionsDialogHidden: boolean;
   isMoveFeedbackItemDialogHidden: boolean;
   isRemoveFeedbackItemFromGroupConfirmationDialogHidden: boolean;
+  isDeletionDisabled: boolean;
   showVotedAnimation: boolean;
   itemElementHeight: number;
   searchedFeedbackItems: IColumnItem[];
@@ -122,6 +123,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
       isMobileFeedbackItemActionsDialogHidden: true,
       isMoveFeedbackItemDialogHidden: true,
       isRemoveFeedbackItemFromGroupConfirmationDialogHidden: true,
+      isDeletionDisabled: false,
       itemElementHeight: 0,
       searchTerm: '',
       searchedFeedbackItems: [],
@@ -135,6 +137,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
   public async componentDidMount() {
     await this.isVoted(this.props.id);
+    await this.setDisabledFeedbackItemDeletion(this.props.boardId, this.props.id);
     if (this.props.groupedItemProps && this.props.groupedItemProps.isMainItem) {
       this.updateFeedbackItemGroupShadowCardHeight();
     }
@@ -253,6 +256,13 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     this.hideRemoveFeedbackItemFromGroupConfirmationDialog();
   }
 
+  private setDisabledFeedbackItemDeletion = async (boardId: string, id: string) => {
+    const feedbackItem = await itemDataService.getFeedbackItem(boardId, id);
+    if (feedbackItem) {
+      this.setState({isDeletionDisabled: feedbackItem.upvotes > 0});
+    }
+  }
+
   private onConfirmDeleteFeedbackItem = async () => {
     this.markFeedbackItemForDelete(true);
     await this.initiateDeleteFeedbackItem();
@@ -350,7 +360,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
         iconProps: { iconName: 'Delete' },
         onClick: this.deleteFeedbackItem,
         text: 'Delete feedback',
-        title: 'Delete feedback',
+        title: 'Delete feedback (disabled when there are active votes)',
       },
       workflowPhases: [ WorkflowPhase.Collect, WorkflowPhase.Group, WorkflowPhase.Vote, WorkflowPhase.Act ],
     },
@@ -397,6 +407,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     if (updatedFeedbackItem) {
       await this.isVoted(this.props.id);
       this.props.refreshFeedbackItems([updatedFeedbackItem], true);
+      await this.setDisabledFeedbackItemDeletion(this.props.boardId, this.props.id);
     } else {
       // TODO: Show pop-up indicating voting failed. This can be a common scenario due to race condition.
     }
@@ -671,7 +682,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                     aria-live="polite"
                     aria-label={'Click to vote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
-                    disabled={!isMainItem || !showVoteButton}
+                    disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
                       'feedback-action-button',
                       'feedback-add-vote',
@@ -697,7 +708,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                     aria-live="polite"
                     aria-label={'Click to unvote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
-                    disabled={!isMainItem || !showVoteButton}
+                    disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
                       'feedback-action-button',
                       'feedback-add-vote',
@@ -726,7 +737,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                         items: this.feedbackItemEllipsisMenuItems
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
-                            menuItem.menuItem.disabled = menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
+                            menuItem.menuItem.disabled =
+                              this.state.isDeletionDisabled ||
+                              menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
                             return menuItem.menuItem;
                           })
                       }}
@@ -745,6 +758,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                           .filter((menuItem) => !(isMainItem && menuItem.hideMainItem))
                           .map((menuItem) => {
                             menuItem.menuItem.disabled =
+                              this.state.isDeletionDisabled ||
                               menuItem.workflowPhases.indexOf(this.props.workflowPhase) === -1;
 
                             return <ActionButton

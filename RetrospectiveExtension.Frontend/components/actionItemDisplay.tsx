@@ -1,9 +1,10 @@
 import { DefaultButton, IButtonProps, ActionButton, Button, BaseButton, PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { Image } from 'office-ui-fabric-react/lib/Image';
 import * as React from 'react';
-import { WebApiTeam } from 'TFS/Core/Contracts';
-import { WorkItem, WorkItemType } from 'TFS/WorkItemTracking/Contracts';
-import { WorkItemFormNavigationService } from 'TFS/WorkItemTracking/Services';
+import { getService, getUser } from 'azure-devops-extension-sdk';
+import { WebApiTeam } from 'azure-devops-extension-api/Core';
+import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
+import { WorkItemTrackingServiceIds, IWorkItemFormNavigationService } from 'azure-devops-extension-api/WorkItemTracking';
 
 import { workItemService } from '../dal/azureDevOpsWorkItemService';
 import { itemDataService } from '../dal/itemDataService';
@@ -12,7 +13,6 @@ import { IFeedbackItemDocument } from '../interfaces/feedback';
 import { FocusTrapCallout, DirectionalHint } from 'office-ui-fabric-react/lib/Callout';
 import { List } from 'office-ui-fabric-react/lib/List';
 import { getBoardUrl } from '../utilities/boardUrlHelper';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import Dialog, { DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import ActionItem from './actionItem';
@@ -65,16 +65,17 @@ export default class ActionItemDisplay extends React.Component<ActionItemDisplay
   private addActionItemButtonWrapper: HTMLElement | null;
 
   private createAndLinkActionItem = async (workItemTypeName: string) => {
-    const workItemNavSvc = await WorkItemFormNavigationService.getService();
+    const boardUrl = await getBoardUrl(this.props.team.id, this.props.boardId);
+    const workItemNavSvc = await getService<IWorkItemFormNavigationService>(WorkItemTrackingServiceIds.WorkItemFormNavigationService);
     const workItem = await workItemNavSvc.openNewWorkItem(workItemTypeName, {
-      'System.AssignedTo': VSS.getWebContext().user.name,
+      'System.AssignedTo': getUser().name,
       'Tags': 'feedback;reflect-hub',
       'Title': '',
       'Description': `${this.props.feedbackItemTitle}`,
       'priority': 1,
       'System.History': `Created by Retrospectives |` +
         ` Team [ ${this.props.team.name} ] Retrospective [ ${this.props.boardTitle} ] Item [ ${this.props.feedbackItemTitle} ]` +
-        ` Link [ ${getBoardUrl(this.props.team.id, this.props.boardId)} ]`,
+        ` Link [ ${boardUrl} ]`,
       'System.AreaPath': this.props.defaultAreaPath,
       'System.IterationPath': this.props.defaultIteration,
     });
@@ -243,7 +244,7 @@ export default class ActionItemDisplay extends React.Component<ActionItemDisplay
                       }
                     }}
                   >
-                    <Icon iconName="Link" className="work-item-icon" />
+                    <i className="work-item-icon fas fa-link"></i>
                     <div className="add-action-item-list-item-text">
                       Link existing work item
                     </div>
