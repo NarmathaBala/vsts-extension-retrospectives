@@ -100,7 +100,7 @@ namespace CollaborationStateService
 
       app.UseCors(builder => { builder.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
 
-      app.UseWebSockets();
+      app.UseWebSockets();s
 
       app.UseAuthentication();
 
