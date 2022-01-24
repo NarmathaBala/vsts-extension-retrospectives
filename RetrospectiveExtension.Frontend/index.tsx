@@ -20,4 +20,4 @@ const feedbackBoardContainerProps: FeedbackBoardContainerProps = {
 ReactDOM.render(
   <FeedbackBoardContainer {...feedbackBoardContainerProps}/>,
   document.getElementById('root') as HTMLElement,
-);s
+);

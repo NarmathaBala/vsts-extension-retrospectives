@@ -95,7 +95,8 @@ namespace CollaborationStateService
         "https://reflectteam.gallerycdn.vsassets.io",
         "https://reflectteam.gallery.vsassets.io",
         "https://ms-devlabs.gallerycdn.vsassets.io",
-        "https://ms-devlabs.gallery.vsassets.io"
+        "https://ms-devlabs.gallery.vsassets.io",
+        "https://phongcao.gallery.vsassets.io"
       };
 
       app.UseCors(builder => { builder.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials(); });
