@@ -1,4 +1,4 @@
-import copy from 'copy-to-clipboard';
+import * as copy from 'copy-to-clipboard';
 import { ActionButton } from 'office-ui-fabric-react/lib/Button';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { ITextField, TextField } from 'office-ui-fabric-react/lib/TextField';

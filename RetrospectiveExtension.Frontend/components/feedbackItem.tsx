@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import moment from 'moment';
+import * as moment from 'moment';
 import { ActionButton, PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
@@ -18,13 +18,13 @@ import { WebApiTeam } from 'azure-devops-extension-api/Core';
 // TODO (enpolat) : import { appInsightsClient, TelemetryEvents } from '../utilities/appInsightsClient';
 import { IColumn, IColumnItem } from './feedbackBoard';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
-import FeedbackColumn, { IFeedbackColumnProps } from './feedbackColumn';
+import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 
 export interface IFeedbackItemProps {
   id: string;
   title: string;
-  columnProps: IFeedbackColumnProps;
+  columnProps: FeedbackColumnProps;
   columns: { [id: string]: IColumn };
   columnIds: string[];
   createdBy?: string;

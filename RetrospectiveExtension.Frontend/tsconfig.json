@@ -1,6 +1,5 @@
 ﻿{
   "compilerOptions": {
-    "esModuleInterop":true,
     "outDir": "./dist",
     "module": "amd",
     "target": "es5",
