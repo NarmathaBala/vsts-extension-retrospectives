@@ -14,7 +14,7 @@ import { ActionButton, IButton } from 'office-ui-fabric-react/lib/Button';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 
-export interface IFeedbackColumnProps {
+export interface  FeedbackColumnProps {
   columns: { [id: string]: IColumn };
   columnIds: string[];
 
@@ -50,10 +50,10 @@ export interface FeedbackColumnState {
   isCarouselHidden: boolean;
 }
 
-export default class FeedbackColumn extends React.Component<IFeedbackColumnProps, FeedbackColumnState> {
+export default class FeedbackColumn extends React.Component< FeedbackColumnProps, FeedbackColumnState> {
   private createFeedbackButton: IButton;
 
-  constructor(props: IFeedbackColumnProps) {
+  constructor(props:  FeedbackColumnProps) {
     super(props);
     this.state = {
       isCarouselHidden: true,
@@ -144,7 +144,7 @@ export default class FeedbackColumn extends React.Component<IFeedbackColumnProps
   };
 
   public static createFeedbackItemProps = (
-    columnProps: IFeedbackColumnProps,
+    columnProps:  FeedbackColumnProps,
     columnItem: IColumnItem,
     isInteractable: boolean): IFeedbackItemProps => {
     return {
