@@ -1,6 +1,6 @@
 import * as SignalR from '@aspnet/signalr';
 import * as jsonwebtoken from 'jsonwebtoken';
-import * as moment from 'moment';
+import moment from 'moment';
 import { getAppToken } from 'azure-devops-extension-sdk';
 
 import Environment from '../config/environment';
@@ -210,7 +210,7 @@ class ReflectBackendService {
       teamId,
       boardId
     );
-  }  
+  }
 
   /**
    * Sends a BroadcastUpdatedItem signal for other instances.

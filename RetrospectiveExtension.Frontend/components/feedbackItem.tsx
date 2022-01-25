@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ActionButton, PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
@@ -18,13 +18,13 @@ import { WebApiTeam } from 'azure-devops-extension-api/Core';
 // TODO (enpolat) : import { appInsightsClient, TelemetryEvents } from '../utilities/appInsightsClient';
 import { IColumn, IColumnItem } from './feedbackBoard';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
-import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
+import FeedbackColumn, { IFeedbackColumnProps } from './feedbackColumn';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 
 export interface IFeedbackItemProps {
   id: string;
   title: string;
-  columnProps: FeedbackColumnProps;
+  columnProps: IFeedbackColumnProps;
   columns: { [id: string]: IColumn };
   columnIds: string[];
   createdBy?: string;
@@ -499,9 +499,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
       this.props.addFeedbackItems(
         this.props.columnId,
-        [newFeedbackItem], 
+        [newFeedbackItem],
         /*shouldBroadcast*/ true,
-        /*newlyCreated*/ false, 
+        /*newlyCreated*/ false,
         /*showAddedAnimation*/ false,
         /*shouldHaveFocus*/ true,
         /*hideFeedbackItems*/ false);
@@ -621,7 +621,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     const isNotGroupedItem = !this.props.groupedItemProps;
     const isMainItem = isNotGroupedItem || this.props.groupedItemProps.isMainItem;
     const groupItemsCount = this.props && this.props.groupedItemProps && this.props.groupedItemProps.groupedCount + 1;
-    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.'); 
+    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.createdBy ? this.props.userIdRef !== getUserIdentity().id : false);
     const curTimerState = this.props.timerState;
 
@@ -724,7 +724,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
                       this.setState({ showVotedAnimation: false });
                     }}>
                     <i className="fas fa-arrow-circle-down" />
-                    
+
                   </button>
                 }
                 {!this.props.newlyCreated && this.props.isInteractable &&

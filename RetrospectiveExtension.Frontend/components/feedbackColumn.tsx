@@ -14,7 +14,7 @@ import { ActionButton, IButton } from 'office-ui-fabric-react/lib/Button';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 
-export interface FeedbackColumnProps {
+export interface IFeedbackColumnProps {
   columns: { [id: string]: IColumn };
   columnIds: string[];
 
@@ -50,10 +50,10 @@ export interface FeedbackColumnState {
   isCarouselHidden: boolean;
 }
 
-export default class FeedbackColumn extends React.Component<FeedbackColumnProps, FeedbackColumnState> {
+export default class FeedbackColumn extends React.Component<IFeedbackColumnProps, FeedbackColumnState> {
   private createFeedbackButton: IButton;
 
-  constructor(props: FeedbackColumnProps) {
+  constructor(props: IFeedbackColumnProps) {
     super(props);
     this.state = {
       isCarouselHidden: true,
@@ -124,8 +124,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
 
   private static moveFeedbackItem = async (
     refreshFeedbackItems: (feedbackItems: IFeedbackItemDocument[], shouldBroadcast: boolean) => void,
-    boardId: string, 
-    feedbackItemId: string, 
+    boardId: string,
+    feedbackItemId: string,
     columnId: string) => {
     const updatedFeedbackItems = await itemDataService.addFeedbackItemAsMainItemToColumn(boardId, feedbackItemId, columnId);
 
@@ -144,7 +144,7 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
   };
 
   public static createFeedbackItemProps = (
-    columnProps: FeedbackColumnProps, 
+    columnProps: IFeedbackColumnProps,
     columnItem: IColumnItem,
     isInteractable: boolean): IFeedbackItemProps => {
     return {
