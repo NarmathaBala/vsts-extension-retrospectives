@@ -24,7 +24,7 @@ import { getUserIdentity } from '../utilities/userIdentityHelper';
 export interface IFeedbackItemProps {
   id: string;
   title: string;
-  columnProps: FeedbackColumnProps;
+  columnProps:FeedbackColumnProps;
   columns: { [id: string]: IColumn };
   columnIds: string[];
   createdBy?: string;

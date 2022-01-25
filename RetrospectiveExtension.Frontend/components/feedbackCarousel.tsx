@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Slider, { Settings } from "react-slick";
-import FeedbackColumn, {  FeedbackColumnProps } from './feedbackColumn';
+import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
 import FeedbackItem from './feedbackItem';
 
@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export interface IFeedbackCarouselProps {
-  feedbackColumnPropsList:  FeedbackColumnProps[];
+  feedbackColumnPropsList: FeedbackColumnProps[];
   isFeedbackAnonymous: boolean;
 }
 
@@ -16,7 +16,7 @@ export interface IFeedbackCarouselState {
 }
 
 export default class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedbackCarouselState>{
-  private renderFeedbackCarouselItems = (feedbackColumnProps:  FeedbackColumnProps) => {
+  private renderFeedbackCarouselItems = (feedbackColumnProps: FeedbackColumnProps) => {
     const columnItems = feedbackColumnProps.columnItems.sort((item1, item2) => item2.feedbackItem.upvotes - item1.feedbackItem.upvotes);
 
     return columnItems
@@ -37,7 +37,7 @@ export default class FeedbackCarousel extends React.Component<IFeedbackCarouselP
       });
   }
 
-  private renderSingleFeedbackCarouselItem = (feedbackColumnProps:  FeedbackColumnProps) => {
+  private renderSingleFeedbackCarouselItem = (feedbackColumnProps: FeedbackColumnProps) => {
     return (
       <div className="feedback-carousel-item">
         <FeedbackItem
