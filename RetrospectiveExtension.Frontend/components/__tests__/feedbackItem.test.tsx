@@ -6,7 +6,7 @@ import { WorkflowPhase } from '../../interfaces/workItem';
 import { IFeedbackItemDocument } from '../../interfaces/feedback';
 import { IColumn, IColumnItem } from '../feedbackBoard';
 import FeedbackItem from '../feedbackItem';
-import FeedbackColumn, FeedbackColumnProps } from '../feedbackColumn';
+import FeedbackColumn, { FeedbackColumnProps } from '../feedbackColumn';
 
 const testTeamId = uuid();
 const testBoardId = uuid();
