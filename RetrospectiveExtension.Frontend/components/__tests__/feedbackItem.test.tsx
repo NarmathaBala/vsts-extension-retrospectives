@@ -91,7 +91,7 @@ const testColumnProps: IFeedbackColumnProps = {
   columnId: testColumnUuidOne,
   accentColor: testColumns.testColumnUuidOne.columnProperties.accentColor,
   iconClass: testColumns.testColumnUuidOne.columnProperties.iconClass,
-  workflowPhase: WorkflowPhase.Vote,
+  workflowPhase: WorkflowPhase.Discuss,
   isDataLoaded: false,
   columnItems: testColumns.testColumnUuidOne.columnItems,
   team: {
