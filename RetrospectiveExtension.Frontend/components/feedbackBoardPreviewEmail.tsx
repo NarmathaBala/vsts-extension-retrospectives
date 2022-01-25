@@ -54,7 +54,7 @@ export default class FeedbackBoardPreviewEmail extends React.Component<IFeedback
           ariaLive="assertive" />
       );
     }
-
+    
     return (
       <>
         <ActionButton className="copy-email-button"
