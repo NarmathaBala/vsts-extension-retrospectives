@@ -6,6 +6,7 @@ The Retrospectives Azure DevOps extension is developed in React, using Typescrip
 
 - [Background](#background)
 - [To contribute](#to-contribute)
+- [Considerations](#considerations)
 - [Development on Windows](#development-on-windows)
 - [Contribute](#contribute)
 - [Storage](#storage)
@@ -21,6 +22,23 @@ Retrospectives is an Azure DevOps extension. Visit [this link](https://docs.micr
 2. Create a new local branch from the 'master' branch. Follow the 'users/{alias}/{nameofyourbranch}' naming convention for your branch.
 3. Publish the newly created branch to the Retrospectives repo. Use this branch as your working branch.
 4. Once you are ready to check-in, create a pull request against the 'master' branch. Link the Bug/Task that you are fixing/adding to the pull request. Reviewers will be added automatically.
+
+## Considerations
+
+Provided in this repo is the environement setup script. Running `env_setup.sh` spins up inidivudal
+instances of the different Azure components for this extension. If you do not have all the packages
+and utilities installed already, it can slow down your development :(
+
+*The easiest solution?* This repo provides a Dockerfile and a devcontainer setup. This creates a simple,
+containerized development environment for contribuing to this extension. Follow along with [this video](https://www.youtube.com/watch?v=GwsscfcAjg8)
+by @polatengin that talks about the different ways to confirgure your environment.
+
+However, if you choose to not run on a container make sure you have the following installed ahead of
+time for seamless development:
+
+* Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+* dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+* the `zip` CLI tool - via `brew install zip`, `apt-get install zip` in a unix-flavored environment
 
 ## Development on Windows
 
@@ -104,7 +122,7 @@ Reference: [Azure DevOps Extension Hot Reload and Debug](https://github.com/micr
   ```
 
 - In the root of the project, create a folder named `.vscode`. In there, create a file named `launch.json`, which will help to set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Inside of this file, you will add a path mapping with `url` set to `webpack:///` and have the path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Fiefox every time you debug.
-  
+
   ```json
   {
     "version": "0.2.0",
@@ -153,7 +171,7 @@ deploy a single backend to support multiple developer test extensions.
 
 1. Copy `/deploy/.env.template` to `/deploy/.env` and make the following
 changes:
-   - Add the Service Principal values used by the `env_setup.sh` script. 
+   - Add the Service Principal values used by the `env_setup.sh` script.
    [Instructions on how to create a Service Principal](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli#password-based-authentication).
    - Add the `RESOURCE_NAME_SUFFIX` value. This will be used for naming
    all Azure resources including the App Service name - `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
