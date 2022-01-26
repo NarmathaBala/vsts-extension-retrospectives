@@ -40,19 +40,19 @@ The extension can be installed from [Azure DevOps Marketplace](https://marketpla
   ![Group](https://github.com/microsoft/vsts-extension-retrospectives/raw/master/RetrospectiveExtension.Frontend/images/usage/createretrospective.png)
 
   ![Group](https://github.com/microsoft/vsts-extension-retrospectives/raw/master/RetrospectiveExtension.Frontend/images/usage/createretrospective2.png)
-  When you select **New Board** or **Create new baord** as above, you will see the following dialog: 
+  When you select **New Board** or **Create new baord** as above, you will see the following dialog:
   ![Group](https://github.com/microsoft/vsts-extension-retrospectives/raw/master/RetrospectiveExtension.Frontend/images/usage/createretrospectivewithmaxvotes.png)
 </br>
   Please enter the appropriate information:
-   - **Retrospective Title**: Enter appropriate text 
+   - **Retrospective Title**: Enter appropriate text
    - **Make all feedback anonymous**: When you select this checkbox, user identities for the item creators will not be displayed
    - **Only show feedback after Collect phase**: When selected, users cannot see other users input till the Collect phase is completed by moving to another phase
-   - **Max Votes per User (Current 5)**: This options lets the board creator control how many total votes (across all columns) that each user can have. Default is 5. While this option can be updated through the _Edit retrospective_ option, please note that this update cannot decrement votes already in place. 
+   - **Max Votes per User (Current 5)**: This options lets the board creator control how many total votes (across all columns) that each user can have. Default is 5. While this option can be updated through the _Edit retrospective_ option, please note that this update cannot decrement votes already in place.
    - **Colums**: You can either Apply from a preselected templates or individually select and configure columns
   </br> </br>Retrospective Title is the minimum 'required' information (other fields can stay at default as needed). Ones the title is provided, the [Save] button is enabled. Save the retrospective using the [Save] button.
 
   ![Group](https://github.com/microsoft/vsts-extension-retrospectives/raw/master/RetrospectiveExtension.Frontend/images/usage/navigatetoretrospective.png)
-  Once you have created the retrospective boards and you want to select a board different from the currently displayed board, click on the board name (e.g. Demo board in the image) and select the desired board. You can use the search box to find the appropriate boards if you have a large number of boards. 
+  Once you have created the retrospective boards and you want to select a board different from the currently displayed board, click on the board name (e.g. Demo board in the image) and select the desired board. You can use the search box to find the appropriate boards if you have a large number of boards.
 
 4. If you created a new retrospective in step 3, give your retrospective an appropriate name and click 'Save'. This will create and navigate you to your newly created retrospective.
 
@@ -90,4 +90,4 @@ See [Contributing Guideline](./CONTRIBUTING.md)
 
 ## License
 
-Copyright (c) Microsoft Corporation. All rights reserved.
+Copyright (c) Microsoft Corporation. All rights reserved.#Test
