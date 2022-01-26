@@ -414,7 +414,6 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     }
   }
 
-
   private timerSwich =  async (feedbackItemId: string) =>
   {
     let updatedFeedbackItem;
@@ -500,9 +499,9 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
 
       this.props.addFeedbackItems(
         this.props.columnId,
-        [newFeedbackItem], 
+        [newFeedbackItem],
         /*shouldBroadcast*/ true,
-        /*newlyCreated*/ false, 
+        /*newlyCreated*/ false,
         /*showAddedAnimation*/ false,
         /*shouldHaveFocus*/ true,
         /*hideFeedbackItems*/ false);
@@ -622,7 +621,7 @@ export default class FeedbackItem extends React.Component<IFeedbackItemProps, IF
     const isNotGroupedItem = !this.props.groupedItemProps;
     const isMainItem = isNotGroupedItem || this.props.groupedItemProps.isMainItem;
     const groupItemsCount = this.props && this.props.groupedItemProps && this.props.groupedItemProps.groupedCount + 1;
-    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.'); 
+    const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.createdBy ? this.props.userIdRef !== getUserIdentity().id : false);
     const curTimerState = this.props.timerState;
 

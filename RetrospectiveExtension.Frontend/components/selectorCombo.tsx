@@ -258,11 +258,11 @@ export default class SelectorCombo<T> extends React.Component<ISelectorComboProp
       selectorList.selectorListItems.map(selectorListItem => {
         if (selectorListItem && selectorListItem.items) {
           itemCount += selectorListItem.items.length;
-        } 
+        }
       });
 
       searchResultsAriaLabel = itemCount === 1
-        ? 'Found 1 result.' 
+        ? 'Found 1 result.'
         :'Found ' + itemCount + ' results.';
     }
 

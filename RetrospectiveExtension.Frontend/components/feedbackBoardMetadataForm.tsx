@@ -178,7 +178,6 @@ console.log(this.state);
     });
   }
 
-
   private showDeleteColumnConfirmationDialog = () => {
     this.setState({
       isDeleteColumnConfirmationDialogHidden: false,

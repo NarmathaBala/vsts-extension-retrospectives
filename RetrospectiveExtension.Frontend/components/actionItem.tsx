@@ -157,13 +157,13 @@ export default class ActionItem extends React.Component<ActionItemProps, ActionI
 
     return (
       <DocumentCard
-        key={this.props.actionItem.id + 'card'} 
+        key={this.props.actionItem.id + 'card'}
         className={`related-task-sub-card ${resolvedBorderRight}`}
         type={DocumentCardType.compact}>
         <DocumentCardPreview key={this.props.actionItem.id + 'preview'} {...iconProps} />
         <div
           ref={(element: HTMLElement) => this.openWorkItemButton = element}
-          key={this.props.actionItem.id + 'details'} 
+          key={this.props.actionItem.id + 'details'}
           className="ms-DocumentCard-details"
           tabIndex={0}
           role="button"

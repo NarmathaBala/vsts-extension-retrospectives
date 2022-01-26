@@ -165,7 +165,7 @@ export default class ExtensionSettingsMenu extends React.Component<IExtensionSet
                   title={extensionSettingsMenuItem.title}
                 >
                   <span className="ms-Button-icon"><i className={"fas fa-" + extensionSettingsMenuItem.iconProps}></i></span>&nbsp;
-                  <span className="ms-Button-label">{extensionSettingsMenuItem.text}</span> 
+                  <span className="ms-Button-label">{extensionSettingsMenuItem.text}</span>
                 </ActionButton>
               )
             }
@@ -180,7 +180,7 @@ export default class ExtensionSettingsMenu extends React.Component<IExtensionSet
           dialogContentProps={{
             type: DialogType.close,
             title: 'Clear Visit History',
-            subText: 'This extension maintains records of the teams and boards you visited. ' + 
+            subText: 'This extension maintains records of the teams and boards you visited. ' +
             'Clearing visit history means that the next time you use the extension, ' +
             'you will not be automatically directed to the your last visited board.',
           }}

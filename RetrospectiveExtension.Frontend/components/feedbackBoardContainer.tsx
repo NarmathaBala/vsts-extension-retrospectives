@@ -620,8 +620,8 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
       });
     }
 
-    // TODO: 
-    // Show error message in case there's an unexpected case of a chosen team not found 
+    // TODO:
+    // Show error message in case there's an unexpected case of a chosen team not found
     // instead of showing the loading indefinitely.
   }
 
@@ -877,7 +877,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
   }
 
   private updateBoardAndBroadcast = (updatedBoard: IFeedbackBoardDocument) => {
-    if (!updatedBoard) { 
+    if (!updatedBoard) {
       this.handleBoardDeleted(this.state.currentTeam.id, this.state.currentBoard.id);
     }
 
@@ -1217,7 +1217,7 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                             className="toggle-carousel-button"
                             onClick={() => { this.setState({ isIncludeTeamEffectivenessMeasurementDialogHidden: false }); }}>
                             <span className="ms-Button-icon"><i className="fas fa-chart-line"></i></span>&nbsp;
-                            <span className="ms-Button-label">Measure Team Effectiveness</span> 
+                            <span className="ms-Button-label">Measure Team Effectiveness</span>
                           </ActionButton>
                         </TooltipHost>
                       </>
@@ -1374,8 +1374,8 @@ export default class FeedbackBoardContainer extends React.Component<FeedbackBoar
                       isCarouselDialogHidden={this.state.isCarouselDialogHidden}
                       hideCarouselDialog={this.hideCarouselDialog}
                       isAnonymous={this.state.currentBoard.isAnonymous ? this.state.currentBoard.isAnonymous : false}
-                      hideFeedbackItems={this.state.currentBoard.shouldShowFeedbackAfterCollect ? 
-                        this.state.currentBoard.activePhase == WorkflowPhase.Collect && this.state.currentBoard.shouldShowFeedbackAfterCollect : 
+                      hideFeedbackItems={this.state.currentBoard.shouldShowFeedbackAfterCollect ?
+                        this.state.currentBoard.activePhase == WorkflowPhase.Collect && this.state.currentBoard.shouldShowFeedbackAfterCollect :
                         false
                       }
                       userId={this.state.currentUserId}
