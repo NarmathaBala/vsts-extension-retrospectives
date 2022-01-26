@@ -20,6 +20,8 @@ on:
 jobs:
   build:
 
+    name: Backend - Build and Test
+
     strategy:
       fail-fast: false
 
