@@ -245,7 +245,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
       onKeyPress: (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
           this.expandSummaryRow(state, rowInfo, instance);
-        }s
+        }
       },
     };
   };
