@@ -43,5 +43,6 @@ jobs:
       if: success() || failure()
       with:
         name: JEST Tests  
+        working-directory: 'RetrospectiveExtension.Frontend'
         path: jest-junit.xml
         reporter: jest-junit
