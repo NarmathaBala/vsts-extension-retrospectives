@@ -124,8 +124,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
 
   private static moveFeedbackItem = async (
     refreshFeedbackItems: (feedbackItems: IFeedbackItemDocument[], shouldBroadcast: boolean) => void,
-    boardId: string,
-    feedbackItemId: string,
+    boardId: string, 
+    feedbackItemId: string, 
     columnId: string) => {
     const updatedFeedbackItems = await itemDataService.addFeedbackItemAsMainItemToColumn(boardId, feedbackItemId, columnId);
 
@@ -144,7 +144,7 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
   };
 
   public static createFeedbackItemProps = (
-    columnProps: FeedbackColumnProps,
+    columnProps: FeedbackColumnProps, 
     columnItem: IColumnItem,
     isInteractable: boolean): IFeedbackItemProps => {
     return {
