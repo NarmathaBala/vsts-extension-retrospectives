@@ -144,7 +144,7 @@ export default class ActionItem extends React.Component<ActionItemProps, ActionI
   }
 
   public render() {
-    const workItemType: any = this.props.allWorkItemTypes.find(wit => wit.name === this.props.actionItem.fields['System.WorkItemType']);
+    const workItemType: WorkItemType = this.props.allWorkItemTypes.find(wit => wit.name === this.props.actionItem.fields['System.WorkItemType']);
     const iconProps: IDocumentCardPreviewProps = this.getWorkItemTypeIconProps(workItemType);
 
     // Explicitly cast, since the returned contract contains states, but the interface defined does not

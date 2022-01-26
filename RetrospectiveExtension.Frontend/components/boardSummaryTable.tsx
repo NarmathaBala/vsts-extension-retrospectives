@@ -222,6 +222,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
     />);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private expandSummaryRow = (state: any, rowInfo: any, instance: any) => {
     const { expanded } = state;
     const path = rowInfo.nestingPath[0];
@@ -235,6 +236,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getTrProps = (state: any, rowInfo: any, col: any, instance: any) => {
     return {
       onClick: () => {
@@ -250,6 +252,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
     };
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getTdProps = (state: any, rowInfo: any, col: any) => {
     const hasPendingItems: boolean =
       (rowInfo && rowInfo.original && rowInfo.original.pendingWorkItemsCount && rowInfo.original.pendingWorkItemsCount > 0) ?
@@ -271,6 +274,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
     };
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getCustomTbodyComponent = (props: any) => (
     <div {...props} className={classNames("rt-tbody", props.className || [])}>
       {props.children}
@@ -293,6 +297,7 @@ export default class BoardSummaryTable extends React.Component<IBoardSummaryTabl
             {
               Header: 'Created Date',
               accessor: 'createdDate',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               Cell: (row: any) => {
                 return (
                   new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(row.original.createdDate)

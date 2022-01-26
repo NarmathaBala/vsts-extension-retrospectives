@@ -173,7 +173,7 @@ class ItemDataService {
   /**
    * flip the timer state.
    */
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public flipTimer = async (boardId: string, feedbackItemId: string, timerid: any): Promise<IFeedbackItemDocument> =>
   {
     const feedbackItem: IFeedbackItemDocument = await this.getFeedbackItem(boardId, feedbackItemId);

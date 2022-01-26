@@ -33,13 +33,13 @@ export interface ISelectorListItemHeader {
   title: string;
 }
 
-export interface ISelectorComboState<T> {
+export interface ISelectorComboState {
   currentFilterText: string;
   isSelectorCalloutVisible: boolean;
   isSelectorDialogHidden: boolean;
 }
 
-export default class SelectorCombo<T> extends React.Component<ISelectorComboProps<T>, ISelectorComboState<T>>  {
+export default class SelectorCombo<T> extends React.Component<ISelectorComboProps<T>, ISelectorComboState>  {
   private selectorButton: HTMLElement | null;
 
   constructor(props: ISelectorComboProps<T>) {

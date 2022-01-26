@@ -109,6 +109,7 @@ export default class FeedbackBoardMetadataForm extends React.Component<IFeedback
 
   private maxColumnCount = 5;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public handleInputChange = (event: any, newValue: string) => {
     this.setState({
       title: newValue,
@@ -116,6 +117,7 @@ export default class FeedbackBoardMetadataForm extends React.Component<IFeedback
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public handleFormSubmit = async (event: any) => {
     event.preventDefault();
     event.stopPropagation();

@@ -37,6 +37,7 @@ interface IIconProps {
 }
 
 interface IActionItemsTableProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
   icon: IIconProps;
   title: string;
