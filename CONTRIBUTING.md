@@ -103,7 +103,7 @@ Reference: [Azure DevOps Extension Hot Reload and Debug](https://github.com/micr
   };
   ```
 
-- In the root of the project, create a folder named `.vscode`. In there, create a file named `launch.json`, which will help to set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Inside of this file, you will add a path mapping with `url` set to `webpack:///` and have the path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Fiefox every time you debug.
+- In the root of the project, create a folder named `.vscode`. In there, create a file named `launch.json`, which will help to set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Inside of this file, you will add a path mapping with `url` set to `webpack:///` and have the path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Firefox every time you debug.
 
   ```json
   {
@@ -182,7 +182,7 @@ CollaborationStateServiceUrl value to the App Service URL -
 
 #### Considerations for the Backend
 
-Provided in this repo is the environement setup script. Running `env_setup.sh` spins up individual
+Provided in this repo is the environment setup script. Running `env_setup.sh` spins up individual
 instances of the different Azure components for this extension. This is ***not*** required for
 contributing to this extension, but can be helpful if you want certain debugging options available
 to you.
