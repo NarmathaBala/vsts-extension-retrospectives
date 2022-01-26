@@ -6,7 +6,6 @@ The Retrospectives Azure DevOps extension is developed in React, using Typescrip
 
 - [Background](#background)
 - [To contribute](#to-contribute)
-- [Considerations](#considerations)
 - [Development on Windows](#development-on-windows)
 - [Contribute](#contribute)
 - [Storage](#storage)
@@ -22,23 +21,6 @@ Retrospectives is an Azure DevOps extension. Visit [this link](https://docs.micr
 2. Create a new local branch from the 'master' branch. Follow the 'users/{alias}/{nameofyourbranch}' naming convention for your branch.
 3. Publish the newly created branch to the Retrospectives repo. Use this branch as your working branch.
 4. Once you are ready to check-in, create a pull request against the 'master' branch. Link the Bug/Task that you are fixing/adding to the pull request. Reviewers will be added automatically.
-
-## Considerations
-
-Provided in this repo is the environement setup script. Running `env_setup.sh` spins up inidivudal
-instances of the different Azure components for this extension. If you do not have all the packages
-and utilities installed already, it can slow down your development :(
-
-*The easiest solution?* This repo provides a Dockerfile and a devcontainer setup. This creates a simple,
-containerized development environment for contribuing to this extension. Follow along with [this video](https://www.youtube.com/watch?v=GwsscfcAjg8)
-by @polatengin that talks about the different ways to confirgure your environment.
-
-However, if you choose to not run on a container make sure you have the following installed ahead of
-time for seamless development:
-
-* Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-* dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
-* the `zip` CLI tool - via `brew install zip`, `apt-get install zip` in a unix-flavored environment
 
 ## Development on Windows
 
@@ -162,6 +144,8 @@ The Retrospectives tool uses the [Azure DevOps data service](https://docs.micros
 
 ### Backend
 
+#### Setup
+
 The Retrospectives tool uses the [Azure SignalR service](https://azure.microsoft.com/en-us/services/signalr-service/) to add real time support. The backend codebase can be found [here](https://github.com/microsoft/vsts-extension-retrospectives/tree/master/RetrospectiveExtension.Backend).
 
 To enable real time updates from your test extension you will need to deploy
@@ -176,7 +160,7 @@ changes:
    - Add the `RESOURCE_NAME_SUFFIX` value. This will be used for naming
    all Azure resources including the App Service name - `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
    **Note:** The app name must be globally unique so select something accordingly.
-   - Add the `LOCATION `value i.e. "eastus", "westus", etc.
+   - Add the `LOCATION`value i.e. "eastus", "westus", etc.
 1. Copy `/allowed_origins.json.template` to `/allowed_origins.json` and replace
 the `<publisher id>` with your publisher id. This id uniquely identifies your
 publisher in the Visual Studio Marketplace. If you are part of a team working
@@ -195,6 +179,24 @@ contains the App Service, App Service Plan and SignalR resources.
 1. You will need to update the `RetrospectiveExtension.FrontEnd/config/environment.tsx`
 CollaborationStateServiceUrl value to the App Service URL -
 `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net` and redeploy the extension.
+
+#### Considerations for the Backend
+
+Provided in this repo is the environement setup script. Running `env_setup.sh` spins up individual
+instances of the different Azure components for this extension. This is ***not*** required for
+contributing to this extension, but can be helpful if you want certain debugging options available
+to you.
+
+There's a Dockerfile and a devcontainer setup available. This creates a simple, containerized
+development environment that. Follow along with [this video](https://www.youtube.com/watch?v=GwsscfcAjg8)
+by @polatengin that talks about the different configurations.
+
+However, if you choose to not run on a container, but want to run the `env_setup.sh` script, make sure
+you have the following installed ahead of time for a seamless experience:
+
+- Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+- the `zip` CLI tool - via `brew install zip` or `apt-get install zip` in a unix-flavored environment
 
 ## Style Guidelines for Backend Project
 
