@@ -103,7 +103,6 @@
     }
   },
   "jest-junit": {
-    "suiteName": "jest tests",
     "outputDirectory": "reports",
     "outputName": "jest-junit.xml",
     "ancestorSeparator": " › ",
