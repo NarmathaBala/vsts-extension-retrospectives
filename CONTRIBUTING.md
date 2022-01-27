@@ -144,14 +144,26 @@ The Retrospectives tool uses the [Azure DevOps data service](https://docs.micros
 
 ### Backend
 
-#### Setup
+#### Overview
 
 The Retrospectives tool uses the [Azure SignalR service](https://azure.microsoft.com/en-us/services/signalr-service/) to add real time support. The backend codebase can be found [here](https://github.com/microsoft/vsts-extension-retrospectives/tree/master/RetrospectiveExtension.Backend).
 
-To enable real time updates from your test extension you will need to deploy
-the backend to Azure specifying your publisher id and the unique key of your
-extension. **Note:** If you are part of a team working on the retro tool you can
-deploy a single backend to support multiple developer test extensions.
+To enable real time updates from your test extension you will need to deploy the backend to Azure
+specifying your publisher id and the unique key of your extension. **Note:**
+
+- This setup is ***not*** required for contributing to this extension, but can be helpful if you want
+certain debugging options available to you.
+- If you are part of a team working on the retro tool you can deploy a single backend to support multiple developer test extensions.
+
+#### Setup
+
+Before starting, ensure these dependencies are installed:
+
+- Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+- the `zip` CLI tool - via `brew install zip` or `apt-get install zip` in a unix-flavored environment
+
+To setup:
 
 1. Copy `/deploy/.env.template` to `/deploy/.env` and make the following
 changes:
@@ -183,20 +195,8 @@ CollaborationStateServiceUrl value to the App Service URL -
 #### Considerations for the Backend
 
 Provided in this repo is the environment setup script. Running `env_setup.sh` spins up individual
-instances of the different Azure components for this extension. This is ***not*** required for
-contributing to this extension, but can be helpful if you want certain debugging options available
-to you.
+instances of the different Azure components for this extension.
 
-There's a Dockerfile and a devcontainer setup available. This creates a simple, containerized
-development environment that. Follow along with [this video](https://www.youtube.com/watch?v=GwsscfcAjg8)
-by @polatengin that talks about the different configurations.
-
-However, if you choose to not run on a container, but want to run the `env_setup.sh` script, make sure
-you have the following installed ahead of time for a seamless experience:
-
-- Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
-- dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
-- the `zip` CLI tool - via `brew install zip` or `apt-get install zip` in a unix-flavored environment
 
 ## Style Guidelines for Backend Project
 
