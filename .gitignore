@@ -267,6 +267,6 @@ RetrospectiveExtension.FrontEnd/vss-extension.dev.json
 allowed_origins.json
 dev_certs.json
 
-#Jest test report
+# Jest test report
 RetrospectiveExtension.FrontEnd/reports/
 RetrospectiveExtension.FrontEnd/coverage/
