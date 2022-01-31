@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 namespace CollaborationStateService
 {
@@ -87,10 +89,16 @@ namespace CollaborationStateService
 
       services.AddSignalR().AddAzureSignalR(Configuration.GetValue<string>("Azure:SignalR:ConnectionString"));
       services.Configure<AppInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
+
+      services.AddLogging(builder => {
+        //  builder.AddApplicationInsights();
+           builder.AddFilter<ApplicationInsightsLoggerProvider>("",LogLevel.Information);
+         builder.AddConsole();
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env,  ILogger<Startup> logger)
     {
       // Retrieve allowed origins from the application settings.
       IConfigurationSection allowedOriginData = Configuration.GetSection("AllowedOrigin");
@@ -115,6 +123,7 @@ namespace CollaborationStateService
       {
           endpoints.MapGet("/health", async context =>
           {
+              logger.LogInformation("Received health request");
               await context.Response.WriteAsync("App Running....");
           });
       });
