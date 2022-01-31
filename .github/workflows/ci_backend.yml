@@ -44,6 +44,15 @@ jobs:
 
       - if: steps.changes.outputs.src == 'true'
         run: |
-          dotnet test
+          dotnet test --logger "trx;LogFileName=test-results.trx"
         name: Test
         working-directory: 'RetrospectiveExtension.Backend.Tests'
+
+      - if: steps.changes.outputs.src == 'true'
+        name: Upload backend test report
+        uses: dorny/test-reporter@v1.5.0
+        with:
+          name: Dotnet Tests
+          path: TestResults/test-results.trx
+          reporter: dotnet-trx
+          working-directory: 'RetrospectiveExtension.Backend.Tests'
