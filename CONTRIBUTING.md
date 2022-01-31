@@ -192,12 +192,6 @@ contains the App Service, App Service Plan and SignalR resources.
 CollaborationStateServiceUrl value to the App Service URL -
 `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net` and redeploy the extension.
 
-#### Considerations for the Backend
-
-Provided in this repo is the environment setup script. Running `env_setup.sh` spins up individual
-instances of the different Azure components for this extension.
-
-
 ## Style Guidelines for Backend Project
 
 Follow the coding guidelines here - [C# Coding Conventions (C# Programming Guide)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions).
