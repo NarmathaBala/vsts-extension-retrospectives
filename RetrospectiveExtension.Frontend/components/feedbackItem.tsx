@@ -18,10 +18,10 @@ import { WebApiTeam } from 'azure-devops-extension-api/Core';
 // TODO (enpolat) : import { appInsightsClient, TelemetryEvents } from '../utilities/appInsightsClient';
 import { IColumn, IColumnItem } from './feedbackBoard';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
-import FeedbackColumn, { FeedbackColumnProps, FeedbackColumnHelper } from './feedbackColumn';
+import { FeedbackColumnProps, FeedbackColumnHelper } from './feedbackColumn';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import { reactPlugin, appInsights } from '../utilities/external/telemetryClient';
+import { reactPlugin } from '../utilities/external/telemetryClient';
 
 export interface IFeedbackItemProps {
   id: string;
@@ -528,8 +528,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
       // TODO: Show pop-up indicating that a change related to work item(s) failed. This can be a common scenario due to race condition.
     }
   }
-
-  
 
   private handleFeedbackItemSearchInputChange = async (event?: React.ChangeEvent<HTMLInputElement>, searchTerm?: string) => {
     if (!searchTerm || !searchTerm.trim()) {

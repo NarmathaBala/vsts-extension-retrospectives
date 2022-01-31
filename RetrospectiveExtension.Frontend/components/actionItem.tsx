@@ -18,7 +18,7 @@ import { IFeedbackItemDocument } from '../interfaces/feedback';
 import { IconType } from 'office-ui-fabric-react/lib/Icon';
 import Dialog, { DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import { reactPlugin, appInsights } from '../utilities/external/telemetryClient';
+import { reactPlugin } from '../utilities/external/telemetryClient';
 
 export interface ActionItemProps extends IButtonProps {
   feedbackItemId: string;

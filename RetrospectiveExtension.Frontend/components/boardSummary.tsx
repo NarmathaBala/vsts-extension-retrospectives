@@ -15,7 +15,7 @@ import {
   IColumn,
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import { reactPlugin, appInsights } from '../utilities/external/telemetryClient';
+import { reactPlugin } from '../utilities/external/telemetryClient';
 
 export interface IBoardSummaryProps {
   actionItems: WorkItem[];
