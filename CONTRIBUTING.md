@@ -38,11 +38,20 @@ Clone the repository to your local machine from the Azure DevOps endpoint.
 
 - Using Powershell, navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install`. This will download all the dependent packages listed in 'package.json'.
 
+- Copy the file `RetrospectiveExtension.Frontend\config\environment.tsx.template` into `RetrospectiveExtension.Frontend\config\environment.tsx` and update the fields
+
+```json
+{
+   CollaborationStateServiceUrl : "https://my-backend-service.com", // change this to the deployed backend service
+   AppInsightsInstrumentK       : "my_instrumentation_key" // put Instrumentation key here
+}
+```
+
 - Run `npm run build` to build the project. Refer to the 'scripts' section in 'package.json' for other commands.
 
 - To test your changes, you will need to publish a new extension under a new Azure DevOps publisher account. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts) on publishing extensions. You can publish it to any test Azure DevOps organization that you are an admin of (As a Microsoft employee, you can create a new test organization from your Azure DevOps profile page). Currently this is the only way to test the extension.
 
-- Update the 'vss-extension-dev.json' file with the new publisher that you setup. Also update the name and id fields.
+- Copy the file `vss-extension-dev.json.template` into `vss-extension-dev.json` file with the new publisher that you setup. Also update the name and id fields.
 
 ```json
 {
@@ -153,7 +162,7 @@ deploy a single backend to support multiple developer test extensions.
 
 1. Copy `/deploy/.env.template` to `/deploy/.env` and make the following
 changes:
-   - Add the Service Principal values used by the `env_setup.sh` script. 
+   - Add the Service Principal values used by the `env_setup.sh` script.
    [Instructions on how to create a Service Principal](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli#password-based-authentication).
    - Add the `RESOURCE_NAME_SUFFIX` value. This will be used for naming
    all Azure resources including the App Service name - `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
@@ -174,9 +183,11 @@ secrets. Remember to increment the name index to add additional secrets.
 1. Once the script completes, it will output the url of the backend service. You can navigate to the [Azure Portal](https://portal.azure.com)
 and validate that the `rg-<RESOURCE_NAME_SUFFIX>` resource group exists and
 contains the App Service, App Service Plan and SignalR resources.
-1. You will need to update the `RetrospectiveExtension.FrontEnd/config/environment.tsx`
-CollaborationStateServiceUrl value to the App Service URL -
-`https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net` and redeploy the extension.
+1. Update the `RetrospectiveExtension.FrontEnd/config/environment.tsx` to reflect changes to:
+   - `CollaborationStateServiceUrl` value to the App Service URL -
+`https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
+   - `AppInsightsInstrumentKey` value to Application Insights' Instrumentation Key for the resource `ai-<RESOURCE_NAME_SUFFIX>`.
+1. After updating the above values redeploy the extension.
 
 ## Style Guidelines for Backend Project
 
