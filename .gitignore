@@ -272,4 +272,4 @@ RetrospectiveExtension.FrontEnd/reports/
 RetrospectiveExtension.FrontEnd/coverage/
 
 # Dotnet test results
-RetrospectiveExtension.Backend.Tests/TestResult
+RetrospectiveExtension.Backend.Tests/TestResults
