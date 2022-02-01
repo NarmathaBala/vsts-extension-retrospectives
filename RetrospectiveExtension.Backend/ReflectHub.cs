@@ -30,6 +30,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the deleted Reflect board.</param>
         public Task BroadcastDeletedBoard(string teamId, string reflectBoardId)
         {
+            _logger.LogInformation($"BroadcastDeletedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete board");
             return Clients.Others.SendAsync("receiveDeletedBoard", teamId, reflectBoardId);
         }
@@ -42,6 +43,7 @@ namespace ReflectBackend
         /// <param name="feedbackItemId">The id of the new feedback item.</param>
         public Task BroadcastDeletedItem(string reflectBoardId, string columnId, string feedbackItemId)
         {
+            _logger.LogInformation($"BroadcastDeletedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete item");
             return Clients.OthersInGroup(reflectBoardId).SendAsync("receiveDeletedItem", columnId, feedbackItemId);
         }
@@ -53,6 +55,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the new Reflect board.</param>
         public Task BroadcastNewBoard(string teamId, string reflectBoardId)
         {
+            _logger.LogInformation($"BroadcastNewBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting new board");
             return Clients.Others.SendAsync("receiveNewBoard", teamId, reflectBoardId);
         }
@@ -77,6 +80,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the reflect board.</param>
         public Task BroadcastUpdatedBoard(string teamId, string reflectBoardId)
         {
+            _logger.LogInformation($"BroadcastUpdatedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting board update");
             return Clients.Others.SendAsync("receiveUpdatedBoard", teamId, reflectBoardId);
         }
@@ -89,6 +93,7 @@ namespace ReflectBackend
         /// <param name="feedbackItemId">The id of the new feedback item.</param>
         public Task BroadcastUpdatedItem(string reflectBoardId, string columnId, string feedbackItemId)
         {
+            _logger.LogInformation($"BroadcastUpdatedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting item update");
             return Clients.OthersInGroup(reflectBoardId).SendAsync("receiveUpdatedItem", columnId, feedbackItemId);
         }
@@ -99,6 +104,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the reflect board.</param>
         public Task JoinReflectBoardGroup(string reflectBoardId)
         {
+            _logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Adding client to board");
             return Groups.AddToGroupAsync(Context.ConnectionId, reflectBoardId);
         }
@@ -109,7 +115,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the reflect board.</param>
         public Task LeaveReflectBoardGroup(string reflectBoardId)
         {
-            _logger.LogInformation($"LeaveReflect connectionID: {Context.ConnectionId}");
+            _logger.LogInformation($"LeaveReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Removing client from board");
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, reflectBoardId);
         }
@@ -124,14 +130,14 @@ namespace ReflectBackend
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _logger.LogInformation($"OnDisconnected connectionID: {Context.ConnectionId}");
+            _logger.LogInformation($"OnDisconnectedAsync connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Removing client from board");
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
         }
         public override Task OnConnectedAsync()
         {
-           _logger.LogInformation($"Established Connection with id {Context.ConnectionId}");
+            _logger.LogInformation($"Established Connection id {Context.ConnectionId}");
             return base.OnConnectedAsync();
         }
     }
