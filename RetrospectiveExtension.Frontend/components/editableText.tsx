@@ -1,7 +1,5 @@
 ﻿import * as React from 'react';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import { withAITracking } from '@microsoft/applicationinsights-react-js';
-import { reactPlugin } from '../utilities/external/telemetryClient';
 
 export interface EditableTextProps {
   isDisabled?: boolean;
@@ -18,7 +16,7 @@ export interface EditableTextState {
   hasErrors: boolean;
 }
 
-class EditableText extends React.Component<EditableTextProps, EditableTextState> {
+export default class EditableText extends React.Component<EditableTextProps, EditableTextState> {
   constructor(props: EditableTextProps) {
     super(props);
 
@@ -188,7 +186,7 @@ class EditableText extends React.Component<EditableTextProps, EditableTextState>
           tabIndex={0}
           onKeyDown={this.props.isDisabled ? () => { } : this.handleEditKeyDown}
           onClick={this.props.isDisabled ? () => { } : this.handleEdit}
-          aria-label={'Feedback title is ' + this.props.text + '. Click to edit.'}
+          aria-label={'Feedback title is ' + (this.props.isDisabled ? 'obscured during collection.' : this.props.text + '. Click to edit.')}
           aria-required={true}>
           {this.props.text}
         </p>
@@ -196,5 +194,3 @@ class EditableText extends React.Component<EditableTextProps, EditableTextState>
     );
   }
 }
-
-export default withAITracking(reactPlugin, EditableText);

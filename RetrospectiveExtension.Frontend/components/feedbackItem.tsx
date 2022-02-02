@@ -773,6 +773,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   title={this.props.title}
                   isChangeEventRequired={false}
                   onSave={this.onDocumentCardTitleSave}
+                  isDisabled={hideFeedbackItems}
                 />}
                 {!this.props.isInteractable &&
                   <div
