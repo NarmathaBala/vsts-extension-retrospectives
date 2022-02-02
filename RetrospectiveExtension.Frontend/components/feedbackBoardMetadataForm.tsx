@@ -138,7 +138,6 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
 
       return;
     }
-    console.log(this.state);
     this.props.onFormSubmit(
       this.state.title.trim(),
       this.state.maxVotesPerUser,
