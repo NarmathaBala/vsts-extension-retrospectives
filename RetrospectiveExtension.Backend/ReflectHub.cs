@@ -8,13 +8,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CollaborationStateService.Configuration;
 using static ReflectBackend.ReflectBackendSignals;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
 namespace ReflectBackend
 {
-
-    [DataContract]
     public enum ReflectBackendSignals
     {
         receiveNewItem,
@@ -33,7 +29,7 @@ namespace ReflectBackend
 
         public ReflectHub(ILogger<ReflectHub> logger, IOptions<AppInsightsSettings> options)
         {
-            _logger = logger;
+            this._logger = logger;
             this._insights = new TelemetryClient(new TelemetryConfiguration(options.Value.InstrumentationKey));
         }
 
@@ -46,6 +42,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastDeletedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete board");
+
             return Clients.Others.SendAsync(receiveDeletedBoard.ToString(), teamId, reflectBoardId);
         }
 
@@ -59,6 +56,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastDeletedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete item");
+
             return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveDeletedItem.ToString(), columnId, feedbackItemId);
         }
 
@@ -71,6 +69,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastNewBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting new board");
+
             return Clients.Others.SendAsync(receiveNewBoard.ToString(), teamId, reflectBoardId);
         }
 
@@ -84,6 +83,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastNewItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting new item");
+
             return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveNewItem.ToString(), columnId, feedbackItemId);
         }
 
@@ -96,6 +96,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastUpdatedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting board update");
+
             return Clients.Others.SendAsync(receiveUpdatedBoard.ToString(), teamId, reflectBoardId);
         }
 
@@ -109,6 +110,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastUpdatedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting item update");
+
             return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveUpdatedItem.ToString(), columnId, feedbackItemId);
         }
 
@@ -120,6 +122,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Adding client to board");
+
             return Groups.AddToGroupAsync(Context.ConnectionId, reflectBoardId);
         }
 
@@ -131,26 +134,40 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"LeaveReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Removing client from board");
+
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, reflectBoardId);
         }
 
+        /// <summary>
+        /// Tracks when the reflect hub instance is disposed.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             _logger.LogInformation($"dispose: {Context.ConnectionId}");
+
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Called when a connection with the hub is terminated.
+        /// </summary>
+        /// <param name="exception">The exception occurred when disconnecting.</param>
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             _logger.LogInformation($"OnDisconnectedAsync connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Removing client from board");
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
         }
 
+        /// <summary>
+        /// Called when a new connection is established with the hub.
+        /// </summary>
         public override Task OnConnectedAsync()
         {
             _logger.LogInformation($"Established Connection id {Context.ConnectionId}");
+
             return base.OnConnectedAsync();
         }
     }
