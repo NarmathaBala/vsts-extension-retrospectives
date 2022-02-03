@@ -1,9 +1,10 @@
 .feedback-item-group {
   @extend .feedbackItem;
-  
+
   .item-cards {
     display: flex;
     flex-direction: column;
+    background-color:red;
 
     .feedbackItemGroupItem {
       &.removeFeedbackItem {
@@ -12,7 +13,7 @@
         }
       }
     }
-    
+
     .item-cards-stack {
       display: none;
     }
@@ -47,12 +48,12 @@
 
   &.feedback-item-group-expanded {
     .feedbackItemGroupGroupedItem {
-      transform: scale(0.95);
+      transform: scale(0.75); //TODO: hakenned - different... 0.75px?
 
       .groupedItemCard {
         @extend .mainItemCard;
         margin-top: 0px;
-  
+
         .card-integral-part {
           border-left-width: 3px;
         }

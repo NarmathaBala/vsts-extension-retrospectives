@@ -3,8 +3,9 @@
 .feedback-column {
   border-right: 2px solid rgba(var(--palette-neutral-20, 200, 200, 200), 1);
   border-left: 2px solid rgba(var(--palette-neutral-20, 200, 200, 200), 1);
-  display: table-cell; 
+  display: table-cell;
   height: calc(100vh - #{$extension_header_height} - #{$second_level_header_height});
+  background-color: darkgrey; //TODO: hakenned
 }
 .feedback-column:last-child {
   border-right: none;
@@ -19,6 +20,7 @@
   padding-top: 15px;
   padding-left: $header_horizontal_spacing;
   border-bottom: 3px solid rgba(var(--palette-neutral-20, 200, 200, 200), 1);
+  background-color: purple; //TODO: hakenned - a better real color
 
   .feedback-column-title {
     display: flex;

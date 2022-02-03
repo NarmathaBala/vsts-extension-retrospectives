@@ -580,6 +580,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
 
   private feedbackCreationInformationContent = () => {
     if (!this.props.createdBy) {
+      //TODO: hakenned maybe another CSS class for if grouped / voting
       return (
         <div className="anonymous-created-date">
           {moment(this.props.createdDate).format('MMM Do, YYYY h:mm a')}
@@ -639,6 +640,10 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                 borderLeftColor: this.props.accentColor
               }}>
               <div className="card-header">
+                {
+                  //TODO: hakenned - change voting presence if it's not the hero card
+                  console.log('feedback item ' + this.props.title + ' isNotGroupedItem state: ' + isNotGroupedItem)
+                }
                 {!isNotGroupedItem && isMainItem &&
                   <button className="feedback-expand-group"
                     aria-live="polite"
@@ -709,6 +714,9 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     <i className="fas fa-arrow-circle-down" />
 
                   </button>
+                }
+                {
+                  // TODO: hakenned if in the voting section, turn this off?
                 }
                 {!this.props.newlyCreated && this.props.isInteractable &&
                   <div className="item-actions-menu">
@@ -786,6 +794,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <div>
                     <span className="feedback-yourvote-count">[Your Votes: {this.state.userVotes}]</span>
                   </div>
+                  //TODO: hakenned - come back to whether this is grouped or not
                 }
               </div>
               {this.feedbackCreationInformationContent()}

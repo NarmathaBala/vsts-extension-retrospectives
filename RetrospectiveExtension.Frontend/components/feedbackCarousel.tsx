@@ -2,7 +2,7 @@ import * as React from 'react';
 import Slider, { Settings } from "react-slick";
 import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
-import FeedbackItem from './feedbackItem';
+import FeedbackItem, { FeedbackItemHelper } from './feedbackItem';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -12,6 +12,7 @@ import { reactPlugin } from '../utilities/external/telemetryClient';
 export interface IFeedbackCarouselProps {
   feedbackColumnPropsList: FeedbackColumnProps[];
   isFeedbackAnonymous: boolean;
+  //isGroupedFeedback: FeedbackItemHelper
 }
 
 export interface IFeedbackCarouselState {
@@ -23,10 +24,13 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
 
     return columnItems
       // Carousel only shows main item cards.
+      // TODO: hakenned change that
       .filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)
       .map((columnItem) => {
         const feedbackItemProps =
-        FeedbackColumn.createFeedbackItemProps(feedbackColumnProps, columnItem, true);
+          FeedbackColumnHelper.createFeedbackItemProps(feedbackColumnProps, columnItem, true);
+
+        //TODO: hakenned - consider showing the count? and expand/collapse caret
 
         return (
           <div key={feedbackItemProps.id} className="feedback-carousel-item">
