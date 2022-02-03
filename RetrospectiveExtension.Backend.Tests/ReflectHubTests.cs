@@ -3,21 +3,22 @@ using Moq;
 using ReflectBackend;
 using System.Threading;
 using Xunit;
-using static ReflectBackend.ReflectBackendSignals;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CollaborationStateService.Configuration;
+using static ReflectBackend.ReflectBackendSignals;
 
 namespace RetrospectiveExtension.Backend.Tests
 {
     public class ReflectHubTests
     {
-        private ILogger<ReflectHub> logger = Mock.Of<ILogger<ReflectHub>>();
-        private IOptions<AppInsightsSettings> appInsightsOptions = Options.Create(new AppInsightsSettings() { InstrumentationKey = "" });
+        private ILogger<ReflectHub> _logger = Mock.Of<ILogger<ReflectHub>>();
+        private IOptions<AppInsightsSettings> _appInsightsOptions = Options.Create(new AppInsightsSettings() { InstrumentationKey = "" });
+
         [Fact]
         public async void BroadcastDeletedBoardTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
 
                 // Set up mock objects
@@ -26,6 +27,7 @@ namespace RetrospectiveExtension.Backend.Tests
                 mockClients.SetupGet(x => x.Others).Returns(mockClientProxy.Object);
                 hub.Clients = mockClients.Object;
                 hub.Context = Mock.Of<HubCallerContext>();
+
                 // Invoke method
                 await hub.BroadcastDeletedBoard("teamId", "reflectBoardId");
 
@@ -40,7 +42,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void BroadcastNewBoardTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockClientProxy = new Mock<IClientProxy>();
@@ -63,7 +65,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void BroadcastUpdatedBoardTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockClientProxy = new Mock<IClientProxy>();
@@ -86,7 +88,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void BroadcastDeletedItemTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockClientProxy = new Mock<IClientProxy>();
@@ -110,7 +112,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void BroadcastNewItemTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockClientProxy = new Mock<IClientProxy>();
@@ -134,7 +136,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void BroadcastUpdatedItem()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockClientProxy = new Mock<IClientProxy>();
@@ -158,7 +160,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void JoinReflectBoardGroupTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockGroups = new Mock<IGroupManager>();
@@ -177,7 +179,7 @@ namespace RetrospectiveExtension.Backend.Tests
         [Fact]
         public async void LeaveReflectBoardGroupTest()
         {
-            using (var hub = new ReflectHub(logger, appInsightsOptions))
+            using (var hub = new ReflectHub(_logger, _appInsightsOptions))
             {
                 // Set up mock objects
                 var mockGroups = new Mock<IGroupManager>();

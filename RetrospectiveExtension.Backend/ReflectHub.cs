@@ -28,17 +28,14 @@ namespace ReflectBackend
     [Authorize]
     public class ReflectHub : Hub
     {
-        private readonly AppInsightsSettings _config;
         private readonly TelemetryClient _insights;
         private ILogger<ReflectHub> _logger;
 
         public ReflectHub(ILogger<ReflectHub> logger, IOptions<AppInsightsSettings> options)
         {
             _logger = logger;
-            this._config = options.Value;
-            this._insights = new TelemetryClient(new TelemetryConfiguration(_config.InstrumentationKey));
+            this._insights = new TelemetryClient(new TelemetryConfiguration(options.Value.InstrumentationKey));
         }
-
 
         /// <summary>
         /// Broadcast receiveDeletedBoard to all connected clients except the sender.
@@ -121,7 +118,7 @@ namespace ReflectBackend
         /// <param name="reflectBoardId">The id of the reflect board.</param>
         public Task JoinReflectBoardGroup(string reflectBoardId)
         {
-            //_logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
+            _logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Adding client to board");
             return Groups.AddToGroupAsync(Context.ConnectionId, reflectBoardId);
         }
@@ -141,7 +138,6 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"dispose: {Context.ConnectionId}");
             base.Dispose(disposing);
-
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -151,6 +147,7 @@ namespace ReflectBackend
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
         }
+
         public override Task OnConnectedAsync()
         {
             _logger.LogInformation($"Established Connection id {Context.ConnectionId}");
