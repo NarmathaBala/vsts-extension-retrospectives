@@ -88,6 +88,7 @@ class ReflectBackendService {
         return that._appToken;
       }
 
+      // TODO (phongcao) : appInsightsClient.trackException(new Error(e.message));
       throw new Error('VSTS returned a malformed appToken value!');
     }));
   }
