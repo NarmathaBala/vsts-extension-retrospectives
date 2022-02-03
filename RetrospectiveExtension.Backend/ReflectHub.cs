@@ -8,18 +8,21 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using CollaborationStateService.Configuration;
 using static ReflectBackend.ReflectBackendSignals;
-
+using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace ReflectBackend
 {
+
+    [DataContract]
     public enum ReflectBackendSignals
     {
-        ReceiveNewItem,
-        ReceiveUpdatedItem,
-        ReceiveUpdatedBoard,
-        ReceiveDeletedItem,
-        ReceiveDeletedBoard,
-        ReceiveNewBoard
+        receiveNewItem,
+        receiveUpdatedItem,
+        receiveUpdatedBoard,
+        receiveDeletedItem,
+        receiveDeletedBoard,
+        receiveNewBoard
     }
 
     [Authorize]
@@ -37,9 +40,6 @@ namespace ReflectBackend
         }
 
 
-
-
-
         /// <summary>
         /// Broadcast receiveDeletedBoard to all connected clients except the sender.
         /// </summary>
@@ -49,7 +49,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastDeletedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete board");
-            return Clients.Others.SendAsync(ReceiveDeletedBoard.ToString(), teamId, reflectBoardId);
+            return Clients.Others.SendAsync(receiveDeletedBoard.ToString(), teamId, reflectBoardId);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastDeletedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting delete item");
-            return Clients.OthersInGroup(reflectBoardId).SendAsync(ReceiveDeletedItem.ToString(), columnId, feedbackItemId);
+            return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveDeletedItem.ToString(), columnId, feedbackItemId);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastNewBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting new board");
-            return Clients.Others.SendAsync(ReceiveNewBoard.ToString(), teamId, reflectBoardId);
+            return Clients.Others.SendAsync(receiveNewBoard.ToString(), teamId, reflectBoardId);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastNewItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting new item");
-            return Clients.OthersInGroup(reflectBoardId).SendAsync(ReceiveNewItem.ToString(), columnId, feedbackItemId);
+            return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveNewItem.ToString(), columnId, feedbackItemId);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastUpdatedBoard connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting board update");
-            return Clients.Others.SendAsync(ReceiveUpdatedBoard.ToString(), teamId, reflectBoardId);
+            return Clients.Others.SendAsync(receiveUpdatedBoard.ToString(), teamId, reflectBoardId);
         }
 
         /// <summary>
@@ -112,16 +112,16 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"BroadcastUpdatedItem connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Broadcasting item update");
-            return Clients.OthersInGroup(reflectBoardId).SendAsync(ReceiveUpdatedItem.ToString(), columnId, feedbackItemId);
+            return Clients.OthersInGroup(reflectBoardId).SendAsync(receiveUpdatedItem.ToString(), columnId, feedbackItemId);
         }
-        
+
         /// <summary>
         /// Adds the client to the group for this reflect board.
         /// </summary>
         /// <param name="reflectBoardId">The id of the reflect board.</param>
         public Task JoinReflectBoardGroup(string reflectBoardId)
         {
-            _logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
+            //_logger.LogInformation($"JoinReflectBoardGroup connectionID: {Context.ConnectionId}");
             _insights.TrackEvent("Adding client to board");
             return Groups.AddToGroupAsync(Context.ConnectionId, reflectBoardId);
         }
@@ -141,7 +141,6 @@ namespace ReflectBackend
         {
             _logger.LogInformation($"dispose: {Context.ConnectionId}");
             base.Dispose(disposing);
-            _insights.Flush();
 
         }
 
