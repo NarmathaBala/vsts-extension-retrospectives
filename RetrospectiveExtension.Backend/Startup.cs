@@ -36,6 +36,7 @@ namespace CollaborationStateService
             // Retrieve the environment specific extension secret from the azure vault.
             IConfigurationSection certificateData = Configuration.GetSection("VSTSExtensionCertificates");
             var combinedKeys = certificateData.AsEnumerable().Where(keyValue => !string.IsNullOrWhiteSpace(keyValue.Value)).Select(x => x.Value).ToList();
+
             // Retrieve additional dev extensions secrets from application settings.
             IConfigurationSection developerCertificateData = Configuration.GetSection("DeveloperOverrideCertificates");
             combinedKeys.AddRange(developerCertificateData.AsEnumerable().Where(keyValue => !string.IsNullOrWhiteSpace(keyValue.Value)).Select(x => x.Value));
@@ -51,8 +52,8 @@ namespace CollaborationStateService
             })
             .AddJwtBearer(options =>
             {
-          // Configure JWT Bearer Auth to expect our security key
-          options.TokenValidationParameters = new TokenValidationParameters
+                // Configure JWT Bearer Auth to expect our security key
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     LifetimeValidator = (before, expires, token, param) => { return expires > DateTime.UtcNow; },
                     ValidateAudience = false,
@@ -64,26 +65,26 @@ namespace CollaborationStateService
                     IssuerSigningKeys = combinedKeys.Select(e => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(e))),
                 };
 
-          // We have to hook the OnMessageReceived event in order to
-          // allow the JWT authentication handler to read the access
-          // token from the query string when a WebSocket or 
-          // Server-Sent Events request comes in.
-          options.Events = new JwtBearerEvents
+                // We have to hook the OnMessageReceived event in order to
+                // allow the JWT authentication handler to read the access
+                // token from the query string when a WebSocket or 
+                // Server-Sent Events request comes in.
+                options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
-              {
-                    var accessToken = context.Request.Query["access_token"];
-
-              // If the request is for our hub...
-              var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/collaborationUpdates"))
                     {
-                  // Read the token out of the query string
-                  context.Token = accessToken;
-                    }
+                        var accessToken = context.Request.Query["access_token"];
 
-                    return Task.CompletedTask;
-                }
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/collaborationUpdates"))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
