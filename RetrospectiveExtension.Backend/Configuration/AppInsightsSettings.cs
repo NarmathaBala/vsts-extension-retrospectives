@@ -7,3 +7,4 @@
         /// </summary>
         public string InstrumentationKey { get; set; }
     } 
+}
