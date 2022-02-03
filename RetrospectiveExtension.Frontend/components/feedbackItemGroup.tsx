@@ -73,6 +73,9 @@ class FeedbackItemGroup extends React.Component<IFeedbackItemGroupProps, Retrosp
         onDrop={this.dropFeedbackItemOnFeedbackItemGroup}>
         <div className="item-cards"
           aria-label="Group Feedback Items">
+          {
+            //TODO: hakenned comeback to how this is phrases. Group feedback items under item titled:""
+          }
           <FeedbackItem
             {...this.props.mainFeedbackItem}
             groupedItemProps={{
