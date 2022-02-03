@@ -91,7 +91,6 @@ namespace CollaborationStateService
       services.Configure<AppInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
 
       services.AddLogging(builder => {
-        //  builder.AddApplicationInsights();
            builder.AddFilter<ApplicationInsightsLoggerProvider>("",LogLevel.Information);
          builder.AddConsole();
       });
