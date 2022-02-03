@@ -12,11 +12,6 @@ namespace RetrospectiveExtension.Backend.Tests
 {
     public class ReflectHubTests
     {
-        //private 
-        //public ReflectHubTests()
-        //{
-
-        //}
         private ILogger<ReflectHub> logger = Mock.Of<ILogger<ReflectHub>>();
         private IOptions<AppInsightsSettings> appInsightsOptions = Options.Create(new AppInsightsSettings() { InstrumentationKey = "" });
         [Fact]
