@@ -416,7 +416,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     }
   }
 
-
   private timerSwich = async (feedbackItemId: string) => {
     let updatedFeedbackItem;
     const boardId: string = this.props.boardId;
@@ -664,7 +663,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <button
                     title="Vote"
                     aria-live="polite"
-                    aria-label={'Click to vote on feedback. Current vote count is ' + this.props.upvotes}
+                    aria-label={'Click to vote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
                     disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
@@ -690,7 +689,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <button
                     title="UnVote"
                     aria-live="polite"
-                    aria-label={'Click to unvote on feedback. Current vote count is ' + this.props.upvotes}
+                    aria-label={'Click to unvote On feedback. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
                     disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
@@ -773,7 +772,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   title={this.props.title}
                   isChangeEventRequired={false}
                   onSave={this.onDocumentCardTitleSave}
-                  isDisabled={hideFeedbackItems}
                 />}
                 {!this.props.isInteractable &&
                   <div
