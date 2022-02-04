@@ -23,8 +23,8 @@ jobs:
 
     - run: |
         npm install -g tfx-cli node-jq
-        tfx
-        jq
+        jq 'del(.baseUri)' RetrospectiveExtension.Frontend/vss-extension-dev.json.template
+        echo RetrospectiveExtension.Frontend/vss-extension-dev.json.template
       name: Install tools
 
     - run: |
