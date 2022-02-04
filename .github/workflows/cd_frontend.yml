@@ -1,0 +1,123 @@
+name: 'CD - Frontend'
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - 'releases/**'
+  pull_request:
+    branches:
+      - master
+      - dev
+      - 'releases/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Frontend - Deploy package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: Check out repository
+
+    - run: |
+        # Get current/target branch names
+        branch=${GITHUB_REF#refs/heads/}
+        target_branch="${{ github.event.pull_request.base.ref }}"
+
+        # TODO: Update these default variables before merging
+        prod_service_url=https://retrospectivesbackendservice.azurewebsites.net
+        dev_service_url=https://thcaoretro.azurewebsites.net
+        pr_service_url=https://thcaoretro.azurewebsites.net
+
+        prod_publisher=ms-devlabs
+        dev_publisher=retroextcd-rc
+        pr_publisher=retroextcd-prval
+
+        dev_ext_prefix=${branch/\//}
+        pr_ext_prefix=${{ github.event.pull_request.user.login }}
+
+        if [[ "$branch" == releases/* ]]; then
+          echo "Setting config for Production environment"
+          echo "##[set-output name=is_prod;]true"
+          echo "##[set-output name=service_url;]$prod_service_url"
+          echo "##[set-output name=publisher;]$prod_publisher"
+        elif [[ "$branch" == master ]] || [[ "$branch" == dev ]] || [[ "$branch" == "phongcao/cd-frontend" ]]; then
+          echo "Setting config for Dev environment"
+          echo "##[set-output name=is_dev;]true"
+          echo "##[set-output name=service_url;]$dev_service_url"
+          echo "##[set-output name=publisher;]$dev_publisher"
+          echo "##[set-output name=ext_prefix;]$dev_ext_prefix"
+        elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
+          echo "Setting config for PR validation"
+          echo "##[set-output name=is_pr;]true"
+          echo "##[set-output name=service_url;]$pr_service_url"
+          echo "##[set-output name=publisher;]$pr_publisher"
+          echo "##[set-output name=ext_prefix;]$pr_ext_prefix"
+        fi
+      name: Set up default variables
+      id: config
+
+    - run: |
+        npm install -g tfx-cli node-jq
+      name: Install tools used for deployment
+
+    - run: |
+        # Create environment.tsx from template
+        cp config/environment.tsx.template config/environment.tsx
+
+        # Inject default backend service url
+        service_url=$(echo ${{ steps.config.outputs.service_url }} | sed 's/\//\\\//g')
+        sed -i -e "s/https:\/\/my-backend-service\.com/$service_url/g" config/environment.tsx
+        cat config/environment.tsx
+      name: Prepare environment.tsx
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - if: |
+        steps.config.outputs.is_dev == 'true' ||
+        steps.config.outputs.is_pr == 'true'
+      run: |
+        # Create vss-extension-dev.json from template
+        cp vss-extension-dev.json.template vss-extension-dev.json
+
+        # Remove baseUri
+        cat <<< $(jq 'del(.baseUri)' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject Publisher Id
+        cat <<< $(jq '.publisher = "${{ steps.config.outputs.publisher }}"' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject Extension Id and Name
+        cat <<< $(jq '.id = "${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev"' vss-extension-dev.json) > vss-extension-dev.json
+        cat <<< $(jq '.name = "${{ steps.config.outputs.ext_prefix }} - Retrospectives (Dev)"' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject version
+        ext_info=$(tfx extension show \
+          --no-prompt \
+          --json \
+          --publisher ${{ steps.config.outputs.publisher }} \
+          --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev \
+          --token ${{ secrets.AZURE_DEVOPS_TOKEN }})
+        if [[ "$ext_info" != "null" ]]; then
+          version=$(ext_info | jq '.versions[0].version')
+          cat <<< $(jq ".version = \"$version\"" vss-extension-dev.json) > vss-extension-dev.json
+        fi
+
+        cat vss-extension-dev.json
+      name: Prepare vss-extension-dev.json
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - run: |
+        npm install
+        npm run build:p
+        npm run pack:d
+      name: Prepare package
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - run: |
+        tfx extension publish
+        --manifests vss-extension-dev.json
+        --vsix ./dist/*.vsix
+        --token ${{ secrets.AZURE_DEVOPS_TOKEN }})
+      name: Publish package
+      working-directory: 'RetrospectiveExtension.Frontend'
