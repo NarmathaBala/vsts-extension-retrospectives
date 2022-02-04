@@ -1,0 +1,171 @@
+name: 'CD - Frontend'
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - 'releases/**'
+  pull_request:
+    branches:
+      - master
+      - dev
+      - 'releases/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Frontend - Deploy package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: Check out repository
+
+    - run: |
+        # Current/target branches' names
+        branch=${GITHUB_REF#refs/heads/}
+        target_branch="${{ github.event.pull_request.base.ref }}"
+
+        # TODO: Update these default variables before merging
+        # Service URLs
+        prod_service_url=https://retrospectivesbackendservice.azurewebsites.net
+        dev_service_url=https://thcaoretro.azurewebsites.net
+        pr_service_url=https://thcaoretro.azurewebsites.net
+
+        # Extension Publishers
+        prod_publisher=ms-devlabs
+        dev_publisher=retroextcd-rc
+        pr_publisher=retroextcd-prval
+
+        # Extension Prefix
+        ext_prefix=${branch/\//}
+
+        # JSON files for publishing extensions
+        prod_ext_json=vss-extension-prod.json
+        dev_ext_json=vss-extension-dev.json
+
+        # Test Organizations
+        dev_test_organization=retroextcd-rc
+        pr_test_organization=retroextcd-prval
+
+        if [[ "$branch" == releases/* ]]; then
+          echo "Setting config for Production environment"
+          echo "##[set-output name=is_prod;]true"
+          echo "##[set-output name=service_url;]$prod_service_url"
+          echo "##[set-output name=publisher;]$prod_publisher"
+          echo "##[set-output name=ext_json;]$prod_ext_json"
+        elif [[ "$branch" == master ]] || [[ "$branch" == dev ]] || [[ "$branch" == "phongcao/cd-frontend" ]]; then
+          echo "Setting config for Dev environment"
+          echo "##[set-output name=is_dev;]true"
+          echo "##[set-output name=service_url;]$dev_service_url"
+          echo "##[set-output name=publisher;]$dev_publisher"
+          echo "##[set-output name=ext_prefix;]$ext_prefix"
+          echo "##[set-output name=ext_json;]$dev_ext_json"
+          echo "##[set-output name=test_organization;]$dev_test_organization"
+        elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
+          echo "Setting config for PR validation"
+          echo "##[set-output name=is_pr;]true"
+          echo "##[set-output name=service_url;]$pr_service_url"
+          echo "##[set-output name=publisher;]$pr_publisher"
+          echo "##[set-output name=ext_prefix;]$ext_prefix"
+          echo "##[set-output name=ext_json;]$dev_ext_json"
+          echo "##[set-output name=test_organization;]$pr_test_organization"
+        fi
+      name: Set up default variables
+      id: config
+
+    - run: |
+        npm install -g tfx-cli node-jq
+      name: Install tools used for deployment
+
+    - run: |
+        # Create environment.tsx from template
+        cp config/environment.tsx.template config/environment.tsx
+
+        # Inject default backend service url
+        service_url=$(echo ${{ steps.config.outputs.service_url }} | sed 's/\//\\\//g')
+        sed -i -e "s/https:\/\/my-backend-service\.com/$service_url/g" config/environment.tsx
+        cat config/environment.tsx
+      name: Prepare environment.tsx
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - if: |
+        steps.config.outputs.is_dev == 'true' ||
+        steps.config.outputs.is_pr == 'true'
+      run: |
+        # Create vss-extension-dev.json from template
+        cp vss-extension-dev.json.template vss-extension-dev.json
+
+        # Remove baseUri
+        cat <<< $(jq 'del(.baseUri)' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject Publisher Id
+        cat <<< $(jq '.publisher = "${{ steps.config.outputs.publisher }}"' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject Extension Id and Name
+        cat <<< $(jq '.id = "${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev"' vss-extension-dev.json) > vss-extension-dev.json
+        cat <<< $(jq '.name = "${{ steps.config.outputs.ext_prefix }} - Retrospectives (Dev)"' vss-extension-dev.json) > vss-extension-dev.json
+
+        # Inject version
+        ext_info=$(tfx extension show \
+          --no-prompt \
+          --json \
+          --publisher ${{ steps.config.outputs.publisher }} \
+          --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev \
+          --token ${{ secrets.AZURE_DEVOPS_TOKEN }})
+        if [[ "$ext_info" != "null" ]]; then
+          version=$(jq -r '.versions[0].version' <<< "$ext_info")
+          cat <<< $(jq ".version = \"$version\"" vss-extension-dev.json) > vss-extension-dev.json
+        fi
+
+        # Inject Properties' Name
+        cat <<< $(jq '.contributions[0].properties.name = "${{ steps.config.outputs.ext_prefix }} Retrospectives (Dev)"' vss-extension-dev.json) > vss-extension-dev.json
+
+        cat vss-extension-dev.json
+      name: Prepare vss-extension-dev.json
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - run: |
+        npm install
+        npm run build:p
+        if [[ "${{ steps.config.outputs.is_prod }}" == "true" ]]; then
+          npm run pack:p
+        else
+          npm run pack:d
+        fi
+      name: Prepare extension package
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - run: >
+        tfx extension publish
+        --manifests ${{ steps.config.outputs.ext_json }}
+        --vsix ./dist/*.vsix
+        --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
+      name: Publish extension
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - if: |
+        steps.config.outputs.is_dev == 'true' ||
+        steps.config.outputs.is_pr == 'true'
+      run: >
+        tfx extension share
+        --no-prompt
+        --publisher ${{ steps.config.outputs.publisher }}
+        --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev
+        --shareWith ${{ steps.config.outputs.test_organization }}
+        --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
+      name: Share extension
+      working-directory: 'RetrospectiveExtension.Frontend'
+
+    - if: |
+        steps.config.outputs.is_dev == 'true' ||
+        steps.config.outputs.is_pr == 'true'
+      run: >
+        tfx extension install
+        --no-prompt
+        --publisher ${{ steps.config.outputs.publisher }}
+        --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev
+        --serviceUrl https://dev.azure.com/${{ steps.config.outputs.test_organization }}
+        --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
+      name: Install extension
+      working-directory: 'RetrospectiveExtension.Frontend'
