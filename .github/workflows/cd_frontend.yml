@@ -27,9 +27,6 @@ jobs:
         branch=${GITHUB_REF#refs/heads/}
         target_branch="${{ github.event.pull_request.base.ref }}"
 
-        echo $branch
-        echo $target_branch
-
         if [[ "$branch" == releases/* ]]; then
           echo "Setting config for Production environment"
           echo "##[set-output name=is_prod;]true"
