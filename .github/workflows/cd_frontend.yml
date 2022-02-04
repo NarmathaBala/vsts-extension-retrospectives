@@ -25,7 +25,7 @@ jobs:
         # TODO: Update default variables before merging
 
         branch=${GITHUB_REF#refs/heads/}
-        target_branch=${{ github.event.pull_request.base.ref }}
+        target_branch="${{ github.event.pull_request.base.ref }}"
 
         echo $branch
         echo $target_branch
