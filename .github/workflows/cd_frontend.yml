@@ -22,10 +22,48 @@ jobs:
       name: Check out repository
 
     - run: |
+        # TODO: Update default variables before merging
+
+        branch=${GITHUB_REF#refs/heads/}
+        target_branch=${{ github.event.pull_request.base.ref }}
+
+        echo $branch
+        echo $target_branch
+
+        if [[ "$branch" == releases/* ]]; then
+          echo "Setting config for Production environment"
+          echo "##[set-output name=is_prod;]true"
+          echo "##[set-output name=service_url;]https://retrospectivesbackendservice.azurewebsites.net"
+        else if [[ "$branch" == master ]] || [[ "$branch" == dev ]]; then
+          echo "Setting config for Dev environment"
+          echo "##[set-output name=is_dev;]true"
+          echo "##[set-output name=service_url;]https://thcaoretro.azurewebsites.net"
+        else if [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
+          echo "Setting config for PR validation"
+          echo "##[set-output name=is_pr;]true"
+          echo "##[set-output name=service_url;]https://thcaoretro.azurewebsites.net"
+        fi
+      name: Set up default variables
+      id: config
+
+    - run: |
+        # TODO: Update default values before merging
+        echo "CollaborationStateServiceUrl=https://thcaoretro.azurewebsites.net" >> $GITHUB_ENV
+      name: Set up default variables
+
+    - run: |
         npm install -g tfx-cli node-jq
-        jq 'del(.baseUri)' RetrospectiveExtension.Frontend/vss-extension-dev.json.template
-        echo RetrospectiveExtension.Frontend/vss-extension-dev.json.template
-      name: Install tools
+      name: Install tools used for deployment
+
+    - run: |
+        # Create environment.tsx from template
+        cp config/environment.tsx.template config/environment.tsx
+
+        # Inject default backend service url
+
+        echo cp config/environment.tsx.template config/environment.tsx
+      name: Prepare environment.tsx
+      working-directory: 'RetrospectiveExtension.Frontend'
 
     - run: |
         npm install
