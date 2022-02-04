@@ -14,15 +14,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  package:
-    name: Frontend - Prepare package
+  deploy:
+    name: Frontend - Deploy package
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       name: Check out repository
 
     - run: |
+        npm install -g tfx-cli node-jq
+        tfx
+        jq
+      name: Install tools
+
+    - run: |
         npm install
         npm run build:p
-      name: Build and Test
+      name: Prepare package
       working-directory: 'RetrospectiveExtension.Frontend'
