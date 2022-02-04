@@ -31,7 +31,7 @@ jobs:
 
       - if: steps.changes.outputs.src == 'true'
         run: |
-          cp config/environment.tsx.template config/environment.tsx 
+          cp config/environment.tsx.template config/environment.tsx
           npm install
           npm run lint
           npm run build:p
