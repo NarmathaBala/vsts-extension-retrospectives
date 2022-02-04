@@ -27,15 +27,18 @@ jobs:
         branch=${GITHUB_REF#refs/heads/}
         target_branch="${{ github.event.pull_request.base.ref }}"
 
-        if [[ "$branch" == releases/* ]]; then
+        echo $branch
+        echo $target_branch
+
+        if [[ "$branch" == releases/* ]] then
           echo "Setting config for Production environment"
           echo "##[set-output name=is_prod;]true"
           echo "##[set-output name=service_url;]https://retrospectivesbackendservice.azurewebsites.net"
-        else if [[ "$branch" == master ]] || [[ "$branch" == dev ]]; then
+        elif [[ "$branch" == master ]] || [[ "$branch" == dev ]] then
           echo "Setting config for Dev environment"
           echo "##[set-output name=is_dev;]true"
           echo "##[set-output name=service_url;]https://thcaoretro.azurewebsites.net"
-        else if [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
+        elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]] then
           echo "Setting config for PR validation"
           echo "##[set-output name=is_pr;]true"
           echo "##[set-output name=service_url;]https://thcaoretro.azurewebsites.net"
