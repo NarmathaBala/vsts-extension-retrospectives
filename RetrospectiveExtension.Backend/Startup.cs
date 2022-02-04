@@ -24,6 +24,7 @@ namespace CollaborationStateService
               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
               .AddJsonFile($"appsettings.{hostingEnvironment.EnvironmentName}.json", optional: true)
               .AddEnvironmentVariables();
+              
 
             Configuration = builder.Build();
         }
@@ -93,9 +94,9 @@ namespace CollaborationStateService
 
             services.AddLogging(builder =>
             {
-                builder.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
-                builder.AddConsole();
+                builder.AddConsole(); 
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

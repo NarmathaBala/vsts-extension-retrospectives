@@ -167,7 +167,6 @@ namespace ReflectBackend
         public override Task OnConnectedAsync()
         {
             _logger.LogInformation($"Established Connection id {Context.ConnectionId}");
-
             return base.OnConnectedAsync();
         }
     }
