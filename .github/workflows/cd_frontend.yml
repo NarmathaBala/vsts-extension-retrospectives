@@ -42,8 +42,10 @@ jobs:
         dev_ext_prefix=${branch//\//}
         pr_branch=${{ github.event.pull_request.head.ref }}
         echo $pr_branch
-        if [[ $pr_branch ]]; then
-          pr_ext_prefix=${${{ github.event.pull_request.head.ref }}//\//}
+        if [[ -z $pr_branch ]]; then
+          pr_ext_prefix=${pr_branch//\//}
+          echo PR Prefix
+          echo $pr_ext_prefix
         fi
 
         # JSON files for publishing extensions
