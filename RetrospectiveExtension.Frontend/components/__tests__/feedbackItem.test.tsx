@@ -1,13 +1,8 @@
 import * as React from 'react';
 import moment from 'moment';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from 'enzyme';
 import { mocked } from 'jest-mock';
-import { mockEnv } from '../__mocks__/config/environment';
-import { mockCore } from '../__mocks__/azure-devops-extension-api/Core/Core';
-import { mockCommon } from '../__mocks__/azure-devops-extension-api/Common/Common';
-import { MockSDK } from '../__mocks__/azure-devops-extension-sdk/sdk';
-import {WorkflowPhase} from '../../interfaces/workItem';
+import { WorkflowPhase } from '../../interfaces/workItem';
 import { v4 as uuid } from 'uuid';
 import FeedbackItem from '../feedbackItem';
 import FeedbackColumn from '../feedbackColumn';
@@ -15,36 +10,10 @@ import EditableDocumentCardTitle from '../editableDocumentCardTitle';
 import Dialog from 'office-ui-fabric-react/lib/Dialog';
 import { DefaultButton, TooltipOverflowMode } from 'office-ui-fabric-react';
 import ActionItemDisplay from '../actionItemDisplay';
-Enzyme.configure({ adapter: new Adapter() });
 
 // Base render constants, these may change if the FeedbackItem component is changed.
 const childDialogCount = 5;
 const voteButtonCount = 2;
-
-// Mock Environment
-jest.mock('../../config/environment', () => { return mockEnv; });
-
-// Mock Azure DevOps Extension SDK
-jest.mock('azure-devops-extension-sdk', () => { return MockSDK; });
-
-// Mock Azure DevOps Extension API
-jest.mock('azure-devops-extension-api/Core', () => { return mockCore; });
-
-jest.mock('azure-devops-extension-api/Core/CoreClient', () => {});
-jest.mock('azure-devops-extension-api/WebApi', () => {});
-jest.mock('azure-devops-extension-api/WorkItemTracking', () => {});
-jest.mock('azure-devops-extension-api/WorkItemTracking/WorkItemTracking', () => {});
-jest.mock('azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient', () => {
-  const mockWorkItemTrackingClient = {
-    WorkItemTrackingRestClient: {},
-  };
-
-  return mockWorkItemTrackingClient;
-});
-
-jest.mock('azure-devops-extension-api/Common', () => {
-  return mockCommon;
-});
 
 const testTeamId = uuid();
 const testBoardId = uuid();
