@@ -118,6 +118,6 @@ jobs:
         tfx extension publish
         --manifests vss-extension-dev.json
         --vsix ./dist/*.vsix
-        --token ${{ secrets.AZURE_DEVOPS_TOKEN }})
+        --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
       name: Publish package
       working-directory: 'RetrospectiveExtension.Frontend'
