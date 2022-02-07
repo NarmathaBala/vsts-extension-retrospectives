@@ -40,7 +40,11 @@ jobs:
         # Extension Prefix
         # Remove all forward slashes to use for Extension Id
         dev_ext_prefix=${branch//\//}
-        pr_ext_prefix=${${{ github.event.pull_request.head.ref }}//\//}
+        pr_branch=${{ github.event.pull_request.head.ref }}
+        echo $pr_branch
+        if [[ $pr_branch ]]; then
+          pr_ext_prefix=${${{ github.event.pull_request.head.ref }}//\//}
+        fi
 
         # JSON files for publishing extensions
         prod_ext_json=vss-extension-prod.json
