@@ -20,7 +20,7 @@ describe('Editable Text Component', () => {
   });
 
   it('updates text appropriately.', () => {
-    mockedTestProps['text'] = 'Test Text';
+    mockedTestProps.text = 'Test Text';
 
     const wrapper = shallow(<EditableText {...mockedTestProps} />);
     const component = wrapper.children().dive();
