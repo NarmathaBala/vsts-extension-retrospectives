@@ -99,7 +99,7 @@ jobs:
           --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev \
           --token ${{ secrets.AZURE_DEVOPS_TOKEN }})
         if [[ "$ext_info" != "null" ]]; then
-          version=$(ext_info | jq '.versions[0].version')
+          version=$(jq -r '.versions[0].version' <<< "$ext_info")
           cat <<< $(jq ".version = \"$version\"" vss-extension-dev.json) > vss-extension-dev.json
         fi
 
