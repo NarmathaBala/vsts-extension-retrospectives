@@ -78,7 +78,7 @@ Clone the repository to your local machine from the Azure DevOps endpoint.
 ### Testing Component Rendering and Functionality
 
 Components functionality is tested using the [Jest testing framework](https://jestjs.io/), and the
-[Enzyme testing utility](https://enzymejs.github.io/enzyme/) and
+[Enzyme Testing utility](https://enzymejs.github.io/enzyme/) and
 [Enzyme to JSON](https://github.com/adriantoine/enzyme-to-json), all of which are installed via package.json.
 
 #### Running Frontend Tests
