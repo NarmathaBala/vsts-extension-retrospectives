@@ -22,20 +22,17 @@ exports[`Editable Text Component renders correctly. 1`] = `
 
 exports[`Editable Text Component updates text appropriately. 1`] = `
 <div
-  aria-live="assertive"
   className="editable-text-container"
 >
-  <StyledTextFieldBase
-    ariaLabel="Please enter feedback title"
-    autoAdjustHeight={true}
-    autoFocus={true}
-    className="editable-text-input-container"
-    inputClassName="editable-text-input"
-    onChange={[Function]}
+  <p
+    aria-label="Feedback title is Test Text. Click to edit."
+    aria-required={true}
+    className="editable-text"
     onClick={[Function]}
     onKeyDown={[Function]}
-    resizable={false}
-    value=""
-  />
+    tabIndex={0}
+  >
+    Test Text
+  </p>
 </div>
 `;
