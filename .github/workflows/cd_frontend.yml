@@ -41,11 +41,8 @@ jobs:
         # Remove all forward slashes to use for Extension Id
         dev_ext_prefix=${branch//\//}
         pr_branch=${{ github.event.pull_request.head.ref }}
-        echo $pr_branch
-        if [[ -z $pr_branch ]]; then
+        if [[ "$pr_branch" ]]; then
           pr_ext_prefix=${pr_branch//\//}
-          echo PR Prefix
-          echo $pr_ext_prefix
         fi
 
         # JSON files for publishing extensions
