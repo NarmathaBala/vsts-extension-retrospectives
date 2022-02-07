@@ -38,7 +38,9 @@ jobs:
         pr_publisher=retroextcd-prval
 
         # Extension Prefix
-        ext_prefix=${branch/\//}
+        # Remove all forward slashes to use for Extension Id
+        dev_ext_prefix=${branch//\//}
+        pr_ext_prefix=${${{ github.event.pull_request.head.ref }}//\//}
 
         # JSON files for publishing extensions
         prod_ext_json=vss-extension-prod.json
@@ -59,7 +61,7 @@ jobs:
           echo "##[set-output name=is_dev;]true"
           echo "##[set-output name=service_url;]$dev_service_url"
           echo "##[set-output name=publisher;]$dev_publisher"
-          echo "##[set-output name=ext_prefix;]$ext_prefix"
+          echo "##[set-output name=ext_prefix;]$dev_ext_prefix"
           echo "##[set-output name=ext_json;]$dev_ext_json"
           echo "##[set-output name=test_organization;]$dev_test_organization"
         elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
@@ -67,7 +69,7 @@ jobs:
           echo "##[set-output name=is_pr;]true"
           echo "##[set-output name=service_url;]$pr_service_url"
           echo "##[set-output name=publisher;]$pr_publisher"
-          echo "##[set-output name=ext_prefix;]$ext_prefix"
+          echo "##[set-output name=ext_prefix;]$pr_ext_prefix"
           echo "##[set-output name=ext_json;]$dev_ext_json"
           echo "##[set-output name=test_organization;]$pr_test_organization"
         fi
