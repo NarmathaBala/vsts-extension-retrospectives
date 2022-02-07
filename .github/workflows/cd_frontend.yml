@@ -140,7 +140,7 @@ jobs:
         --no-prompt
         --publisher ${{ steps.config.outputs.publisher }}
         --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev
-        --shareWith ${{ steps.config.outputs.publisher }}
+        --shareWith ${{ steps.config.outputs.test_organization }}
         --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
       name: Share extension
       working-directory: 'RetrospectiveExtension.Frontend'
@@ -153,7 +153,7 @@ jobs:
         --no-prompt
         --publisher ${{ steps.config.outputs.publisher }}
         --extensionId ${{ steps.config.outputs.ext_prefix }}-retrospective-vsts-extension-dev
-        --serviceUrl https://dev.azure.com/${{ steps.config.outputs.publisher }}
+        --serviceUrl https://dev.azure.com/${{ steps.config.outputs.test_organization }}
         --token ${{ secrets.AZURE_DEVOPS_TOKEN }}
       name: Install extension
       working-directory: 'RetrospectiveExtension.Frontend'
