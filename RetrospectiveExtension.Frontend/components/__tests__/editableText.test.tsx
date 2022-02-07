@@ -5,7 +5,7 @@ import EditableText, { EditableTextProps } from '../editableText';
 
 const mockOnSave = jest.fn(() => { });
 
-let mockedTestProps: EditableTextProps = {
+const mockedTestProps: EditableTextProps = {
   text: '',
   isChangeEventRequired: false,
   onSave: mockOnSave
