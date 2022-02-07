@@ -5,7 +5,7 @@ import ActionItemDisplay, {
   ActionItemDisplayProps,
 } from "../actionItemDisplay";
 
-let mockOnUpdateActionItem = jest.fn(() => {});
+const mockOnUpdateActionItem = jest.fn(() => {});
 
 const defaultTestProps: ActionItemDisplayProps = {
   feedbackItemId: "101",

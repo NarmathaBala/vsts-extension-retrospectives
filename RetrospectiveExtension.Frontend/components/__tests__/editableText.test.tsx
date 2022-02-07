@@ -3,10 +3,11 @@ import { shallow } from 'enzyme';
 import toJson from "enzyme-to-json";
 import EditableText, { EditableTextProps } from '../editableText';
 
-let mockOnSave = jest.fn(() => { });
+let testText = '';
+const mockOnSave = jest.fn(() => { });
 
-let defaultTestProps: EditableTextProps = {
-  text: '',
+const defaultTestProps: EditableTextProps = {
+  text: testText,
   isChangeEventRequired: false,
   onSave: mockOnSave
 }
@@ -20,8 +21,7 @@ describe('Editable Text Component', () => {
   });
 
   it('updates text appropriately.', () => {
-    let testTextProps = defaultTestProps;
-    testTextProps['text'] = 'Test Text';
+    testText = 'Test Text';
 
     const wrapper = shallow(<EditableText {...defaultTestProps} />);
     const component = wrapper.children().dive();

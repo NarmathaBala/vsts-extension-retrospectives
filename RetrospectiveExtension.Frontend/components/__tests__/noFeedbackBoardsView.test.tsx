@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import toJson from "enzyme-to-json";
 import NoFeedbackBoardsView, { NoFeedbackBoardsViewProps } from '../noFeedbackBoardsView';
 
-let mockOnCreateBoardClick = jest.fn(() => { });
+const mockOnCreateBoardClick = jest.fn(() => { });
 
 const defaultTestProps: NoFeedbackBoardsViewProps = {
   onCreateBoardClick: mockOnCreateBoardClick
