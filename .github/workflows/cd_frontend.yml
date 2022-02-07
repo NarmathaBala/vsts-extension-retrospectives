@@ -114,7 +114,7 @@ jobs:
       name: Prepare package
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: |
+    - run: >
         tfx extension publish
         --manifests vss-extension-dev.json
         --vsix ./dist/*.vsix
