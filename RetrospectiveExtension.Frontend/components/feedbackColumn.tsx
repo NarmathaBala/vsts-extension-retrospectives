@@ -183,7 +183,14 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       shouldHaveFocus: columnItem.shouldHaveFocus ? true : false,
       hideFeedbackItems: columnProps.hideFeedbackItems,
       userIdRef: columnItem.feedbackItem.userIdRef,
-      onVoteCasted: columnProps.onVoteCasted
+      onVoteCasted: columnProps.onVoteCasted,
+      groupCount: columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length : 0,
+      isGroupedCarouselItem: false,//columnItem.feedbackItem
+      groupTitles: {
+        longTitles: [],
+        shortTitles: []
+      },
+      isShowingGroupedChildrenTitles: false
     }
   }
 

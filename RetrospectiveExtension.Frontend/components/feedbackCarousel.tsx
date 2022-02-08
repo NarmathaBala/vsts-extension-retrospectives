@@ -2,12 +2,16 @@ import * as React from 'react';
 import Slider, { Settings } from "react-slick";
 import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
-import FeedbackItem, { FeedbackItemHelper } from './feedbackItem';
+import FeedbackItem, { IFeedbackItemProps, IGroupedFeedbackItemProps } from './feedbackItem';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
+import { itemDataService } from '../dal/itemDataService';
+import feedbackItemGroup from './feedbackItemGroup';
+import { IFeedbackItemDocument } from '../interfaces/feedback';
+import { IColumnItem } from './feedbackBoard';
 
 export interface IFeedbackCarouselProps {
   feedbackColumnPropsList: FeedbackColumnProps[];
@@ -32,10 +36,37 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
 
         //TODO: hakenned - consider showing the count? and expand/collapse caret
 
+        console.log('toot toot carousel happened')
+        feedbackItemProps.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+
+        if (feedbackItemProps.isGroupedCarouselItem) {
+          //TODO: COME BACK TO THIS
+          const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
+          const childrenTitlesLong: String[] = [];
+          const childrenTitlesShort: String[] = [];
+          columnItemChildrenIds.forEach(childId => {
+            const childFeedbackItem = columnItems.find(childItem => childItem.feedbackItem.id == childId)
+            const origTitle = childFeedbackItem.feedbackItem.title
+            const shortTitle = origTitle.length > 20 ? origTitle.substring(0, 20) + '...' : origTitle;
+            childrenTitlesShort.push(shortTitle)
+            childrenTitlesLong.push(origTitle)
+          });
+
+          feedbackItemProps.groupTitles = {
+            longTitles: childrenTitlesLong,
+            shortTitles: childrenTitlesShort //TODO: comeback to this logic
+          };
+
+        }
+
+
         return (
           <div key={feedbackItemProps.id} className="feedback-carousel-item">
             <FeedbackItem
               key={feedbackItemProps.id}
+              groupTitles={
+                feedbackItemProps.groupTitles
+              }
               {...feedbackItemProps}
             />
           </div>

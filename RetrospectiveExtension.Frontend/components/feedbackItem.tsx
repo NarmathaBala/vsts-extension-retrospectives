@@ -23,6 +23,7 @@ import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
 
+
 export interface IFeedbackItemProps {
   id: string;
   title: string;
@@ -57,6 +58,13 @@ export interface IFeedbackItemProps {
   timerState: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   timerId: any;
+  groupCount: number;
+  isGroupedCarouselItem: boolean;
+  groupTitles: {
+    longTitles: String[],
+    shortTitles: String[]
+  };
+  isShowingGroupedChildrenTitles: boolean;
   onVoteCasted: () => void;
 
   addFeedbackItems: (
@@ -101,6 +109,7 @@ export interface IFeedbackItemState {
   searchTerm: string;
   hideFeedbackItems: boolean;
   userVotes: string;
+  isShowingGroupedChildrenTitles: boolean;
 }
 
 interface FeedbackItemEllipsisMenuItem {
@@ -132,6 +141,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
       searchedFeedbackItems: [],
       showVotedAnimation: false,
       userVotes: "0",
+      isShowingGroupedChildrenTitles: false
     };
 
     this.itemElement = null;
@@ -354,6 +364,11 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
       searchedFeedbackItems: [],
       searchTerm: '',
     });
+  }
+
+  private toggleShowGroupedChildrenTitles = () => {
+    this.setState((previousState) => ({ isShowingGroupedChildrenTitles: !previousState.isShowingGroupedChildrenTitles })) //TODO: Look here!
+
   }
 
   private readonly feedbackItemEllipsisMenuItems: FeedbackItemEllipsisMenuItem[] = [
@@ -604,10 +619,13 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const isDraggable = this.props.isInteractable && this.props.workflowPhase === WorkflowPhase.Group && !this.state.isMarkedForDeletion;
     const isNotGroupedItem = !this.props.groupedItemProps;
     const isMainItem = isNotGroupedItem || this.props.groupedItemProps.isMainItem;
+    const isGroupedCarouselItem = this.props.isGroupedCarouselItem;
     const groupItemsCount = this.props && this.props.groupedItemProps && this.props.groupedItemProps.groupedCount + 1;
     const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.userIdRef !== getUserIdentity().id);
     const curTimerState = this.props.timerState;
+    const childrenTitlesShort = this.props.groupTitles.shortTitles;
+    const childrenLongTitles = this.props.groupTitles.longTitles;
 
     return (
       <div
@@ -640,11 +658,33 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                 borderLeftColor: this.props.accentColor
               }}>
               <div className="card-header">
-                {
+                {/* {
                   //TODO: hakenned - change voting presence if it's not the hero card
-                  console.log('feedback item ' + this.props.title + ' isNotGroupedItem state: ' + isNotGroupedItem)
+                } */}
+                {
+                  isGroupedCarouselItem && isMainItem &&
+                  <button className="feedback-expand-group-focus"
+                    // aria-live="polite"
+                    // aria-label={this.props.groupedItemProps
+                    //   && !this.props.groupedItemProps.isGroupExpanded
+                    //   ? 'Expand Feedback Group button. Group has ' + groupItemsCount + ' items.'
+                    //   : 'Collapse Feedback Group button. Group has ' + groupItemsCount + ' items.'}
+                    // style={{ color: this.props.accentColor }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      //this.props.groupedItemProps.toggleGroupExpand();
+                      console.log('before :' + this.state.isShowingGroupedChildrenTitles)
+                      this.toggleShowGroupedChildrenTitles();
+                      console.log('before :' + this.state.isShowingGroupedChildrenTitles)
+                    }}>
+                    <i className={classNames('fa', {
+                      'fa-angle-double-down': this.state.isShowingGroupedChildrenTitles,
+                      'fa-angle-double-right': !this.state.isShowingGroupedChildrenTitles
+                    })} />&nbsp;
+                    {this.props.groupCount + 1} Items <i className='far fa-comments' />
+                  </button>
                 }
-                {!isNotGroupedItem && isMainItem &&
+                {!isNotGroupedItem && isMainItem && this.props.groupCount > 0 &&
                   <button className="feedback-expand-group"
                     aria-live="polite"
                     aria-label={this.props.groupedItemProps
@@ -654,7 +694,9 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     style={{ color: this.props.accentColor }}
                     onClick={(e) => {
                       e.stopPropagation();
+                      // console.log(this.props.groupTitles)
                       this.props.groupedItemProps.toggleGroupExpand();
+                      // this.props.groupTitles.toggleGroupExpand();
                     }}>
                     <i className={classNames('fa', {
                       'fa-chevron-down': this.props.groupedItemProps.isGroupExpanded,
@@ -838,6 +880,23 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                 </button>
               }
             </div>
+            {isGroupedCarouselItem && isMainItem && this.state.isShowingGroupedChildrenTitles && //TODO: Look here please
+              <div className="group-child-feedback-stack"
+                style={{
+                  backgroundColor: "#FFFF00",
+                  width: "300px"
+                }}>
+                <ul className='fa-ul'>
+                  {childrenTitlesShort.map((title, index) =>
+                    <li key={index}
+                      onClick={e =>
+                        console.log(this.props.groupTitles.longTitles[index])
+                      }><span className='fa-li'><i className='far fa-comment-dots' /></span> {title}</li>
+                  )
+                  }
+                </ul>
+              </div>
+            }
           </DocumentCard>
         </div>
         <Dialog
