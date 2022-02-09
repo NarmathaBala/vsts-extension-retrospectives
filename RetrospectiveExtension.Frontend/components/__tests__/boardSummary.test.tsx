@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { mockWorkItem, mockWorkItemType } from './mocked_components/WorkItemTracking';
 import { shallow, ShallowWrapper } from 'enzyme';
 import BoardSummary, { IBoardSummaryProps } from '../boardSummary';
-import { WorkItem, WorkItemType } from '../__mocks__/azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 
 const mockedDefaultProps: IBoardSummaryProps = {
   actionItems: [],
-  isDataLoaded: false,
+  isDataLoaded: true,
   pendingWorkItemsCount: 0,
   resolvedActionItemsCount: 0,
   boardName: '',
@@ -31,7 +31,25 @@ describe('Board Summary', () => {
     verifySummaryBoardCounts(component, mockedDefaultProps);
   });
 
-  test('renders with when work item counts are greater than zero.', () => {
+  test('renders with one action item.', () => {
+    mockedDefaultProps.actionItems.push(mockWorkItem);
+    mockedDefaultProps.supportedWorkItemTypes.push(mockWorkItemType);
+    const wrapper = shallow(<BoardSummary {...mockedDefaultProps} />);
+    const component = wrapper.children().dive();
+
+    verifySummaryBoardCounts(component, mockedDefaultProps);
+  });
+
+  test('renders when work item counts are greater than zero.', () => {
+    const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
+    const component = wrapper.children().dive();
+
+    verifySummaryBoardCounts(component, mockedWorkItemCountProps);
+  });
+
+  test('renders with one action item when work item counts are greater than zero.', () => {
+    mockedWorkItemCountProps.actionItems.push(mockWorkItem);
+    mockedWorkItemCountProps.supportedWorkItemTypes.push(mockWorkItemType);
     const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
     const component = wrapper.children().dive();
 
