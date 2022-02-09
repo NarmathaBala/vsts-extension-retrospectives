@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { shallow, ShallowWrapper} from 'enzyme';
+import { DetailsList } from 'office-ui-fabric-react/lib/DetailsList';
 import { mockWorkItem, mockWorkItemType } from './mocked_components/WorkItemTracking';
-import { shallow, ShallowWrapper } from 'enzyme';
 import BoardSummary, { IBoardSummaryProps } from '../boardSummary';
 
 const mockedDefaultProps: IBoardSummaryProps = {
@@ -24,36 +25,46 @@ const mockedWorkItemCountProps: IBoardSummaryProps = {
 };
 
 describe('Board Summary', () => {
-  test('renders with no action or work items.', () => {
+  it('renders with no action or work items.', () => {
     const wrapper = shallow(<BoardSummary {...mockedDefaultProps} />);
     const component = wrapper.children().dive();
 
     verifySummaryBoardCounts(component, mockedDefaultProps);
+    verifyActionItemsSummaryCard(component, false);
   });
 
-  test('renders with one action item.', () => {
+  it('renders with one action item.', () => {
     mockedDefaultProps.actionItems.push(mockWorkItem);
     mockedDefaultProps.supportedWorkItemTypes.push(mockWorkItemType);
     const wrapper = shallow(<BoardSummary {...mockedDefaultProps} />);
     const component = wrapper.children().dive();
 
     verifySummaryBoardCounts(component, mockedDefaultProps);
+    verifyActionItemsSummaryCard(component, true);
   });
 
-  test('renders when work item counts are greater than zero.', () => {
+  it('renders when work item counts are greater than zero.', () => {
     const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
     const component = wrapper.children().dive();
 
     verifySummaryBoardCounts(component, mockedWorkItemCountProps);
+    verifyActionItemsSummaryCard(component, false);
   });
 
-  test('renders with one action item when work item counts are greater than zero.', () => {
+  it.skip('renders action item columns when an action item exists.', () => {
+    const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
+
+    console.log(wrapper.debug());
+  });
+
+  it('renders with one action item when work item counts are greater than zero.', () => {
     mockedWorkItemCountProps.actionItems.push(mockWorkItem);
     mockedWorkItemCountProps.supportedWorkItemTypes.push(mockWorkItemType);
     const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
     const component = wrapper.children().dive();
 
     verifySummaryBoardCounts(component, mockedWorkItemCountProps);
+    verifyActionItemsSummaryCard(component, true);
   });
 });
 
@@ -71,3 +82,13 @@ const verifySummaryBoardCounts = (component: ShallowWrapper, props: IBoardSummar
     child => child.prop("aria-label") === "resolved work items count").text()).toBe(
       props.resolvedActionItemsCount.toString());
 };
+
+const verifyActionItemsSummaryCard = (component: ShallowWrapper, wereActionItemsInclude: boolean) => {
+  if(wereActionItemsInclude){
+    const child = component.findWhere((child: any) => child.prop('className') === 'action-items-summary-card').children();
+    expect(child.find(DetailsList)).toHaveLength(1);
+  } else {
+    expect(component.findWhere((child: any) => child.prop('className') === 'action-items-summary-card').
+      text()).toBe('Looks like no work items were created for this board.');
+  }
+}

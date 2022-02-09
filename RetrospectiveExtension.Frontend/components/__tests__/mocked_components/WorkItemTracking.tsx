@@ -51,7 +51,11 @@ export const mockWorkItem = mocked({
   commentVersionRef: WorkItemCommentVersionRef,
   fields: {
     ['System.WorkItemType'] : 'Test Work Item Type Name',
-    ['System.AssignedTo'] : 'Jane Doe'
+    ['System.ChangedDate'] : (new Date()).toLocaleDateString(),
+    ['System.AssignedTo'] : 'Jane Doe',
+    ['System.Title'] : 'Mocked Work Item Title',
+    ['System.State'] : 'Resolved',
+    ['Microsoft.VSTS.Common.Priority'] : 'high'
   },
   id: 500,
   relations: [WorkItemRelation],
