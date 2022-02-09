@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { shallow, ShallowWrapper} from 'enzyme';
+import { shallow, mount, ShallowWrapper} from 'enzyme';
 import { DetailsList } from 'office-ui-fabric-react/lib/DetailsList';
 import { mockWorkItem, mockWorkItemType } from './mocked_components/WorkItemTracking';
 import BoardSummary, { IBoardSummaryProps } from '../boardSummary';
@@ -52,7 +52,7 @@ describe('Board Summary', () => {
   });
 
   it.skip('renders action item columns when an action item exists.', () => {
-    const wrapper = shallow(<BoardSummary {...mockedWorkItemCountProps} />);
+    const wrapper = mount(<BoardSummary {...mockedWorkItemCountProps} />);
 
     console.log(wrapper.debug());
   });
