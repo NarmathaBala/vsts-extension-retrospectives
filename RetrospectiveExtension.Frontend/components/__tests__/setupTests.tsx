@@ -1,11 +1,21 @@
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { mockEnv } from '../__mocks__/config/environment';
 import { mockCore } from '../__mocks__/azure-devops-extension-api/Core/Core';
 import { mockCommon } from '../__mocks__/azure-devops-extension-api/Common/Common';
 import { MockSDK } from '../__mocks__/azure-devops-extension-sdk/sdk';
 
 Enzyme.configure({ adapter: new Adapter() });
+
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+  };
+});
 
 jest.mock('../../config/environment', () => { return mockEnv; });
 jest.mock('azure-devops-extension-sdk', () => { return MockSDK; });
