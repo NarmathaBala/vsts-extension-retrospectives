@@ -54,6 +54,8 @@ jobs:
           echo "##[set-output name=ext_prefix;]$pr_ext_prefix"
           echo "##[set-output name=test_organization;]$pr_test_organization"
         fi
+
+        echo test
       name: Set up default variables
       id: config
 
