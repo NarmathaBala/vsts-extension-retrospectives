@@ -57,18 +57,14 @@ jobs:
       name: Set up default variables
       id: config
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: |
         npm install -g \
           tfx-cli \
           node-jq
       name: Install tools used for deployment
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: |
         # Create environment.tsx from template
         cp config/environment.tsx.template config/environment.tsx
@@ -80,9 +76,7 @@ jobs:
       name: Prepare environment.tsx
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: |
         # Create vss-extension-dev.json from template
         cp vss-extension-dev.json.template vss-extension-dev.json
@@ -98,9 +92,7 @@ jobs:
       name: Prepare vss-extension-dev.json
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: |
         npm install
         npm run build:p
@@ -108,9 +100,7 @@ jobs:
       name: Prepare extension package
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: >
         tfx extension publish
         --manifests vss-extension-dev.json
@@ -119,9 +109,7 @@ jobs:
       name: Publish extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: >
         tfx extension share
         --no-prompt
@@ -132,9 +120,7 @@ jobs:
       name: Share extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: >
         tfx extension install
         --no-prompt
@@ -145,9 +131,7 @@ jobs:
       name: Install extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: |
-        ${{ steps.config.outputs.is_dev }} == "true" ||
-        ${{ steps.config.outputs.is_pr }} == "true" ||
+    - if: ${{ steps.config.outputs.is_dev }} == "true" || ${{ steps.config.outputs.is_pr }} == "true"
       run: |
         # Download developer certificate
         cert_file=cert.txt
