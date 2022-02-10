@@ -43,11 +43,13 @@ jobs:
         # TODO Remove debug branch before merging
         if [[ "$branch" == master ]] || [[ "$branch" == dev ]] || [[ "$branch" == "phongcao/cd-frontend" ]]; then
           echo "Setting config for Dev environment"
+          echo "##[set-output name=is_dev;]true"
           echo "##[set-output name=publisher;]$dev_publisher"
           echo "##[set-output name=ext_prefix;]$dev_ext_prefix"
           echo "##[set-output name=test_organization;]$dev_test_organization"
         elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
           echo "Setting config for PR validation"
+          echo "##[set-output name=is_pr;]true"
           echo "##[set-output name=publisher;]$pr_publisher"
           echo "##[set-output name=ext_prefix;]$pr_ext_prefix"
           echo "##[set-output name=test_organization;]$pr_test_organization"
@@ -55,13 +57,19 @@ jobs:
       name: Set up default variables
       id: config
 
-    - run: |
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: |
         npm install -g \
           tfx-cli \
           node-jq
       name: Install tools used for deployment
 
-    - run: |
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: |
         # Create environment.tsx from template
         cp config/environment.tsx.template config/environment.tsx
 
@@ -72,7 +80,10 @@ jobs:
       name: Prepare environment.tsx
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: |
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: |
         # Create vss-extension-dev.json from template
         cp vss-extension-dev.json.template vss-extension-dev.json
 
@@ -87,14 +98,20 @@ jobs:
       name: Prepare vss-extension-dev.json
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: |
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: |
         npm install
         npm run build:p
         npm run pack:d
       name: Prepare extension package
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: >
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: >
         tfx extension publish
         --manifests vss-extension-dev.json
         --vsix ./dist/*.vsix
@@ -102,7 +119,10 @@ jobs:
       name: Publish extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: >
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: >
         tfx extension share
         --no-prompt
         --publisher ${{ steps.config.outputs.publisher }}
@@ -112,7 +132,10 @@ jobs:
       name: Share extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: >
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: >
         tfx extension install
         --no-prompt
         --publisher ${{ steps.config.outputs.publisher }}
@@ -122,7 +145,10 @@ jobs:
       name: Install extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - run: |
+    - if: |
+        ${{ steps.config.outputs.is_dev }} ||
+        ${{ steps.config.outputs.is_pr }} ||
+      run: |
         # Download developer certificate
         cert_file=cert.txt
         scripts/download_dev_cert.sh \
