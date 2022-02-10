@@ -41,7 +41,7 @@ jobs:
         pr_test_organization=retroextcd-prval
 
         # TODO Remove debug branch before merging
-        if [[ "$branch" == master ]] || [[ "$branch" == dev ]] || [[ "$branch" == "phongcao/cd-frontend" ]]; then
+        if [[ "$branch" == master ]] || [[ "$branch" == dev ]] || [[ "$branch" == "phongcao/cd-frontend-test" ]]; then
           echo "Setting config for Dev environment"
           echo "##[set-output name=is_dev;]true"
           echo "##[set-output name=publisher;]$dev_publisher"
