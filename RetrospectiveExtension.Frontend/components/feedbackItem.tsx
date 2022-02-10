@@ -60,10 +60,7 @@ export interface IFeedbackItemProps {
   timerId: any;
   groupCount: number;
   isGroupedCarouselItem: boolean;
-  groupTitles: {
-    longTitles: String[],
-    shortTitles: String[]
-  };
+  groupTitles: String[];
   isShowingGroupedChildrenTitles: boolean;
   onVoteCasted: () => void;
 
@@ -624,8 +621,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.userIdRef !== getUserIdentity().id);
     const curTimerState = this.props.timerState;
-    const childrenTitlesShort = this.props.groupTitles.shortTitles;
-    const childrenLongTitles = this.props.groupTitles.longTitles;
+    const childrenTitlesShort = this.props.groupTitles;
 
     return (
       <div
@@ -885,13 +881,10 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                 style={{
                   backgroundColor: "#FFFF00",
                   width: "300px"
-                }}>
+                }}> Related Feedback
                 <ul className='fa-ul'>
-                  {childrenTitlesShort.map((title, index) =>
-                    <li key={index}
-                      onClick={e =>
-                        console.log(this.props.groupTitles.longTitles[index])
-                      }><span className='fa-li'><i className='far fa-comment-dots' /></span> {title}</li>
+                  {childrenTitlesShort.map((title: String, index: React.Key) =>
+                    <li key={index}><span className='fa-li'><i className='far fa-comment-dots' /></span> {title}</li>
                   )
                   }
                 </ul>

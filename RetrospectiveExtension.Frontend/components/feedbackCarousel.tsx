@@ -36,29 +36,25 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
 
         //TODO: hakenned - consider showing the count? and expand/collapse caret
 
-        console.log('toot toot carousel happened')
+
         feedbackItemProps.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
 
-        if (feedbackItemProps.isGroupedCarouselItem) {
-          //TODO: COME BACK TO THIS
-          const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
-          const childrenTitlesLong: String[] = [];
-          const childrenTitlesShort: String[] = [];
-          columnItemChildrenIds.forEach(childId => {
-            const childFeedbackItem = columnItems.find(childItem => childItem.feedbackItem.id == childId)
-            const origTitle = childFeedbackItem.feedbackItem.title
-            const shortTitle = origTitle.length > 20 ? origTitle.substring(0, 20) + '...' : origTitle;
-            childrenTitlesShort.push(shortTitle)
-            childrenTitlesLong.push(origTitle)
-          });
+        // if (feedbackItemProps.isGroupedCarouselItem) {
+        //   //TODO: COME BACK TO THIS
+        //   const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
+        //   const childrenTitlesShort: String[] = [];
+        //   columnItemChildrenIds.forEach(childId => {
+        //     const childFeedbackItem = columnItems.find(childItem => childItem.feedbackItem.id == childId)
+        //     const origTitle = childFeedbackItem.feedbackItem.title
+        //     const shortTitle = origTitle.length > 200 ? origTitle.substring(0, 200) + '...' : origTitle;
+        //     childrenTitlesShort.push(shortTitle)
+        //   });
 
-          feedbackItemProps.groupTitles = {
-            longTitles: childrenTitlesLong,
-            shortTitles: childrenTitlesShort //TODO: comeback to this logic
-          };
+        // feedbackItemProps.groupTitles = childrenTitlesShort; //TODO: comeback to this logic
 
-        }
 
+        console.log('is the new information getting to this level?')
+        console.log(feedbackItemProps)
 
         return (
           <div key={feedbackItemProps.id} className="feedback-carousel-item">
@@ -75,9 +71,12 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
   }
 
   private renderSingleFeedbackCarouselItem = (feedbackColumnProps: FeedbackColumnProps) => {
+    console.log('in a single item, did the props get here?')
+    console.log(feedbackColumnProps)
     return (
       <div className="feedback-carousel-item">
         <FeedbackItem
+          //TODO: include the same kind of logic. or just revisit structure in general
           {...FeedbackColumn.createFeedbackItemProps(feedbackColumnProps, feedbackColumnProps.columnItems.filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)[0], true)}
         />
       </div>
@@ -97,16 +96,60 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
       accessibility: true,
     };
 
-    return (
+    return ( //TODO:
       <Pivot
         className="feedback-carousel-pivot">
         {this.props.feedbackColumnPropsList.map((columnProps) => {
           const mainCardCount = columnProps.columnItems.filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId).length;
 
+          console.log('toot toot carousel happened now in pivot land')
+          console.log('is this the new source of info?')
+          console.log(columnProps)
+
+          columnProps.columnItems.forEach(columnItem => {
+            const feedbackItemProps = FeedbackColumn.createFeedbackItemProps(columnProps, columnItem, true);
+            feedbackItemProps.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+
+            console.log('is there group info here?');
+            console.log(feedbackItemProps);
+
+            if (feedbackItemProps.isGroupedCarouselItem) {
+              //TODO: COME BACK TO THIS
+              const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
+              const childrenTitlesShort: String[] = [];
+              columnItemChildrenIds.forEach(childId => {
+                const childFeedbackItem = columnProps.columnItems.find(childItem => childItem.feedbackItem.id == childId)
+                const origTitle = childFeedbackItem.feedbackItem.title
+                const shortTitle = origTitle.length > 200 ? origTitle.substring(0, 200) + '...' : origTitle;
+                childrenTitlesShort.push(shortTitle)
+              });
+
+              feedbackItemProps.groupTitles = childrenTitlesShort; //TODO: comeback to this logic
+
+              columnItem.feedbackItem.groupTitles = childrenTitlesShort;
+              console.log('is this column item getting the group title?')
+              console.log(columnItem.feedbackItem)
+              console.log('in the column props though?')
+              console.log(columnProps)
+              console.log('what are the ids?')
+              console.log(columnProps.columnItems)
+              const findItem = columnProps.columnItems.find(colItem =>
+                colItem.feedbackItem.id == columnItem.feedbackItem.id)
+              console.log('can i find the item')
+              console.log(findItem)
+              findItem.feedbackItem.groupTitles = childrenTitlesShort;
+            }
+          });
+          console.log('after some information insertion')
+          console.log(columnProps)
+
+
+
           return <PivotItem
             key={columnProps.columnId}
             headerText={columnProps.columnName}
             className="feedback-carousel-pivot-item"
+            {...columnProps}
           >
             {mainCardCount === 1 &&
               this.renderSingleFeedbackCarouselItem(columnProps)
@@ -115,6 +158,8 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
               // @ts-ignore TS2786
               <Slider {...settings}>
                 {React.Children.map(this.renderFeedbackCarouselItems(columnProps), (child: React.ReactElement<typeof FeedbackItem>) => {
+                  console.log('what about here? are you accessing the right column props?')
+                  console.log(columnProps)
                   return (
                     <div
                       className="feedback-carousel-item-wrapper"

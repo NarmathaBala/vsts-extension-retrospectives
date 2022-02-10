@@ -4,7 +4,6 @@
   .item-cards {
     display: flex;
     flex-direction: column;
-    background-color:red;
 
     .feedbackItemGroupItem {
       &.removeFeedbackItem {
@@ -48,7 +47,7 @@
 
   &.feedback-item-group-expanded {
     .feedbackItemGroupGroupedItem {
-      transform: scale(0.75); //TODO: hakenned - different... 0.75px?
+      transform: scale(0.95); //TODO: hakenned - different... 0.75px?
 
       .groupedItemCard {
         @extend .mainItemCard;

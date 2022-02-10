@@ -168,6 +168,10 @@
       ul {
         list-style: none;
       }
+      .fa-ul > li {
+        word-wrap: break-word;
+        padding: 2px;
+      }
     }
   }
 }
