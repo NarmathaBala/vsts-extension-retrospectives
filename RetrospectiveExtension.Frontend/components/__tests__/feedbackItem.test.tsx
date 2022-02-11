@@ -1,14 +1,11 @@
 import * as React from 'react';
 import moment from 'moment';
 import { shallow } from 'enzyme';
-import { mocked } from 'jest-mock';
-import { WorkflowPhase } from '../../interfaces/workItem';
-import { v4 as uuid } from 'uuid';
 import FeedbackItem from '../feedbackItem';
 import FeedbackColumn from '../feedbackColumn';
 import EditableDocumentCardTitle from '../editableDocumentCardTitle';
 import Dialog from 'office-ui-fabric-react/lib/Dialog';
-import { DefaultButton, TooltipOverflowMode } from 'office-ui-fabric-react';
+import { DefaultButton } from 'office-ui-fabric-react';
 import ActionItemDisplay from '../actionItemDisplay';
 import {
   testColumnProps,

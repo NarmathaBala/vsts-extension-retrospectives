@@ -9,7 +9,7 @@ const mockedProps = mocked({
   maxLength: 50,
   title: "Mocked Title",
   isChangeEventRequired: true,
-  onSave: jest.fn((newText) => {})
+  onSave: jest.fn(() => {})
 });
 
 describe('Workflow Stage ', () => {
