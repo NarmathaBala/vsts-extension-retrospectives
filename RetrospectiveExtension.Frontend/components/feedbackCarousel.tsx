@@ -16,7 +16,7 @@ import { IColumnItem } from './feedbackBoard';
 export interface IFeedbackCarouselProps {
   feedbackColumnPropsList: FeedbackColumnProps[];
   isFeedbackAnonymous: boolean;
-  //isGroupedFeedback: FeedbackItemHelper
+  isFocusModalHidden: boolean;
 }
 
 export interface IFeedbackCarouselState {
@@ -26,9 +26,10 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
   private renderFeedbackCarouselItems = (feedbackColumnProps: FeedbackColumnProps) => {
     const columnItems = feedbackColumnProps.columnItems.sort((item1, item2) => item2.feedbackItem.upvotes - item1.feedbackItem.upvotes);
 
+    console.log('FOR THE LOVE OF CHEESE IS THE FOCUS MODAL HIDDEN? ' + this.props.isFocusModalHidden)
+
     return columnItems
       // Carousel only shows main item cards.
-      // TODO: hakenned change that
       .filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)
       .map((columnItem) => {
         const feedbackItemProps =
@@ -36,33 +37,14 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
 
         //TODO: hakenned - consider showing the count? and expand/collapse caret
 
+        const isFocusModalHidden = this.props.isFocusModalHidden;
 
-        feedbackItemProps.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
-
-        // if (feedbackItemProps.isGroupedCarouselItem) {
-        //   //TODO: COME BACK TO THIS
-        //   const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
-        //   const childrenTitlesShort: String[] = [];
-        //   columnItemChildrenIds.forEach(childId => {
-        //     const childFeedbackItem = columnItems.find(childItem => childItem.feedbackItem.id == childId)
-        //     const origTitle = childFeedbackItem.feedbackItem.title
-        //     const shortTitle = origTitle.length > 200 ? origTitle.substring(0, 200) + '...' : origTitle;
-        //     childrenTitlesShort.push(shortTitle)
-        //   });
-
-        // feedbackItemProps.groupTitles = childrenTitlesShort; //TODO: comeback to this logic
-
-
-        console.log('is the new information getting to this level?')
-        console.log(feedbackItemProps)
+        feedbackItemProps.isGroupedCarouselItem = !isFocusModalHidden && columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
 
         return (
           <div key={feedbackItemProps.id} className="feedback-carousel-item">
             <FeedbackItem
               key={feedbackItemProps.id}
-              groupTitles={
-                feedbackItemProps.groupTitles
-              }
               {...feedbackItemProps}
             />
           </div>
@@ -71,13 +53,11 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
   }
 
   private renderSingleFeedbackCarouselItem = (feedbackColumnProps: FeedbackColumnProps) => {
-    console.log('in a single item, did the props get here?')
-    console.log(feedbackColumnProps)
     return (
       <div className="feedback-carousel-item">
         <FeedbackItem
-          //TODO: include the same kind of logic. or just revisit structure in general
-          {...FeedbackColumn.createFeedbackItemProps(feedbackColumnProps, feedbackColumnProps.columnItems.filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)[0], true)}
+          {...FeedbackColumn.createFeedbackItemProps(feedbackColumnProps, feedbackColumnProps.columnItems.filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)[0], true)
+          }
         />
       </div>
     );
@@ -96,54 +76,38 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
       accessibility: true,
     };
 
-    return ( //TODO:
+    return (
       <Pivot
         className="feedback-carousel-pivot">
         {this.props.feedbackColumnPropsList.map((columnProps) => {
           const mainCardCount = columnProps.columnItems.filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId).length;
 
-          console.log('toot toot carousel happened now in pivot land')
-          console.log('is this the new source of info?')
-          console.log(columnProps)
-
           columnProps.columnItems.forEach(columnItem => {
             const feedbackItemProps = FeedbackColumn.createFeedbackItemProps(columnProps, columnItem, true);
-            feedbackItemProps.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
 
-            console.log('is there group info here?');
-            console.log(feedbackItemProps);
+            // Establish whether an item in the column has children feedback grouped beneath it,
+            // and therefore will be the parent
+            const isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
 
-            if (feedbackItemProps.isGroupedCarouselItem) {
-              //TODO: COME BACK TO THIS
+            // Set that property for later
+            columnItem.feedbackItem.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+
+            if (isGroupedCarouselItem) {
+              // If an item in the column is a parent, get the title of the children
+              // to show in 'Related Feedback' section
               const columnItemChildrenIds = columnItem.feedbackItem.childFeedbackItemIds;
               const childrenTitlesShort: String[] = [];
               columnItemChildrenIds.forEach(childId => {
+                // For every child item in the group, limit to 2 lines (~200 characters)
                 const childFeedbackItem = columnProps.columnItems.find(childItem => childItem.feedbackItem.id == childId)
                 const origTitle = childFeedbackItem.feedbackItem.title
                 const shortTitle = origTitle.length > 200 ? origTitle.substring(0, 200) + '...' : origTitle;
                 childrenTitlesShort.push(shortTitle)
               });
 
-              feedbackItemProps.groupTitles = childrenTitlesShort; //TODO: comeback to this logic
-
               columnItem.feedbackItem.groupTitles = childrenTitlesShort;
-              console.log('is this column item getting the group title?')
-              console.log(columnItem.feedbackItem)
-              console.log('in the column props though?')
-              console.log(columnProps)
-              console.log('what are the ids?')
-              console.log(columnProps.columnItems)
-              const findItem = columnProps.columnItems.find(colItem =>
-                colItem.feedbackItem.id == columnItem.feedbackItem.id)
-              console.log('can i find the item')
-              console.log(findItem)
-              findItem.feedbackItem.groupTitles = childrenTitlesShort;
             }
           });
-          console.log('after some information insertion')
-          console.log(columnProps)
-
-
 
           return <PivotItem
             key={columnProps.columnId}
@@ -158,8 +122,6 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
               // @ts-ignore TS2786
               <Slider {...settings}>
                 {React.Children.map(this.renderFeedbackCarouselItems(columnProps), (child: React.ReactElement<typeof FeedbackItem>) => {
-                  console.log('what about here? are you accessing the right column props?')
-                  console.log(columnProps)
                   return (
                     <div
                       className="feedback-carousel-item-wrapper"

@@ -71,9 +71,9 @@
             font-size: 14px;
           }
 
-          &:focus {
-            border: none;
-          }
+          // &:focus {
+          //   border: none;
+          // }
 
           &:disabled {
             opacity: 0.5;
@@ -136,6 +136,7 @@
 
       .card-content {
         display: flex;
+        flex-direction: column;
         margin-right: 16px;
         margin-left: 16px;
       }
@@ -164,13 +165,37 @@
       }
     }
 
+    .card-action-timer {
+      margin-bottom: 10px;
+    }
+
     .group-child-feedback-stack {
+      .related-feedback-header {
+        font-variant: small-caps;
+      }
+
       ul {
         list-style: none;
       }
-      .fa-ul > li {
-        word-wrap: break-word;
-        padding: 2px;
+      .fa-ul {
+        margin-top: 0;
+        margin-left: 45px;
+
+        .fa-li {
+          background-color: lightgrey;
+          border: 1px darkgrey solid;
+          height: 30px;
+        }
+        li {
+          word-wrap: break-word;
+          padding: 2px;
+          line-height: 30px;
+          border-bottom: lightgrey 1px solid;
+
+          .related-feedback-title {
+            margin-left: 10px;
+          }
+        }
       }
     }
   }

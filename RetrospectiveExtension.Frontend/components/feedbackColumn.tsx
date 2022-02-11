@@ -94,7 +94,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       timerSecs: 0,
       timerstate: false,
       timerId: null,
-      groupTitles: []
+      groupTitles: [],
+      isGroupedCarouselItem: false
     };
 
     this.props.addFeedbackItems(
@@ -187,8 +188,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       userIdRef: columnItem.feedbackItem.userIdRef,
       onVoteCasted: columnProps.onVoteCasted,
       groupCount: columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length : 0,
-      isGroupedCarouselItem: false,//TODO: remove?columnItem.feedbackItem
-      groupTitles: [],
+      isGroupedCarouselItem: columnItem.feedbackItem.isGroupedCarouselItem,
+      groupTitles: columnItem.feedbackItem.groupTitles,
       isShowingGroupedChildrenTitles: false
     }
   }

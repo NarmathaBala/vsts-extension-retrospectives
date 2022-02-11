@@ -65,4 +65,5 @@ export interface IFeedbackItemDocument {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   timerId: any;
   groupTitles: String[];
+  isGroupedCarouselItem: boolean;
 }
