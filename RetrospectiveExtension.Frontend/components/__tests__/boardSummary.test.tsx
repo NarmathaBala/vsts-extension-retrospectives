@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { shallow, mount, ShallowWrapper} from 'enzyme';
+import { shallow, ShallowWrapper} from 'enzyme';
 import { DetailsList } from 'office-ui-fabric-react/lib/DetailsList';
 import { mockWorkItem, mockWorkItemType } from './mocked_components/WorkItemTracking';
 import BoardSummary, { IBoardSummaryProps } from '../boardSummary';
@@ -51,12 +51,6 @@ describe('Board Summary', () => {
     verifyActionItemsSummaryCard(component, false);
   });
 
-  it.skip('renders action item columns when an action item exists.', () => {
-    const wrapper = mount(<BoardSummary {...mockedWorkItemCountProps} />);
-
-    console.log(wrapper.debug());
-  });
-
   it('renders with one action item when work item counts are greater than zero.', () => {
     mockedWorkItemCountProps.actionItems.push(mockWorkItem);
     mockedWorkItemCountProps.supportedWorkItemTypes.push(mockWorkItemType);
@@ -85,9 +79,11 @@ const verifySummaryBoardCounts = (component: ShallowWrapper, props: IBoardSummar
 
 const verifyActionItemsSummaryCard = (component: ShallowWrapper, wereActionItemsInclude: boolean) => {
   if(wereActionItemsInclude){
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const child = component.findWhere((child: any) => child.prop('className') === 'action-items-summary-card').children();
     expect(child.find(DetailsList)).toHaveLength(1);
   } else {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(component.findWhere((child: any) => child.prop('className') === 'action-items-summary-card').
       text()).toBe('Looks like no work items were created for this board.');
   }
