@@ -21,7 +21,7 @@ jest.mock('../../config/environment', () => { return mockEnv; });
 jest.mock('azure-devops-extension-sdk', () => { return MockSDK; });
 jest.mock('azure-devops-extension-api/Core', () => { return mockCore; });
 
-jest.mock('azure-devops-extension-api/Core/CoreClient', () => {});
+jest.mock('azure-devops-extension-api/Core/CoreClient', () => { return mockCore; });
 jest.mock('azure-devops-extension-api/WebApi', () => {});
 jest.mock('azure-devops-extension-api/WorkItemTracking', () => {});
 jest.mock('azure-devops-extension-api/WorkItemTracking/WorkItemTracking', () => {});
