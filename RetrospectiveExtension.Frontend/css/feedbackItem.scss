@@ -71,9 +71,9 @@
             font-size: 14px;
           }
 
-          // &:focus {
-          //   border: none;
-          // }
+          &:focus {
+            border: none;
+          }
 
           &:disabled {
             opacity: 0.5;
