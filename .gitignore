@@ -276,3 +276,6 @@ RetrospectiveExtension.Backend.Tests/TestResults
 
 #Application Insights Dashboard description
 ai-dashboard.json 
+
+# Config
+config.json
