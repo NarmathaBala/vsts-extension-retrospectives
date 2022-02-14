@@ -25,27 +25,27 @@ jobs:
         target_branch="${{ github.event.pull_request.base.ref }}"
 
         # Extension Publishers
-        dev_publisher=retroextcd-rc
+        rc_publisher=retroextcd-rc
         pr_publisher=retroextcd-prval
 
         # Extension Prefix
         # Remove all forward slashes to use for Extension Id
-        dev_ext_prefix=${branch//\//}
+        rc_ext_prefix=${branch//\//}
         pr_branch=${{ github.event.pull_request.head.ref }}
         if [[ "$pr_branch" ]]; then
           pr_ext_prefix=${pr_branch//\//}
         fi
 
         # Test Organizations
-        dev_test_organization=retroextcd-rc
+        rc_test_organization=retroextcd-rc
         pr_test_organization=retroextcd-prval
 
         if [[ "$branch" == master ]] || [[ "$branch" == dev ]]; then
-          echo "Setting config for Dev environment"
-          echo "##[set-output name=is_dev;]true"
-          echo "##[set-output name=publisher;]$dev_publisher"
-          echo "##[set-output name=ext_prefix;]$dev_ext_prefix"
-          echo "##[set-output name=test_organization;]$dev_test_organization"
+          echo "Setting config for Release Candidate (RC) environment"
+          echo "##[set-output name=is_rc;]true"
+          echo "##[set-output name=publisher;]$rc_publisher"
+          echo "##[set-output name=ext_prefix;]$rc_ext_prefix"
+          echo "##[set-output name=test_organization;]$rc_test_organization"
         elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
           echo "Setting config for PR validation"
           echo "##[set-output name=is_pr;]true"
@@ -56,14 +56,14 @@ jobs:
       name: Set up default variables
       id: config
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: |
         npm install -g \
           tfx-cli \
           node-jq
       name: Install tools used for deployment
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: |
         # Create environment.tsx from template
         cp config/environment.tsx.template config/environment.tsx
@@ -75,7 +75,7 @@ jobs:
       name: Prepare environment.tsx
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: |
         # Create vss-extension-dev.json from template
         cp vss-extension-dev.json.template vss-extension-dev.json
@@ -91,7 +91,7 @@ jobs:
       name: Prepare vss-extension-dev.json
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: |
         npm install
         npm run build:p
@@ -99,7 +99,7 @@ jobs:
       name: Prepare extension package
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: >
         tfx extension publish
         --manifests vss-extension-dev.json
@@ -108,7 +108,7 @@ jobs:
       name: Publish extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: >
         tfx extension share
         --no-prompt
@@ -119,7 +119,7 @@ jobs:
       name: Share extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: >
         tfx extension install
         --no-prompt
@@ -130,7 +130,7 @@ jobs:
       name: Install extension
       working-directory: 'RetrospectiveExtension.Frontend'
 
-    - if: steps.config.outputs.is_dev == 'true' || steps.config.outputs.is_pr == 'true'
+    - if: steps.config.outputs.is_rc == 'true' || steps.config.outputs.is_pr == 'true'
       run: |
         # Download developer certificate
         cert_file=cert.txt
