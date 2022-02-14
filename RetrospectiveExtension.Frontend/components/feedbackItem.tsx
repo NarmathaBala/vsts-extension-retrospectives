@@ -879,8 +879,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                         aria-label={'Title of the feedback is ' + title}>
                         {title}
                       </span></li>
-
-
                   )
                   }
                 </ul>
