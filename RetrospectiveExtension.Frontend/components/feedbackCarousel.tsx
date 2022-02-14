@@ -33,9 +33,7 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
       .filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)
       .map((columnItem) => {
         const feedbackItemProps =
-          FeedbackColumnHelper.createFeedbackItemProps(feedbackColumnProps, columnItem, true);
-
-        //TODO: hakenned - consider showing the count? and expand/collapse caret
+          FeedbackColumn.createFeedbackItemProps(feedbackColumnProps, columnItem, true);
 
         const isFocusModalHidden = this.props.isFocusModalHidden;
 

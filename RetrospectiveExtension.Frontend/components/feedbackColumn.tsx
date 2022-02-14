@@ -273,7 +273,9 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
                 <i className="fa fa-caret-down" />}
             </div>
             <div className="feedback-column-name">
-              {this.props.columnName}
+              {this.props.columnName}&nbsp;
+              <i className={this.props.iconClass}
+                style={{ color: this.props.accentColor }}></i>
             </div>
           </div>
         </div>

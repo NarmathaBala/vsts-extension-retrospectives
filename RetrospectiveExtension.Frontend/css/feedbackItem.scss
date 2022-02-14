@@ -139,6 +139,10 @@
         flex-direction: column;
         margin-right: 16px;
         margin-left: 16px;
+
+        .feedback-yourvote-count {
+          font-size: 1em;
+        }
       }
 
       .card-id {
