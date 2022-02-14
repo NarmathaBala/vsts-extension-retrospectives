@@ -1,5 +1,6 @@
 ﻿const webpack = require('webpack');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -49,13 +50,14 @@ module.exports = {
   plugins: [
     new MomentLocalesPlugin(),
     new ESLintPlugin(),
+    new Dotenv(),
     new webpack.ProvidePlugin({
       process: 'process/browser',
     }),
     new webpack.DefinePlugin({
       'process.env': {
         BUILD_BUILDNUMBER: JSON.stringify(process.env.BUILD_BUILDNUMBER),
-        'process.env.NODE_ENV' : JSON.stringify(process.env.NODE_ENV || 'production'),
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
       }
     })
   ]
