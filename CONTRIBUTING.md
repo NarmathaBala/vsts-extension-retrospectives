@@ -73,8 +73,6 @@ All of the development prequisites, such as [NodeJS](https://nodejs.org/en/downl
 
 ### Dev Containers
 
-#### Prerequisities
-
 1. Install the latest version of [Visual Studio Code](https://code.visualstudio.com/).
 
 2. Install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) extension for
@@ -95,46 +93,64 @@ Visual Studio Code.
 
 ### Windows Subsystem For Linux
 
-#### Prerequisites
-
 1. To configure the WSL if it is not already available on the development machine, follow this
 [tutorial](https://docs.microsoft.com/en-us/learn/modules/get-started-with-windows-subsystem-for-linux/).
 
-2. Install the latest version of [Visual Studio Code](https://code.visualstudio.com/).
+2. Follow [Git on WSL Instructions](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git) if Git is not already installed on the development machine.
 
-3. Install the [Remote – WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
+3. Follow [Node Installation Instructions](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to enable Node for WSL.
+
+4. Install the latest version of [Visual Studio Code](https://code.visualstudio.com/).
+
+5. Install the [Remote – WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
  extension for Visual Studio Code.
+
+6. Check out this repository and open the parent folder in Visual Studio Code.
+
+7. The first time the repository is opened in Visual Studio Code, the terminal may not default to WSL. In the top right hand corner of the terminal window, select the down arrow to "Launch Profile..." and select the name of the distribution in use to create a new WSL terminal.
+
+8. Perform the commands listed in the [Dockerfile](.devcontainer/Dockerfile) to globally install required packages such as dotnet core.
+
+9. Run the [setup_ci.sh](RetrospectiveExtension.Frontend/scripts/setup_ci.sh) script to configure the WSL for the pre-commit hook.
+
+10. Follow the steps outlined in the [Build](#build) section to build, test, and deploy development versions of the extension.
+
+---
+
+- The first time this repository is opened in Visual Studio Code, the .devcontainer folder will be detected. In the bottom right-hand corner of the screen, a prompt will be displayed: “Folder contains a Dev Container configuration file. Reopen folder to develop in a container.”.
+- Some commands, such as `dotnet build` and `npm run build:d` may need `sudo` prefixed to execute successfully.
 
 ### Github Codespaces
 
-### Other
+1. If necessary, read Github's [codespace creation](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace) documentation.
 
-Local development is also supported on Windows and Mac, however the other environments listed above have been tested and known to work.
+2. Create a branch for the work you are planning to complete.
+
+3. Create a codespace through the new branch's dropdown on Github.
+
+4. Codespaces are powered by [Visual Studio Code and dev containers](https://docs.github.com/en/codespaces/developing-in-codespaces/developing-in-a-codespace) - once the codespace has been entered, you can follow the instructions within the [dev containers section](#dev-containers) for continuing to set up the development environment. View the [Developing in a codespace](https://docs.github.com/en/codespaces/developing-in-codespaces/developing-in-a-codespace) documentation for additional details.
 
 ## Build
 
 ### Test in Azure DevOps
+
 Test changes in the Azure DevOps environment by publishing a development version of the extension under an Azure DevOps publisher account.
 
 ---
 
 1. Clone this repository, and open in your preferred [development environment](#development-environments).
-
 2. Using Powershell, navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install`. This will download all the dependent packages listed in 'package.json'.
-
 3. Copy the file `RetrospectiveExtension.Frontend\config\environment.tsx.template` into `RetrospectiveExtension.Frontend\config\environment.tsx` and update the fields
 
-```json
-{
-   CollaborationStateServiceUrl : "https://my-backend-service.com", // change this to the deployed backend service
-   AppInsightsInstrumentK       : "my_instrumentation_key" // put Instrumentation key here
-}
-```
+    ```json
+    {
+      CollaborationStateServiceUrl : "https://my-backend-service.com", // change this to the deployed backend service
+      AppInsightsInstrumentK       : "my_instrumentation_key" // put Instrumentation key here
+    }
+    ```
 
 4. Run `npm run build:d` to build the project. Refer to the 'scripts' section in 'package.json' for other commands.
-
 5. To test your changes, you will need to publish a new extension under a new Azure DevOps publisher account. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts) on publishing extensions. You can publish it to any test Azure DevOps organization that you are an admin of (As a Microsoft employee, you can create a new test organization from your Azure DevOps profile page). Currently this is the only way to test the extension.
-
 6. Copy the file `vss-extension-dev.json.template` into `vss-extension-dev.json` file with the new publisher that you setup. Also update the name and id fields.
 
 ```json
@@ -144,12 +160,12 @@ Test changes in the Azure DevOps environment by publishing a development version
   "publisher": <the new publisher you created>,
   "version": <your staring version>,
   "name": <your extension's name. Can be any name you can identify by. Eg. Retrospectives-test>,
-}
-```
+}```
 
 7. Run `npm run pack:d` to package the modules into a Azure DevOps extension package. This generated package has a '.vsix' extension. This package is generated using information from the manifest file and your built code. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/develop/manifest?view=vsts) to know more about extension manifests.
-
 8. [Publish your to the marketplace](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#publish). Once published, share the extension with the newly created test org. See [this link](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#share) for documentation on sharing.
+
+---
 
 - Once the extension has been shared with your test org, you can install it to your org and start using it. This installation process is similar to installing any other DevOps extensions. Refer to [this link](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=vsts) for instructions. Since the extension is still in preview mode, it needs to be enabled for the Azure DevOps project. Enable the extension from the 'Preview Features' tab.
 
@@ -165,7 +181,8 @@ Test changes by loading changes locally without having to re-package and re-publ
 
 ---
 
-**Prerequisites**
+#### Hot Reload Prerequisites
+
 1. [Azure DevOps Extension Hot Reload and Debug](https://github.com/microsoft/azure-devops-extension-hot-reload-and-debug)
 
 2. [Visual Studio Code](https://code.visualstudio.com/download)
@@ -177,67 +194,61 @@ Test changes by loading changes locally without having to re-package and re-publ
 ---
 
 1. In the 'RetrospectiveExtension.Frontend' folder, create the 'vss-extension-dev.json' file using the template file `vss-extension-dev.json.template` for reference.
-
 2. Update the 'webpack.config.js' to enable source maps. Set the devtool property to `inline-source-map`. Also set devServer.https to true and devServer.port to 3000.
 
-  ```js
-  module.exports = {
-    devtool: 'inline-source-map',
-    devServer: {
-      https: true,
-      port: 3000,
-      static: {
-        directory: path.join(__dirname),
-      }
-    },
-  ...
-  ```
+    ```js
+    module.exports = {
+      devtool: 'inline-source-map',
+      devServer: {
+        https: true,
+        port: 3000,
+        static: {
+          directory: path.join(__dirname),
+        }
+      },
+    ...
+    ```
 
 3. Set `output.publicPath` to `/dist/` in the webpack.config.json file. This will allow webpack to serve files from `https://localhost:3000/dist`.
 
-  ```js
-  module.exports = {
-      output: {
-        publicPath: "/dist/"
-        // ...
-      }
-      // ..
-  };
-  ```
+    ```js
+    module.exports = {
+        output: {
+          publicPath: "/dist/"
+          // ...
+        }
+        // ..
+    };
+    ```
 
 4. In the root of the project, create a folder named `.vscode`. In there, create a file named `launch.json`, which will help to set up a debug configuration for VS Code that launches Firefox with the correct path mappings. Inside of this file, you will add a path mapping with `url` set to `webpack:///` and have the path set to `${workspaceFolder}/RetrospectiveExtension.Frontend/`. Also set the reAttach property on the configuration to true to avoid restarting Firefox every time you debug.
 
-  ```json
-  {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "Launch Firefox",
-        "type": "firefox",
-        "request": "launch",
-        "url": "https://localhost:3000/",
-        "reAttach": true,
-        "pathMappings": [
-          {
-            "url": "webpack:///",
-            "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/"
-          }
-        ]
-      }
-    ]
-  }
-  ```
+    ```json
+    {
+      "version": "0.2.0",
+      "configurations": [
+        {
+          "name": "Launch Firefox",
+          "type": "firefox",
+          "request": "launch",
+          "url": "https://localhost:3000/",
+          "reAttach": true,
+          "pathMappings": [
+            {
+              "url": "webpack:///",
+              "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/"
+            }
+          ]
+        }
+      ]
+    }
+    ```
 
 5. Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install` to download all the dependent packages listed in 'package.json'.
-
 6. Run `npm run build:d` to build the project.
-
 7. Run `npm run start:dev` to start the webpack-dev-server
-
 8. Start debugger (making sure the webpack-dev-server is still running). The default launch configuration should be set to Launch Firefox.
-
 9. Once Firefox starts up, you should get an untrusted certificate error page. Select Advanced and then select **Accept the Risk and Continue** and log into your Azure DevOps account. From now on, if you leave this Firefox window open, the debugger will reattach instead of starting a clean Firefox instance each time.
-
 10. Once you are logged in to Azure DevOps, your extension should be running. Set a breakpoint in a method in VS Code and you should see that breakpoint hit when that method executes.
 
 ### Test with Deployed Backend Service
@@ -250,14 +261,17 @@ specifying your publisher id and the unique key of your extension.
 ---
 
 #### Notes
+
 - This setup is ***not*** required for contributing to this extension, but can be helpful if you want
 certain debugging options available to you.
 - If you are part of a team working on the Retrospectives extension you can deploy a single backend to support multiple developer test extensions.
 
-#### Prerequisites
+#### Backend Prerequisites
 
 1. Azure CLI - [installation instructions here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
 2. dotnet CLI - the CLI comes as a part of the [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/5.0)
+
 3. the `zip` CLI tool - via `brew install zip` or `apt-get install zip` in a unix-flavored environment.
 
 #### Setup
@@ -294,6 +308,7 @@ contains the App Service, App Service Plan and SignalR resources.
    - `CollaborationStateServiceUrl` value to the App Service URL -
 `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
    - `AppInsightsInstrumentKey` value to Application Insights' Instrumentation Key for the resource `ai-<RESOURCE_NAME_SUFFIX>`.
+
 7. After updating the above values redeploy the extension.
 
 ## Frontend Development
@@ -357,7 +372,9 @@ The Retrospectives tool uses the [Azure DevOps data service](https://docs.micros
 ### Code
 
 1. The project is developed using the [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/) development platform. The 'CollaborationStateService' web project contains the code for the backend service. Since .NET Core is platform independent, project can be developed on any operating system.
+
 2. The 'ReflectBackend.ReflectHub' class contains the implementation of all the functions that the backend service supports. New methods should be added here to support more real time scenarios.
+
 3. Examples:
    - The code snippet below provides a method that the client can use to join a backend Group. Groups in SignalR provide a method for broadcasting messages to specified subsets of connected clients. Any client using this method gets added to the group that it specifies by the reflectBoardId.
 
