@@ -247,7 +247,7 @@ $team_selector_list_item_width: 450px;
       &.active {
         color: var(--status-info-foreground);
         font-weight: bold;
-        background-color: #c9c9c9; //TODO: hakenned - color the active one
+        background-color: #c9c9c9;
 
         &::before {
           background-color: transparent;

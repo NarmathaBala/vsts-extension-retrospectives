@@ -364,7 +364,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
   }
 
   private toggleShowGroupedChildrenTitles = () => {
-    this.setState((previousState) => ({ isShowingGroupedChildrenTitles: !previousState.isShowingGroupedChildrenTitles })) //TODO: Look here!
+    this.setState((previousState) => ({ isShowingGroupedChildrenTitles: !previousState.isShowingGroupedChildrenTitles }))
 
   }
 
@@ -592,7 +592,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
 
   private feedbackCreationInformationContent = () => {
     if (!this.props.createdBy) {
-      //TODO: hakenned maybe another CSS class for if grouped / voting
       return (
         <div className="anonymous-created-date">
           {moment(this.props.createdDate).format('MMM Do, YYYY h:mm a')}
@@ -655,6 +654,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
               }}>
               <div className="card-header">
                 {
+                  // This controls the top-level feedback item in the action phase on the carousel
                   isGroupedCarouselItem && isMainItem && showAddActionItem &&
                   <button className="feedback-expand-group-focus"
                     aria-live="polite"
@@ -673,7 +673,10 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     {this.props.groupCount + 1} Items <i className='far fa-comments' />
                   </button>
                 }
-                {!isGroupedCarouselItem && !isNotGroupedItem && isMainItem && this.props.groupCount > 0 && this.onVote &&
+                {
+                  // This controls the top level feedback item in a group in the vote phase
+                  // and outside the focus mode
+                  !isGroupedCarouselItem && !isNotGroupedItem && isMainItem && this.props.groupCount > 0 && this.onVote &&
                   <button className="feedback-expand-group"
                     aria-live="polite"
                     aria-label={this.props.groupedItemProps
@@ -744,9 +747,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     <i className="fas fa-arrow-circle-down" />
 
                   </button>
-                }
-                {
-                  // TODO: hakenned if in the voting section, turn this off?
                 }
                 {!this.props.newlyCreated && this.props.isInteractable &&
                   <div className="item-actions-menu">
@@ -845,7 +845,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <div>
                     <span className="feedback-yourvote-count">[Your Votes: {this.state.userVotes}]</span>
                   </div>
-                  //TODO: hakenned - come back to whether this is grouped or not
                 }
               </div>
               {this.feedbackCreationInformationContent()}
