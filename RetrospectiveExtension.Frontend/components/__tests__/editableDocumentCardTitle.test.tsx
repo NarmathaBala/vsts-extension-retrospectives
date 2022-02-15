@@ -12,7 +12,7 @@ const mockedProps = mocked({
   onSave: jest.fn(() => {})
 });
 
-describe('Workflow Stage ', () => {
+describe('Editable Document Card Title ', () => {
   it('can be rendered when enabled.', () => {
     mockedProps.isDisabled = true;
     const wrapper = shallow(<EditableDocumentCardTitle {...mockedProps} />);
