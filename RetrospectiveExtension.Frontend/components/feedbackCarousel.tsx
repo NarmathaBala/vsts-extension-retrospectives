@@ -2,16 +2,12 @@ import * as React from 'react';
 import Slider, { Settings } from "react-slick";
 import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { Pivot, PivotItem } from 'office-ui-fabric-react/lib/Pivot';
-import FeedbackItem, { IFeedbackItemProps, IGroupedFeedbackItemProps } from './feedbackItem';
+import FeedbackItem from './feedbackItem';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
-import { itemDataService } from '../dal/itemDataService';
-import feedbackItemGroup from './feedbackItemGroup';
-import { IFeedbackItemDocument } from '../interfaces/feedback';
-import { IColumnItem } from './feedbackBoard';
 
 export interface IFeedbackCarouselProps {
   feedbackColumnPropsList: FeedbackColumnProps[];
@@ -26,8 +22,6 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
   private renderFeedbackCarouselItems = (feedbackColumnProps: FeedbackColumnProps) => {
     const columnItems = feedbackColumnProps.columnItems.sort((item1, item2) => item2.feedbackItem.upvotes - item1.feedbackItem.upvotes);
 
-    console.log('FOR THE LOVE OF CHEESE IS THE FOCUS MODAL HIDDEN? ' + this.props.isFocusModalHidden)
-
     return columnItems
       // Carousel only shows main item cards.
       .filter((columnItem) => !columnItem.feedbackItem.parentFeedbackItemId)
@@ -38,6 +32,7 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
         const isFocusModalHidden = this.props.isFocusModalHidden;
 
         feedbackItemProps.isGroupedCarouselItem = !isFocusModalHidden && columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+        feedbackItemProps.isFocusModalHidden = isFocusModalHidden;
 
         return (
           <div key={feedbackItemProps.id} className="feedback-carousel-item">

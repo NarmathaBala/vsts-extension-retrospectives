@@ -190,7 +190,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       groupCount: columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length : 0,
       isGroupedCarouselItem: columnItem.feedbackItem.isGroupedCarouselItem,
       groupTitles: columnItem.feedbackItem.groupTitles,
-      isShowingGroupedChildrenTitles: false
+      isShowingGroupedChildrenTitles: false,
+      isFocusModalHidden: true
     }
   }
 

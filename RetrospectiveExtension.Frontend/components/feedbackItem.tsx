@@ -23,7 +23,6 @@ import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
 
-
 export interface IFeedbackItemProps {
   id: string;
   title: string;
@@ -62,6 +61,7 @@ export interface IFeedbackItemProps {
   isGroupedCarouselItem: boolean;
   groupTitles: String[];
   isShowingGroupedChildrenTitles: boolean;
+  isFocusModalHidden: boolean;
   onVoteCasted: () => void;
 
   addFeedbackItems: (
@@ -621,6 +621,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.userIdRef !== getUserIdentity().id);
     const curTimerState = this.props.timerState;
     const childrenTitlesShort = this.props.groupTitles;
+    const isFocusModalHidden = this.props.isFocusModalHidden;
 
     return (
       <div
@@ -655,7 +656,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
               <div className="card-header">
                 {
                   // This controls the top-level feedback item in the action phase on the carousel
-                  isGroupedCarouselItem && isMainItem && showAddActionItem &&
+                  isGroupedCarouselItem && isMainItem && showAddActionItem && !isFocusModalHidden &&
                   <button className="feedback-expand-group-focus"
                     aria-live="polite"
                     aria-label={this.props.groupedItemProps
@@ -670,13 +671,13 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                       'fa-angle-double-down': this.state.isShowingGroupedChildrenTitles,
                       'fa-angle-double-right': !this.state.isShowingGroupedChildrenTitles
                     })} />&nbsp;
-                    {this.props.groupCount + 1} Items <i className='far fa-comments' />
+                    {this.props.groupCount + 1} Items <i className="far fa-comments" />
                   </button>
                 }
                 {
                   // This controls the top level feedback item in a group in the vote phase
                   // and outside the focus mode
-                  !isGroupedCarouselItem && !isNotGroupedItem && isMainItem && this.props.groupCount > 0 && this.onVote &&
+                  !isNotGroupedItem && isMainItem && this.props.groupCount > 0 && isFocusModalHidden &&
                   <button className="feedback-expand-group"
                     aria-live="polite"
                     aria-label={this.props.groupedItemProps
@@ -872,10 +873,10 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                 style={{
                   width: "300px"
                 }}><span className="related-feedback-header">Related Feedback</span>
-                <ul className='fa-ul'>
+                <ul className="fa-ul">
                   {childrenTitlesShort.map((title: String, index: React.Key) =>
-                    <li key={index}><span className='fa-li'><i className='far fa-comment-dots' /></span>
-                      <span className='related-feedback-title'
+                    <li key={index}><span className="fa-li"><i className="far fa-comment-dots" /></span>
+                      <span className="related-feedback-title"
                         aria-label={'Title of the feedback is ' + title}>
                         {title}
                       </span></li>
