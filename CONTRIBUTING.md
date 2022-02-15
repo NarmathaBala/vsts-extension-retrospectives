@@ -9,7 +9,7 @@
 - [Development Environments](#development-environments)
   - [Visual Studio Code - Dev Containers](#dev-containers)
   - [Windows Subsystem for Linux (WSL)](#windows-subsystem-for-linux)
-  - [Github Codespaces](#codespaces)
+  - [Github Codespaces](#github-codespaces)
 - [Build](#build)
   - [Test in Azure DevOps](#test-in-azure-devops)
   - [Test with Hot Reload and Debug](#test-with-hot-reload-and-debug)
@@ -160,7 +160,8 @@ Test changes in the Azure DevOps environment by publishing a development version
   "publisher": <the new publisher you created>,
   "version": <your staring version>,
   "name": <your extension's name. Can be any name you can identify by. Eg. Retrospectives-test>,
-}```
+}
+```
 
 7. Run `npm run pack:d` to package the modules into a Azure DevOps extension package. This generated package has a '.vsix' extension. This package is generated using information from the manifest file and your built code. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/develop/manifest?view=vsts) to know more about extension manifests.
 8. [Publish your to the marketplace](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#publish). Once published, share the extension with the newly created test org. See [this link](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#share) for documentation on sharing.
