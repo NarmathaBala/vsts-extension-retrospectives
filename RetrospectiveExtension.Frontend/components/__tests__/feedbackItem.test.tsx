@@ -16,7 +16,7 @@ import {
   testColumns,
   testBoardId,
   testColumnUuidOne
- } from './mocked_components/mockedFeedbackColumn';
+ } from '../__mocks__/mocked_components/mockedFeedbackColumn';
 
 // Base render constants, these may change if the FeedbackItem component is changed.
 const childDialogCount = 5;

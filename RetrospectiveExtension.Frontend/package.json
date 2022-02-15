@@ -87,8 +87,7 @@
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "./components/__tests__/setupTests.tsx",
-      "./components/__tests__/mocked_components/*"
+      "./components/__tests__/setupTests.tsx"
     ],
     "transform": {
       "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"
