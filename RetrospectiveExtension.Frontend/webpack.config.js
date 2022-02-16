@@ -52,7 +52,9 @@ module.exports = (env, argv) => {
     plugins: [
       new MomentLocalesPlugin(),
       new ESLintPlugin(),
-      new Dotenv(),
+      new Dotenv({
+        systemvars: true
+      }),
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),
