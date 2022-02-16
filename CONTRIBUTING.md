@@ -9,7 +9,7 @@
 - [Development Environments](#development-environments)
   - [Visual Studio Code - Dev Containers](#dev-containers)
   - [Windows Subsystem for Linux (WSL)](#windows-subsystem-for-linux)
-  - [Github Codespaces](#codespaces)
+  - [Github Codespaces](#github-codespaces)
 - [Build](#build)
   - [Test in Azure DevOps](#test-in-azure-devops)
   - [Test with Hot Reload and Debug](#test-with-hot-reload-and-debug)
