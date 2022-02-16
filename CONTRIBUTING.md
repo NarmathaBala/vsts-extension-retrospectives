@@ -173,16 +173,20 @@ version of the extension under an Azure DevOps publisher account.
 2. Using Powershell, navigate to the '/RetrospectiveExtension.Frontend' folder,
 run `npm install`. This will download all the dependent packages listed in
 'package.json'.
-3. Copy the file
-`RetrospectiveExtension.Frontend\config\environment.tsx.template` into
-`RetrospectiveExtension.Frontend\config\environment.tsx` and update the fields.
+3. When developing or publishing the extension locally, you need to create a .env file at the top level directory of the front end project (where `package.json` lives). You can copy `RetrospectiveExtension.Frontend/.env.template` to `RetrospectiveExtension.Frontend/.env` to get started. The contents of the `.env` file are
 
-    ```json
-    {
-      CollaborationStateServiceUrl : "https://my-backend-service.com", // change this to the deployed backend service
-      AppInsightsInstrumentK       : "my_instrumentation_key" // put Instrumentation key here
-    }
+    ```bash
+    # Backend Service URL
+    REACT_APP_COLLABORATION_STATE_SERVICE_URL="put the deployed backend service url here"
+    # App Instrumentation Key
+    REACT_APP_APP_INSIGHTS_INSTRUMENTATION_KEY="put Instrumentation key here"
     ```
+
+    - In lieu of the .env file you can set actual environment variables.
+
+    - When using the CI/CD github action(s) pipeline to deploy the extension,
+    environment variables are used to set Application Insights instrumentation
+    key and the backend service url.
 
 4. Run `npm run build:d` or `npm run build:p` to build the project. The
 difference in commands is `development` versus `production`, respectively;
