@@ -728,7 +728,8 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <button
                     title="UnVote"
                     aria-live="polite"
-                    aria-label={'Click to unvote On feedback. Current vote count is ' + this.props.upvotes}
+                    aria-label={'Click to unvote on feedback with title ' + this.props.title
+                      + '. Current vote count is ' + this.props.upvotes}
                     tabIndex={0}
                     disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
