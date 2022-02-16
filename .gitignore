@@ -278,4 +278,4 @@ RetrospectiveExtension.Backend.Tests/TestResults
 ai-dashboard.json 
 
 # Alerts template
-alerts.json
+ai-alerts.json

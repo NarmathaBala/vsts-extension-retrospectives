@@ -113,9 +113,9 @@
             --output tsv)
 
     # Create Alerts and Action Group
-    alerts_file="./deploy/alerts.json"
+    alerts_file="./deploy/ai-alerts.json"
 
-    cp ./deploy/alerts.json.template ${alerts_file}
+    cp ./deploy/ai-alerts.json.template ${alerts_file}
 
     perl -pi -e s,VARRGNAME,${resource_group},g ${alerts_file}
     perl -pi -e s,VARSUBSCRIPTIONID,${subscription_id},g ${alerts_file}
