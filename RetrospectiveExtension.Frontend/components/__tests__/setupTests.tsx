@@ -6,10 +6,18 @@ import { MockSDK } from '../__mocks__/azure-devops-extension-sdk/sdk';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+  };
+});
 jest.mock('azure-devops-extension-sdk', () => { return MockSDK; });
 jest.mock('azure-devops-extension-api/Core', () => { return mockCore; });
-
-jest.mock('azure-devops-extension-api/Core/CoreClient', () => { });
+jest.mock('azure-devops-extension-api/Core/CoreClient', () => { return mockCore; });
 jest.mock('azure-devops-extension-api/WebApi', () => { });
 jest.mock('azure-devops-extension-api/WorkItemTracking', () => { });
 jest.mock('azure-devops-extension-api/WorkItemTracking/WorkItemTracking', () => { });

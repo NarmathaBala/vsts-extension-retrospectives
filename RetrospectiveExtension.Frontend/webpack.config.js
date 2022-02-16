@@ -7,12 +7,9 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 const BUILD_DIR = path.resolve(__dirname, 'dist');
 const APP_DIR = path.resolve(__dirname, '');
-const mode = process.env.NODE_ENV || 'production';
 
 module.exports = (env, argv) => {
-  const mode = argv.mode;
-  console.log(`mode is ${mode}`);
-  console.log(`env var is ${process.env.NODE_ENV}`);
+  const mode = argv.mode || 'production';
   return {
     devtool: 'source-map',
     entry: `${APP_DIR}/index.tsx`,

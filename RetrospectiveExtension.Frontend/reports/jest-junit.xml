@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="18" failures="0" errors="0" time="19.601">
+  <testsuite name="components/__tests__/feedbackItem.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:17:51" time="5.54" tests="1">
+    <testcase classname="Feedback Item" name="Render a Feedback Item with no child Feedback Items." time="0.178">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/boardSummary.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:17:57" time="1.864" tests="4">
+    <testcase classname="Board Summary" name="renders with no action or work items." time="0.019">
+    </testcase>
+    <testcase classname="Board Summary" name="renders with one action item." time="0.02">
+    </testcase>
+    <testcase classname="Board Summary" name="renders when work item counts are greater than zero." time="0.008">
+    </testcase>
+    <testcase classname="Board Summary" name="renders with one action item when work item counts are greater than zero." time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/feedbackCarousel.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:17:59" time="1.052" tests="1">
+    <testcase classname="Feedback Carousel " name="can be rendered" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/noFeedbackBoardsView.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:00" time="0.777" tests="1">
+    <testcase classname="No Feedback Boards View component" name="renders correctly." time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/workflowStage.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:01" time="1.058" tests="4">
+    <testcase classname="Workflow Stage " name="can be rendered when active." time="0.008">
+    </testcase>
+    <testcase classname="Workflow Stage " name="can be rendered when inactive." time="0.002">
+    </testcase>
+    <testcase classname="Workflow Stage " name="calls clickEventCallback when the Enter key is pressed." time="0.003">
+    </testcase>
+    <testcase classname="Workflow Stage " name="calls clickEventCallback when the component is clicked." time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/actionItemDisplay.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:02" time="0.64" tests="2">
+    <testcase classname="Action Item Display component" name="renders correctly when there are no action items." time="0.014">
+    </testcase>
+    <testcase classname="Action Item Display component" name="renders correctly when action items exist" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/editableDocumentCardTitle.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:02" time="0.438" tests="1">
+    <testcase classname="Editable Document Card Title " name="can be rendered when enabled." time="0.007">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/editableText.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:03" time="0.438" tests="2">
+    <testcase classname="Editable Text Component" name="renders correctly." time="0.011">
+    </testcase>
+    <testcase classname="Editable Text Component" name="updates text appropriately." time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/feedbackBoard.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:03" time="0.319" tests="1">
+    <testcase classname="The Feedback Board Component" name="Should not regress" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="components/__tests__/feedbackBoardContainer.test.tsx" errors="0" failures="0" skipped="0" timestamp="2022-02-16T18:18:04" time="5.205" tests="1">
+    <testcase classname="Feedback Board Container " name="can be rendered without content." time="0.034">
+    </testcase>
+  </testsuite>
+</testsuites>
