@@ -834,7 +834,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   }}
                 >
                   <i className={curTimerState ? "fa fa-stop-circle" : "fa fa-play-circle"} />
-                  <span> {this.formatTimer(this.props.timerSecs)} elapsed</span> {/* TODO: COME HERE*/}
+                  <span> {this.formatTimer(this.props.timerSecs)} elapsed</span>
                 </button>
               }
             </div>
