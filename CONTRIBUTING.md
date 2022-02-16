@@ -149,7 +149,7 @@ Test changes in the Azure DevOps environment by publishing a development version
     }
     ```
 
-4. Run `npm run build:d` to build the project. Refer to the 'scripts' section in 'package.json' for other commands.
+4. Run `npm run build:d` or `npm run build:p` to build the project.The difference in commands is `development` versus `production`, respectively; the `production` command will generate a smaller bundle.
 5. To test your changes, you will need to publish a new extension under a new Azure DevOps publisher account. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts) on publishing extensions. You can publish it to any test Azure DevOps organization that you are an admin of (As a Microsoft employee, you can create a new test organization from your Azure DevOps profile page). Currently this is the only way to test the extension.
 6. Copy the file `vss-extension-dev.json.template` into `vss-extension-dev.json` file with the new publisher that you setup. Also update the name and id fields.
 
@@ -160,7 +160,8 @@ Test changes in the Azure DevOps environment by publishing a development version
   "publisher": <the new publisher you created>,
   "version": <your staring version>,
   "name": <your extension's name. Can be any name you can identify by. Eg. Retrospectives-test>,
-}```
+}
+```
 
 7. Run `npm run pack:d` to package the modules into a Azure DevOps extension package. This generated package has a '.vsix' extension. This package is generated using information from the manifest file and your built code. Refer to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/develop/manifest?view=vsts) to know more about extension manifests.
 8. [Publish your to the marketplace](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#publish). Once published, share the extension with the newly created test org. See [this link](https://docs.microsoft.com/en-us/azure/devops/extend/publish/overview?view=vsts#share) for documentation on sharing.
@@ -416,11 +417,9 @@ Unit Tests for the Backend are located in the [Backend Tests folder](Retrospecti
 
 3. Execute `dotnet build`.
 
-4. Navigate to the RetrospectiveExtension.Backend.Tests folder.
+4. Execute `dotnet test ../RetrospectiveExtension.Backend.Tests`.
 
-5. Execute `dotnet test`.
-
-6. View test results in the terminal.
+7. View test results in the terminal.
 
 ## Application Monitoring and Telemetry
 
