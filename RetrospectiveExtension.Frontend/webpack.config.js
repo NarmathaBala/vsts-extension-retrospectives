@@ -8,10 +8,11 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const BUILD_DIR = path.resolve(__dirname, 'dist');
 const APP_DIR = path.resolve(__dirname, '');
 const mode = process.env.NODE_ENV || 'production';
-console.log(`mode is ${mode}`);
-console.log(`env var is ${process.env.NODE_ENV}`);
+
 module.exports = (env, argv) => {
-  // const mode = argv
+  const mode = argv.mode;
+  console.log(`mode is ${mode}`);
+  console.log(`env var is ${process.env.NODE_ENV}`);
   return {
     devtool: 'source-map',
     entry: `${APP_DIR}/index.tsx`,
@@ -64,13 +65,6 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env.BUILD_BUILDNUMBER': JSON.stringify(process.env.BUILD_BUILDNUMBER)
       }),
-
-      // new webpack.DefinePlugin({
-      //   'process.env': {
-      //     BUILD_BUILDNUMBER: JSON.stringify(process.env.BUILD_BUILDNUMBER),
-      //     'NODE_ENV': JSON.stringify(mode),
-      //   }
-      // })
     ]
   };
 }
