@@ -148,6 +148,8 @@ export const testColumnProps = mocked({
   isBoardAnonymous: false,
   shouldFocusOnCreateFeedback: false,
   hideFeedbackItems: false,
+  groupTitles: ['example one', 'example two'],
+  isFocusModalHidden: false,
   onVoteCasted: jest.fn(() => { }),
   addFeedbackItems: jest.fn(() => { }),
   removeFeedbackItemFromColumn: jest.fn(() => { }),
