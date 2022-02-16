@@ -56,8 +56,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        BUILD_BUILDNUMBER: JSON.stringify(process.env.BUILD_BUILDNUMBER)
-        // 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+        BUILD_BUILDNUMBER: JSON.stringify(process.env.BUILD_BUILDNUMBER),
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
       }
     })
   ]
