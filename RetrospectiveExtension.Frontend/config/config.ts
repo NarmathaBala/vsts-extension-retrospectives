@@ -16,7 +16,7 @@ const getConfiguration = (): AppConfiguration => {
   }
   return {
     AppInsightsInstrumentKey: appInsightsInstrumentKey || '',
-    CollaborationStateServiceUrl: collaborationStateServiceUrl || 'https://wesbite-unset.com/',
+    CollaborationStateServiceUrl: collaborationStateServiceUrl || 'https://website-unset.com/',
     CurrentEnvironment: process.env.NODE_ENV,
   }
 }
