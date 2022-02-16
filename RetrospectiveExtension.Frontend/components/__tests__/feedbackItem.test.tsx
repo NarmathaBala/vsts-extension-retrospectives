@@ -16,7 +16,7 @@ import {
   testColumns,
   testBoardId,
   testColumnUuidOne
- } from '../__mocks__/mocked_components/mockedFeedbackColumn';
+} from '../__mocks__/mocked_components/mockedFeedbackColumn';
 
 // Base render constants, these may change if the FeedbackItem component is changed.
 const childDialogCount = 5;
@@ -53,8 +53,8 @@ describe('Feedback Item', () => {
     });
     expect(component.findWhere((child) =>
       child.prop("title") === "Vote").
-        findWhere((nestedChild) =>
-          nestedChild.prop("className") === "feedback-upvote-count").text()).
+      findWhere((nestedChild) =>
+        nestedChild.prop("className") === "feedback-upvote-count").text()).
       toEqual(` ${testUpvotes}`);
 
     // Expect basic values of the Feedback Item to be propagated in multiple areas of the rendered component.
@@ -69,8 +69,8 @@ describe('Feedback Item', () => {
           columnItem.feedbackItem.id === testFeedbackItem.id)}`);
 
     expect(component.findWhere((child) =>
-     child.type() === EditableDocumentCardTitle).prop("title")).
-     toEqual(testFeedbackItem.title);
+      child.type() === EditableDocumentCardTitle).prop("title")).
+      toEqual(testFeedbackItem.title);
 
     const actionItemDisplay = component.findWhere((child) =>
       child.type() === ActionItemDisplay);
@@ -79,8 +79,10 @@ describe('Feedback Item', () => {
     expect(actionItemDisplay.prop("boardId")).toEqual(testBoardId);
     expect(actionItemDisplay.prop("boardTitle")).toEqual(testColumnProps.boardTitle);
 
+
     expect(component.findWhere((child) =>
+      // TODO: fix this test
       child.prop("title") === "Timer").html()).
-      toContain(`${testFeedbackItem.timerSecs} (seconds)`);
+      toContain(`${this.formatTimer(testFeedbackItem.timerSecs)} elasped`);
   });
 });
