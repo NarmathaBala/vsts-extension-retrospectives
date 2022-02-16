@@ -79,10 +79,13 @@ describe('Feedback Item', () => {
     expect(actionItemDisplay.prop("boardId")).toEqual(testBoardId);
     expect(actionItemDisplay.prop("boardTitle")).toEqual(testColumnProps.boardTitle);
 
+    // Same formating function
+    const timerMinutes = Math.floor(testFeedbackItem.timerSecs / 60);
+    const timerSeconds = testFeedbackItem.timerSecs % 60;
+    const leadingZeroSeconds = timerSeconds < 10;
+    const formatTimer = leadingZeroSeconds ? (timerMinutes + ':0' + timerSeconds) : (timerMinutes + ':' + timerSeconds);
 
     expect(component.findWhere((child) =>
-      // TODO: fix this test
-      child.prop("title") === "Timer").html()).
-      toContain(`${this.formatTimer(testFeedbackItem.timerSecs)} elasped`);
+      child.prop("title") === "Timer").html()).toContain(`${formatTimer} elapsed`);
   });
 });

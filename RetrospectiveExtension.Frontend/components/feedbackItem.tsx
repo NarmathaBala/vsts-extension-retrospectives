@@ -596,7 +596,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     />);
   };
 
-  public formatTimer = (timeInSeconds: number) => {
+  private formatTimer = (timeInSeconds: number) => {
     // Handle the timer display
     // Doesn't handle formatting hours since that may be excessive
     const timerMinutes = Math.floor(timeInSeconds / 60);
