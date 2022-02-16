@@ -40,12 +40,12 @@ jobs:
         pr_test_organization=retroextcd-prval
 
         if [[ "$branch" == master ]] || [[ "$branch" == dev ]]; then
-          echo "Setting config for Release Candidate (RC) environment"
+          echo "Setting config for Release Candidate (RC)"
           echo "##[set-output name=publisher;]$rc_publisher"
           echo "##[set-output name=ext_prefix;]$rc_ext_prefix"
           echo "##[set-output name=test_organization;]$rc_test_organization"
         elif [[ "$target_branch" == master ]] || [[ "$target_branch" == dev ]]; then
-          echo "Setting config for PR validation"
+          echo "Setting config for PR Validation"
           echo "##[set-output name=publisher;]$pr_publisher"
           echo "##[set-output name=ext_prefix;]$pr_ext_prefix"
           echo "##[set-output name=test_organization;]$pr_test_organization"
