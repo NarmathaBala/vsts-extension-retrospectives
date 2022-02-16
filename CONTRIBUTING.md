@@ -318,14 +318,14 @@ you debug.
           "url": "https://localhost:3000/",
           "reAttach": true,
           "pathMappings": [
-                {
-                    "url": "webpack://retrospective-vsts-extension/components",
-                    "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/components"
-                },
-                {
-                    "url": "webpack://retrospective-vsts-extension/dal",
-                    "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/dal"
-                },
+            {
+              "url": "webpack://retrospective-vsts-extension/components",
+              "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/components"
+            },
+            {
+              "url": "webpack://retrospective-vsts-extension/dal",
+              "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/dal"
+            },
             {
               "url": "webpack:///",
               "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/"
