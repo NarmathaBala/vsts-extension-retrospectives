@@ -48,7 +48,7 @@ REACT_APP_APP_INSIGHTS_INSTRUMENTATION_KEY="put Instrumentation key here"
 ```
 
 - In lieu of the `.env` file you can set actual environment variables.
-- When using the CI github action pipeline to deploy the extension, environment variables are used to set Application Insights instrumentation key and the backend service url.
+- When using the CI/CD github action(s) pipeline to deploy the extension, environment variables are used to set Application Insights instrumentation key and the backend service url.
 
 - Run `npm run build` to build the project. Refer to the 'scripts' section in 'package.json' for other commands.
 
