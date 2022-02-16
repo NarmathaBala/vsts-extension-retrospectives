@@ -90,16 +90,18 @@ outside of a [dev container](#dev-containers).
 
 ### Dev Containers
 
-1. Install the latest version of
+1. Install the latest version of [Docker Desktop](https://www.docker.com/products/docker-desktop).
+
+2. Install the latest version of
 [Visual Studio Code](https://code.visualstudio.com/).
 
-2. Install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) extension for Visual Studio Code.
+3. Install the [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) extension for Visual Studio Code.
 
-3. Install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for Visual Studio Code.
+4. Install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for Visual Studio Code.
 
-4. Check out this repository and open the parent folder in Visual Studio Code.
+5. Check out this repository and open the parent folder in Visual Studio Code.
 
-5. Follow the steps outlined in the [Build](#build) section to build, test, and
+6. Follow the steps outlined in the [Build](#build) section to build, test, and
 deploy development versions of the extension.
 
 ---
