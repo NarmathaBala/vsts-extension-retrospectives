@@ -82,10 +82,10 @@ The Retrospectives Extension can be built, developed and tested in several
 development environments. This section highlights three of the primary
 environments in order of relevance.
 
-All of the development prequisites, such as [Webpack](https://webpack.js.org/)
+All of the development prerequisites, such as [Webpack](https://webpack.js.org/)
 and [NodeJS](https://nodejs.org/en/download/) are listed in the
 [Dockerfile](.devcontainer/Dockerfile). This file can be opened in a text
-editor and the install commands can be used to configure the prequisites
+editor and the install commands can be used to configure the prerequisites
 outside of a [dev container](#dev-containers).
 
 ### Dev Containers
@@ -152,11 +152,11 @@ prefixed to execute successfully.
 
 ### Github Codespaces
 
-1. If necessary, read Github's [codespace creation](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace) documentation.
+1. If necessary, read GitHub's [codespace creation](https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace) documentation.
 
 2. Create a branch for the work you are planning to complete.
 
-3. Create a codespace through the new branch's dropdown on Github.
+3. Create a codespace through the new branch's dropdown on GitHub.
 
 4. Codespaces are powered by [Visual Studio Code and dev containers](https://docs.github.com/en/codespaces/developing-in-codespaces/developing-in-a-codespace) - once the codespace has been entered, you can follow the instructions within the [dev containers section](#dev-containers) for continuing to set up the development environment. View the [Developing in a codespace](https://docs.github.com/en/codespaces/developing-in-codespaces/developing-in-a-codespace) documentation for additional details.
 
@@ -314,6 +314,14 @@ you debug.
           "url": "https://localhost:3000/",
           "reAttach": true,
           "pathMappings": [
+                {
+                    "url": "webpack://retrospective-vsts-extension/components",
+                    "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/components"
+                },
+                {
+                    "url": "webpack://retrospective-vsts-extension/dal",
+                    "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/dal"
+                },
             {
               "url": "webpack:///",
               "path": "${workspaceFolder}/RetrospectiveExtension.Frontend/"
