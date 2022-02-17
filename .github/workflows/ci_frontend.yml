@@ -88,6 +88,6 @@ jobs:
         name: Test Coverage PR comment
         uses: thollander/actions-comment-pull-request@v1
         with:
-          message: 'Test Coverage! ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhassaninmsft/b414faf6b91eaaa6ec7d82882be36935/raw/retrotool__${{ env.BRANCH }}.json)'
+          message: "Test Coverage! ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhassaninmsft/b414faf6b91eaaa6ec7d82882be36935/raw/retrotool__${{ env.BRANCH }}.json)"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
