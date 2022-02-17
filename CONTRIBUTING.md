@@ -15,9 +15,10 @@
   - [Test with Hot Reload and Debug](#test-with-hot-reload-and-debug)
   - [Test with Deployed Backend Service](#test-with-deployed-backend-service)
 - [Frontend Development](#frontend-development)
+  - [Style Guide](#frontend-style-guide)
   - [Unit Testing](#frontend-unit-testing)
 - [Backend Development](#backend-development)
-  - [Style Guide](#style-guide)
+  - [Style Guide](#backend-style-guide)
   - [Storage](#storage)
   - [Code](#code)
   - [Unit Testing](#backend-unit-testing)
@@ -44,11 +45,10 @@ convention.
 2. Once your feature addition or bug fix is ready for review, create a pull
 request against the `master` branch of the repository.
 
-3. Include a link to the bug or task you are addressing to the description of
+3. Include a link to the GitHub issue you are addressing to the description of
 your pull request. Reviewers will be added to the pull request automatically.
 
-4. Ensure builds are successful and tests, including any added or updated tests
-, pass prior to submitting the pull request.
+4. Ensure all CI/CD checks are successful after the creation of the pull request.
 
 5. Update any documentation, user and contributor, that is impacted by your
 changes.
@@ -107,7 +107,7 @@ deploy development versions of the extension.
 ---
 
 - The first time this repository is opened in Visual Studio Code, the
-.devcontainer folder will be detected. In the bottom right-hand corner of the
+`.devcontainer` folder will be detected. In the bottom right-hand corner of the
 screen, a prompt will be displayed: “Folder contains a Dev Container
 configuration file. Reopen folder to develop in a container.”.
 - Selecting the “Reopen in Container” option will automatically start the
@@ -172,9 +172,9 @@ version of the extension under an Azure DevOps publisher account.
 ---
 
 1. Clone this repository, and open in your preferred [development environment](#development-environments).
-2. Using Powershell, navigate to the '/RetrospectiveExtension.Frontend' folder,
+2. Using Powershell, navigate to the `/RetrospectiveExtension.Frontend` folder,
 run `npm install`. This will download all the dependent packages listed in
-'package.json'.
+`package.json`.
 3. When developing or publishing the extension locally, you need to create a .env file at the top level directory of the front end project (where `package.json` lives). You can copy `RetrospectiveExtension.Frontend/.env.template` to `RetrospectiveExtension.Frontend/.env` to get started. The contents of the `.env` file are
 
     ```bash
@@ -200,7 +200,7 @@ on publishing extensions. You can publish it to any test Azure DevOps
 organization that you are an admin of (As a Microsoft employee, you can create
 a new test organization from your Azure DevOps profile page). Currently this is
 the only way to test the extension.
-6. Copy the file `vss-extension-dev.json.template` into
+6. Copy the file `vss-extension-dev.json.template` into a new
 `vss-extension-dev.json` file with the new publisher that you setup. Also
 update the name and id fields.
 
@@ -215,7 +215,7 @@ update the name and id fields.
     ```
 
 7. Run `npm run pack:d` to package the modules into a Azure DevOps extension
-package. This generated package has a '.vsix' extension. This package is
+package. This generated package has a `.vsix` extension. This package is
 generated using information from the manifest file and your built code. Refer
 to the [documentation](https://docs.microsoft.com/en-us/azure/devops/extend/develop/manifest?view=vsts)
 to know more about extension manifests.
@@ -232,7 +232,7 @@ any other DevOps extensions. Refer to
 [this link](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=vsts)
 for instructions. Since the extension is still in preview mode, it needs to be
 enabled for the Azure DevOps project. Enable the extension from the
-'Preview Features' tab.
+`Preview Features` tab.
 
 - Now start using the extension to test your changes.
 
@@ -267,10 +267,10 @@ re-publish the extension in the marketplace.
 
 ---
 
-1. In the 'RetrospectiveExtension.Frontend' folder, create the
-'vss-extension-dev.json' file using the template file
+1. In the `RetrospectiveExtension.Frontend` folder, create the
+`vss-extension-dev.json` file using the template file
 `vss-extension-dev.json.template` for reference.
-2. Update the 'webpack.config.js' to enable source maps. Set the devtool
+2. Update the `webpack.config.js` to enable source maps. Set the devtool
 property to `inline-source-map`. Also set devServer.https to true and
 devServer.port to 3000.
 
@@ -338,8 +338,8 @@ you debug.
     }
     ```
 
-5. Navigate to the '/RetrospectiveExtension.Frontend' folder, run `npm install`
-to download all the dependent packages listed in 'package.json'.
+5. Navigate to the `/RetrospectiveExtension.Frontend` folder, run `npm install`
+to download all the dependent packages listed in `package.json`.
 6. Run `npm run build:d` to build the project.
 7. Run `npm run start:dev` to start the webpack-dev-server
 8. Start debugger (making sure the webpack-dev-server is still running). The
@@ -422,6 +422,11 @@ reflect changes to:
 
 ## Frontend Development
 
+### Frontend Style Guide
+
+This extension uses [ESLint](https://eslint.org/) for consistent formatting
+and styling within the React components.
+
 ### Frontend Unit Testing
 
 #### Framework
@@ -484,9 +489,9 @@ expected changes are present, and include the snapshot in your pull request.
 
 ## Backend Development
 
-### Style Guide
+### Backend Style Guide
 
-Follow the coding guidelines here - [C# Coding Conventions (C# Programming Guide)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)..
+Follow the coding guidelines here - [C# Coding Conventions (C# Programming Guide)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions).
 
 ### Storage
 
@@ -495,11 +500,11 @@ The Retrospectives tool uses the [Azure DevOps data service](https://docs.micros
 ### Code
 
 1. The project is developed using the [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/)
-development platform. The 'CollaborationStateService' web project contains the
+development platform. The `CollaborationStateService` web project contains the
 code for the backend service. Since .NET Core is platform independent, project
 can be developed on any operating system.
 
-2. The 'ReflectBackend.ReflectHub' class contains the implementation of all the
+2. The `ReflectBackend.ReflectHub` class contains the implementation of all the
 functions that the backend service supports. New methods should be added here
 to support more real time scenarios.
 
@@ -522,8 +527,8 @@ to support more real time scenarios.
      ```
 
    - The code snippet below broadcasts that a new Feedback specified by the
-   'feedbackItemId' is available on the board specified by 'reflectBoardId'.
-   The 'columnId' specifies which column of the board the item was added to.
+   `feedbackItemId` is available on the board specified by `reflectBoardId`.
+   The `columnId` specifies which column of the board the item was added to.
    Clients can use this method to signal to other clients that a new Feedback
    was added to one of its boards.
 
