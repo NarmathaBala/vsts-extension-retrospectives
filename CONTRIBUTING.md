@@ -133,10 +133,9 @@ machine, follow this [tutorial](https://docs.microsoft.com/en-us/learn/modules/g
 
 6. Check out this repository and open the parent folder in Visual Studio Code.
 
-7. The first time the repository is opened in Visual Studio Code, the terminal
-may not default to WSL. In the top right hand corner of the terminal window,
-select the down arrow to "Launch Profile..." and select the name of the
-distribution in use to create a new WSL terminal.
+7. If VSCode does not recognize the WSL on its own, in the top right hand
+corner of the terminal window, select the down arrow to "Launch Profile..."
+and select the name of the distribution in use to create a new WSL terminal.
 
 8. Perform the commands listed in the [Dockerfile](.devcontainer/Dockerfile) to
 globally install required packages such as dotnet core.
@@ -271,7 +270,7 @@ re-publish the extension in the marketplace.
 `vss-extension-dev.json` file using the template file
 `vss-extension-dev.json.template` for reference.
 2. Update the `webpack.config.js` to enable source maps. Set the devtool
-property to `inline-source-map`. Also set devServer.https to true and
+property to `inline-source-map`. Also set `devServer.https` to true and
 devServer.port to 3000.
 
     ```js
