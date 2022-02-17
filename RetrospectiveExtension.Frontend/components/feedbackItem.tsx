@@ -701,8 +701,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <button
                     title="Vote"
                     aria-live="polite"
-                    aria-label={'Click to vote on feedback with title ' + this.props.title
-                      + '. Current vote count is ' + this.props.upvotes}
+                    aria-label={`Click to vote on feedback with title ${this.props.title}. Current vote count is ${this.props.upvotes}`}
                     tabIndex={0}
                     disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(
@@ -728,8 +727,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                   <button
                     title="UnVote"
                     aria-live="polite"
-                    aria-label={'Click to unvote on feedback with title ' + this.props.title
-                      + '. Current vote count is ' + this.props.upvotes}
+                    aria-label={`Click to unvote on feedback with title ${this.props.title}. Current vote count is ${this.props.upvotes}`}
                     tabIndex={0}
                     disabled={!isMainItem || !showVoteButton || this.state.showVotedAnimation}
                     className={classNames(

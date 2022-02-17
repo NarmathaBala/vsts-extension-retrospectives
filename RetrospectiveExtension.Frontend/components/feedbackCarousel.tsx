@@ -69,6 +69,9 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
       accessibility: true,
     };
 
+    // Change this value to adjust what "two lines" is considered
+    const childTitleLengthMax = 200;
+
     return (
       <Pivot
         className="feedback-carousel-pivot">
@@ -80,10 +83,10 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
 
             // Establish whether an item in the column has children feedback grouped beneath it,
             // and therefore will be the parent
-            const isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+            const isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length > 0 : false;
 
             // Set that property for later
-            columnItem.feedbackItem.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? (columnItem.feedbackItem.childFeedbackItemIds.length > 0 ? true : false) : false;
+            columnItem.feedbackItem.isGroupedCarouselItem = columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length > 0 : false;
 
             if (isGroupedCarouselItem) {
               // If an item in the column is a parent, get the title of the children
@@ -94,7 +97,7 @@ class FeedbackCarousel extends React.Component<IFeedbackCarouselProps, IFeedback
                 // For every child item in the group, limit to 2 lines (~200 characters)
                 const childFeedbackItem = columnProps.columnItems.find(childItem => childItem.feedbackItem.id == childId)
                 const origTitle = childFeedbackItem.feedbackItem.title
-                const shortTitle = origTitle.length > 200 ? origTitle.substring(0, 200) + '...' : origTitle;
+                const shortTitle = origTitle.length > childTitleLengthMax ? origTitle.substring(0, childTitleLengthMax) + '...' : origTitle;
                 childrenTitlesShort.push(shortTitle)
               });
 
