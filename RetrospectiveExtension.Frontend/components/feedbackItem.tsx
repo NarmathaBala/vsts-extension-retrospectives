@@ -612,8 +612,8 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     // Doesn't handle formatting hours since that may be excessive
     const timerMinutes = Math.floor(timeInSeconds / 60);
     const timerSeconds = timeInSeconds % 60;
-    const leadingZeroSeconds = timerSeconds < 10;
-    return leadingZeroSeconds ? (timerMinutes + ':0' + timerSeconds) : (timerMinutes + ':' + timerSeconds);
+    const showLeadingZeroInSeconds = timerSeconds < 10;
+    return showLeadingZeroInSeconds ? (timerMinutes + ':0' + timerSeconds) : (timerMinutes + ':' + timerSeconds);
   }
 
   public render(): JSX.Element {

@@ -82,8 +82,8 @@ describe('Feedback Item', () => {
     // Same formating function
     const timerMinutes = Math.floor(testFeedbackItem.timerSecs / 60);
     const timerSeconds = testFeedbackItem.timerSecs % 60;
-    const leadingZeroSeconds = timerSeconds < 10;
-    const formatTimer = leadingZeroSeconds ? (timerMinutes + ':0' + timerSeconds) : (timerMinutes + ':' + timerSeconds);
+    const showLeadingZeroInSeconds = timerSeconds < 10;
+    const formatTimer = showLeadingZeroInSeconds ? (timerMinutes + ':0' + timerSeconds) : (timerMinutes + ':' + timerSeconds);
 
     expect(component.findWhere((child) =>
       child.prop("title") === "Timer").html()).toContain(`${formatTimer} elapsed`);
