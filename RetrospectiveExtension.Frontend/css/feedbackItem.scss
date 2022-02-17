@@ -115,8 +115,15 @@
 
       .card-content {
         display: flex;
+        flex-direction: column;
         margin-right: 16px;
         margin-left: 16px;
+
+        .original-column-info {
+          text-align: right;
+          font-weight: 300;
+          font-style: italic;
+        }
       }
 
       .card-id {

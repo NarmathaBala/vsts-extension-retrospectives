@@ -22,6 +22,7 @@ import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
+import workflowStage from './workflowStage';
 
 export interface IFeedbackItemProps {
   id: string;
@@ -38,6 +39,7 @@ export interface IFeedbackItemProps {
   iconClass: string;
   workflowPhase: WorkflowPhase;
   team: WebApiTeam;
+  originalColumnId: string;
   columnId: string;
   boardId: string;
   boardTitle: string;
@@ -60,8 +62,13 @@ export interface IFeedbackItemProps {
   onVoteCasted: () => void;
 
   addFeedbackItems: (
-    columnId: string, columnItems: IFeedbackItemDocument[], shouldBroadcast: boolean,
-    newlyCreated: boolean, showAddedAnimation: boolean, shouldHaveFocus: boolean, hideFeedbackItems: boolean) => void;
+    columnId: string,
+    columnItems: IFeedbackItemDocument[],
+    shouldBroadcast: boolean,
+    newlyCreated: boolean,
+    showAddedAnimation: boolean,
+    shouldHaveFocus: boolean,
+    hideFeedbackItems: boolean) => void;
 
   removeFeedbackItemFromColumn: (columnIdToDeleteFrom: string, feedbackItemIdToDelete: string, shouldSetFocusOnFirstAvailableItem: boolean) => void;
 
@@ -607,6 +614,13 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const ariaLabel = isNotGroupedItem ? 'Feedback item.' : (!isMainItem ? 'Feedback group item.' : 'Feedback group main item. Group has ' + groupItemsCount + ' items.');
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.userIdRef !== getUserIdentity().id);
     const curTimerState = this.props.timerState;
+    const originalColumnId = this.props.originalColumnId;
+    const originalColumnTitle = originalColumnId ? this.props.columns[originalColumnId].columnProperties.title : 'TOOT'; //only a problem for older boards who don't have this property
+
+
+    console.log('the object of the board')
+    console.log(this.props)
+
 
     return (
       <div
@@ -781,7 +795,9 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     </p>
                   </div>
                 }
-
+                {(this.props.workflowPhase === WorkflowPhase.Group || this.props.workflowPhase === WorkflowPhase.Vote) && (this.props.columnId !== this.props.originalColumnId) &&
+                  <div className="original-column-info">Original Column: {originalColumnTitle}</div>
+                }
                 {showVoteButton && this.props.isInteractable &&
                   <div>
                     <span className="feedback-yourvote-count">[Your Votes: {this.state.userVotes}]</span>

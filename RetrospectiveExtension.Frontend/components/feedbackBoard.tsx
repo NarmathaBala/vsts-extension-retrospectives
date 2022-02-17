@@ -191,7 +191,7 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
     this.setState((prevState) => {
       columnItems.forEach((columnItem) => {
         // Some columns might have been deleted. Only add items to columns that still exist.
-        if ( this.state.columnIds.indexOf(columnItem.feedbackItem.columnId) >= 0 ) {
+        if (this.state.columnIds.indexOf(columnItem.feedbackItem.columnId) >= 0) {
           prevState.columns[columnItem.feedbackItem.columnId].columnItems.push(columnItem);
         }
       });
@@ -220,7 +220,7 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
   }
 
   private getColumnsWithReleasedFocus = (currentFeedbackBoardState: FeedbackBoardState) => {
-    const resetFocusForStateColumns = {...currentFeedbackBoardState.columns};
+    const resetFocusForStateColumns = { ...currentFeedbackBoardState.columns };
 
     for (const columnIdKey in currentFeedbackBoardState.columns) {
       if (resetFocusForStateColumns[columnIdKey].shouldFocusOnCreateFeedback) {
@@ -228,7 +228,7 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
       }
 
       const resetColumnItems = currentFeedbackBoardState.columns[columnIdKey].columnItems.map(columnItem => {
-        return {...columnItem, shouldHaveFocus: false};
+        return { ...columnItem, shouldHaveFocus: false };
       });
 
       resetFocusForStateColumns[columnIdKey].columnItems = resetColumnItems;
@@ -268,7 +268,7 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
         },
       ).concat(resetFocusForStateColumns[columnId].columnItems);
 
-      const newColumns = {...resetFocusForStateColumns};
+      const newColumns = { ...resetFocusForStateColumns };
       newColumns[columnId].columnItems = updatedColumnItems;
 
       return {
@@ -300,11 +300,11 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
       if (shouldSetFocusOnFirstAvailableItem) {
         if (updatedColumnItems.length > 0 && updatedColumnItems[0]) {
           updatedColumnItemsWithActiveFocus = updatedColumnItems.map((columnItem): IColumnItem => {
-            return {...columnItem, shouldHaveFocus: false};
+            return { ...columnItem, shouldHaveFocus: false };
           });
 
           const nextAvailableItemIndex = removedItemIndex >= updatedColumnItemsWithActiveFocus.length ? 0 : removedItemIndex;
-          updatedColumnItemsWithActiveFocus[nextAvailableItemIndex] = {...updatedColumnItemsWithActiveFocus[nextAvailableItemIndex], shouldHaveFocus: true};
+          updatedColumnItemsWithActiveFocus[nextAvailableItemIndex] = { ...updatedColumnItemsWithActiveFocus[nextAvailableItemIndex], shouldHaveFocus: true };
         }
         else {
           // If no items in colummn, set focus to column's create feedback button
@@ -430,13 +430,13 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
 
     return (
       <div className="feedback-board">
-        { this.props.workflowPhase === WorkflowPhase.Vote &&
-        <div className="feedback-maxvotes-per-user">
-          <label>Votes: {this.state.currentVoteCount} / {this.props.board?.maxVotesPerUser?.toString()}</label>
-        </div>
+        {this.props.workflowPhase === WorkflowPhase.Vote &&
+          <div className="feedback-maxvotes-per-user">
+            <label>Votes: {this.state.currentVoteCount} / {this.props.board?.maxVotesPerUser?.toString()}</label>
+          </div>
         }
         <div className="feedback-columns-container">
-          { this.state.isDataLoaded && feedbackColumnPropsList.map((columnProps) => { return (<FeedbackColumn {...columnProps} />); }) }
+          {this.state.isDataLoaded && feedbackColumnPropsList.map((columnProps) => { return (<FeedbackColumn {...columnProps} />); })}
         </div>
         <Dialog
           hidden={this.props.isCarouselDialogHidden}
