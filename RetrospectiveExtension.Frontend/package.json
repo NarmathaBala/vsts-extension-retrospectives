@@ -4,8 +4,8 @@
   "description": "Azure DevOps Retrospective Extension",
   "main": "index.tsx",
   "scripts": {
-    "build:d": "rm -rf ./dist && webpack --mode=development",
-    "build:p": "rm -rf ./dist && webpack --mode=production",
+    "build:d": "rm -rf ./dist && webpack --mode=development ",
+    "build:p": "rm -rf ./dist && webpack --mode=production ",
     "lint": "eslint . --ext .ts,.tsx",
     "pack:d": "tfx extension create --manifests vss-extension-dev.json --rev-version --output-path ./dist/",
     "pack:p": "tfx extension create --manifests vss-extension-prod.json --rev-version --output-path ./dist/",
@@ -31,6 +31,7 @@
     "babel-jest": "^27.4.6",
     "classnames": "2.3.1",
     "copy-to-clipboard": "3.3.1",
+    "dotenv-webpack": "^7.1.0",
     "enzyme-to-json": "^3.6.2",
     "file-saver": "2.0.5",
     "jest-junit-reporter": "^1.1.0",
@@ -87,8 +88,7 @@
   },
   "jest": {
     "testPathIgnorePatterns": [
-      "./components/__tests__/setupTests.tsx",
-      "./components/__tests__/mocked_components/*"
+      "./components/__tests__/setupTests.tsx"
     ],
     "transform": {
       "^.+\\.(js|ts|tsx|jsx)$": "ts-jest"
@@ -100,9 +100,11 @@
       "./components/__tests__/setupTests.tsx"
     ],
     "moduleNameMapper": {
-      "office-ui-fabric-react/lib/(.*)$": "office-ui-fabric-react/lib-commonjs/$1"
+      "office-ui-fabric-react/lib/(.*)$": "office-ui-fabric-react/lib-commonjs/$1",
+      "^.+\\.(css|less)$": "<rootDir>/components/__mocks__/cssTestStub.tsx"
     },
     "preset": "ts-jest/presets/js-with-babel",
+    "resetMocks": true,
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
