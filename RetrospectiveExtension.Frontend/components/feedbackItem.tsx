@@ -9,7 +9,7 @@ import * as React from 'react';
 import { WorkflowPhase } from '../interfaces/workItem';
 import ActionItemDisplay from './actionItemDisplay';
 import EditableDocumentCardTitle from './editableDocumentCardTitle';
-import { IFeedbackItemDocument } from '../interfaces/feedback';
+import { IFeedbackBoardDocument, IFeedbackItemDocument } from '../interfaces/feedback';
 import { itemDataService } from '../dal/itemDataService';
 import { WorkItem, WorkItemType } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import localStorageHelper from '../utilities/localStorageHelper';
@@ -23,6 +23,7 @@ import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
 import workflowStage from './workflowStage';
+import { HighContrastSelectorWhite } from 'office-ui-fabric-react';
 
 export interface IFeedbackItemProps {
   id: string;
@@ -212,14 +213,32 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     this.setState({ isBeingDragged: false });
   }
 
-  private dropFeedbackItemOnFeedbackItem = (e: React.DragEvent<HTMLDivElement>) => {
+  private dropFeedbackItemOnFeedbackItem = async (e: React.DragEvent<HTMLDivElement>) => {
     // Using localStorage as a temporary solution for Edge issue
     // Bug 19016440: Edge drag and drop dataTransfer protocol is bugged
     // const droppedItemId = e.dataTransfer.getData('id');
     const droppedItemId = localStorageHelper.getIdValue();
-    if (this.props.id !== droppedItemId) {
-      FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
+    const droppedItemProps = await itemDataService.getFeedbackItem(this.props.boardId, droppedItemId);
+
+    const boardItem: IFeedbackBoardDocument = await itemDataService.getBoardItem(this.props.team.id, this.props.boardId);
+    const allowCrossColumnGroups = boardItem.allowCrossColumnGroups;
+
+    if (allowCrossColumnGroups) {
+      console.log(`allow crosscolumn is true`)
+      if (this.props.id !== droppedItemId) { // TODO: hakenned - here? make sure destination column is same unless board is setup?
+        FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
+      }
+    } else {
+      console.log(`cross column grouping is not allowed`)
+      console.log(`the column for ${droppedItemProps.title} is ${droppedItemProps.columnId}`)
+      console.log(`the column for ${this.props.title} is ${this.props.columnId}`)
+
+      if (this.props.id !== droppedItemId && this.props.columnId === droppedItemProps.originalColumnId) {
+        console.log(`this feedbackitem ${droppedItemProps.title} has the same column as ${this.props.title}`)
+        FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
+      }
     }
+
     e.stopPropagation();
   }
 

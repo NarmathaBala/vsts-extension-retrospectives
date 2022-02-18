@@ -128,6 +128,9 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
     boardId: string,
     feedbackItemId: string,
     columnId: string) => {
+
+
+    const boardItem = await itemDataService.getBoardItem(, boardId)
     const updatedFeedbackItems = await itemDataService.addFeedbackItemAsMainItemToColumn(boardId, feedbackItemId, columnId);
 
     refreshFeedbackItems(

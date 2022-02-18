@@ -103,6 +103,7 @@ export const testColumnProps = mocked({
   columnIds: testColumnIds,
   columnName: testColumns[testColumnUuidOne].columnProperties.title,
   columnId: testColumnUuidOne,
+  originalColumnId: testColumnUuidOne,
   accentColor: testColumns[testColumnUuidOne].columnProperties.accentColor,
   iconClass: testColumns[testColumnUuidOne].columnProperties.iconClass,
   workflowPhase: WorkflowPhase.Act,
@@ -147,6 +148,7 @@ export const testColumnProps = mocked({
   isBoardAnonymous: false,
   shouldFocusOnCreateFeedback: false,
   hideFeedbackItems: false,
+  allowCrossColumnGroups: true, //TODO: worth testing when true
   onVoteCasted: jest.fn(() => { }),
   addFeedbackItems: jest.fn(() => { }),
   removeFeedbackItemFromColumn: jest.fn(() => { }),

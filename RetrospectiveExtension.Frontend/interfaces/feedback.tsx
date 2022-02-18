@@ -26,6 +26,7 @@ export interface IFeedbackBoardDocument {
   isAnonymous?: boolean;
   shouldShowFeedbackAfterCollect?: boolean;
   displayPrimeDirective?: boolean;
+  allowCrossColumnGroups?: boolean;
   maxVotesPerUser: number;
   boardVoteCollection: { [voter: string]: number };
   teamEffectivenessMeasurementVoteCollection: ITeamEffectivenessMeasurementVoteCollection[];
