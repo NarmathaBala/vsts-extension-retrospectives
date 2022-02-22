@@ -22,8 +22,6 @@ import FeedbackColumn, { FeedbackColumnProps } from './feedbackColumn';
 import { getUserIdentity } from '../utilities/userIdentityHelper';
 import { withAITracking } from '@microsoft/applicationinsights-react-js';
 import { reactPlugin } from '../utilities/external/telemetryClient';
-import workflowStage from './workflowStage';
-import { HighContrastSelectorWhite } from 'office-ui-fabric-react';
 
 export interface IFeedbackItemProps {
   id: string;
@@ -206,7 +204,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     this.setState({ isBeingDragged: true });
   }
 
-  private dragFeedbackItemEnd = () => {
+  private dragFeedbackItemEnd = async () => {
     if (this.props.groupedItemProps) {
       this.props.groupedItemProps.setIsGroupBeingDragged(false);
     }
@@ -223,21 +221,27 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const boardItem: IFeedbackBoardDocument = await itemDataService.getBoardItem(this.props.team.id, this.props.boardId);
     const allowCrossColumnGroups = boardItem.allowCrossColumnGroups;
 
-    if (allowCrossColumnGroups) {
-      console.log(`allow crosscolumn is true`)
-      if (this.props.id !== droppedItemId) { // TODO: hakenned - here? make sure destination column is same unless board is setup?
-        FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
-      }
-    } else {
-      console.log(`cross column grouping is not allowed`)
-      console.log(`the column for ${droppedItemProps.title} is ${droppedItemProps.columnId}`)
-      console.log(`the column for ${this.props.title} is ${this.props.columnId}`)
-
-      if (this.props.id !== droppedItemId && this.props.columnId === droppedItemProps.originalColumnId) {
-        console.log(`this feedbackitem ${droppedItemProps.title} has the same column as ${this.props.title}`)
+    if (this.props.id !== droppedItemId) {
+      if (allowCrossColumnGroups || this.props.columnId === droppedItemProps.originalColumnId) {
         FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
       }
     }
+
+    // if (allowCrossColumnGroups) {
+    //   console.log(`allow crosscolumn is true`)
+    //   if (this.props.id !== droppedItemId) { // TODO: hakenned - here? make sure destination column is same unless board is setup?
+    //     FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
+    //   }
+    // } else {
+    //   console.log(`cross column grouping is not allowed`)
+    //   console.log(`the column for ${droppedItemProps.title} is ${droppedItemProps.columnId}`)
+    //   console.log(`the column for ${this.props.title} is ${this.props.columnId}`)
+
+    //   if (this.props.id !== droppedItemId && this.props.columnId === droppedItemProps.originalColumnId) {
+    //     console.log(`this feedbackitem ${droppedItemProps.title} has the same column as ${this.props.title}`)
+    //     FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
+    //   }
+    // }
 
     e.stopPropagation();
   }
@@ -636,11 +640,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const originalColumnId = this.props.originalColumnId;
     const originalColumnTitle = originalColumnId ? this.props.columns[originalColumnId].columnProperties.title : 'TOOT'; //only a problem for older boards who don't have this property
 
-
-    console.log('the object of the board')
-    console.log(this.props)
-
-
     return (
       <div
         ref={this.itemElementRef}
@@ -814,8 +813,8 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
                     </p>
                   </div>
                 }
-                {(this.props.workflowPhase === WorkflowPhase.Group || this.props.workflowPhase === WorkflowPhase.Vote) && (this.props.columnId !== this.props.originalColumnId) &&
-                  <div className="original-column-info">Original Column: {originalColumnTitle}</div>
+                {(this.props.workflowPhase !== WorkflowPhase.Collect) && (this.props.columnId !== this.props.originalColumnId) &&
+                  <div className="original-column-info">Original Column: <br />{originalColumnTitle}</div>
                 }
                 {showVoteButton && this.props.isInteractable &&
                   <div>

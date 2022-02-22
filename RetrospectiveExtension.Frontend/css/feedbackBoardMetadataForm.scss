@@ -24,6 +24,7 @@ $feedback_column_card_height: 60px;
     font-style: italic;
     font-weight: 200;
     width: 100%;
+    text-align: left;
   }
 
   .feedback-column-card {
@@ -152,11 +153,11 @@ $feedback_column_card_height: 60px;
     flex-direction: column;
     align-items: center;
     padding-bottom: 2px;
-    
+
     .ms-TextField-wrapper {
       display: flex;
       align-items: center;
-      
+
       .ms-Label {
         width: 50px;
       }

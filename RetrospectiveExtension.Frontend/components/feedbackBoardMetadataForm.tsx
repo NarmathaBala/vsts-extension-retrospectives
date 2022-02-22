@@ -702,7 +702,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               onChange={this.handleIsIncludeTeamEffectivenessMeasurementCheckboxChange}
               styles={{
                 root: {
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   width: '100%',
                 },
               }} />
@@ -718,7 +718,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               onChange={this.handleIsAnonymousCheckboxChange}
               styles={{
                 root: {
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   width: '100%',
                   display: 'flex',
                 },
@@ -735,7 +735,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               onChange={this.handleShouldShowFeedbackAfterCollectChange}
               styles={{
                 root: {
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   width: '100%',
                   display: 'flex',
                 },
@@ -752,7 +752,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               onChange={this.handleDisplayPrimeDirectiveChange}
               styles={{
                 root: {
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   width: '100%',
                   display: 'flex',
                 },
@@ -769,7 +769,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               onChange={this.handleAllowCrossColumnGroups} // TODO: add a function for handling the display see handleDisplayPrimeDirectiveChange
               styles={{
                 root: {
-                  justifyContent: 'center',
+                  // justifyContent: 'center',
                   width: '100%',
                   display: 'flex',
                 },

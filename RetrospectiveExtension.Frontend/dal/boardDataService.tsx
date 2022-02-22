@@ -10,8 +10,17 @@ class BoardDataService {
   public readonly legacyNegativeColumnId: string = 'whatdidntgowell';
 
   public createBoardForTeam = async (
-    teamId: string, title: string, maxVotesPerUser: number, columns: IFeedbackColumn[],
-    isIncludeTeamEffectivenessMeasurement?: boolean, isAnonymous?: boolean, shouldShowFeedbackAfterCollect?: boolean, displayPrimeDirective?: boolean, startDate?: Date, endDate?: Date) => {
+    teamId: string,
+    title: string,
+    maxVotesPerUser: number,
+    columns: IFeedbackColumn[],
+    isIncludeTeamEffectivenessMeasurement?: boolean,
+    isAnonymous?: boolean,
+    shouldShowFeedbackAfterCollect?: boolean,
+    displayPrimeDirective?: boolean,
+    allowCrossColumnGroups?: boolean,
+    startDate?: Date,
+    endDate?: Date) => {
     const boardId: string = uuid();
     const userIdentity = getUserIdentity();
 
@@ -27,6 +36,7 @@ class BoardDataService {
       modifiedDate: new Date(Date.now()),
       shouldShowFeedbackAfterCollect: shouldShowFeedbackAfterCollect ? shouldShowFeedbackAfterCollect : false,
       displayPrimeDirective: displayPrimeDirective ? displayPrimeDirective : false,
+      allowCrossColumnGroups: allowCrossColumnGroups ? allowCrossColumnGroups : false,
       maxVotesPerUser: maxVotesPerUser,
       startDate,
       teamId,
@@ -55,7 +65,7 @@ class BoardDataService {
 
     try {
       teamBoards = await ExtensionDataService.readDocuments<IFeedbackBoardDocument>(teamId, false, true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e.serverError?.typeKey === 'DocumentCollectionDoesNotExistException') {
         // TODO (enpolat) : appInsightsClient.trackTrace(TelemetryExceptions.BoardsNotFoundForTeam, e, AI.SeverityLevel.Warning);
@@ -81,7 +91,7 @@ class BoardDataService {
     await ExtensionDataService.deleteDocument(teamId, boardId);
   }
 
-  public updateBoardMetadata = async (teamId: string, boardId: string, maxvotesPerUser:number, title: string, newColumns: IFeedbackColumn[]): Promise<IFeedbackBoardDocument> => {
+  public updateBoardMetadata = async (teamId: string, boardId: string, maxvotesPerUser: number, title: string, newColumns: IFeedbackColumn[]): Promise<IFeedbackBoardDocument> => {
     const board: IFeedbackBoardDocument = await this.getBoardForTeamById(teamId, boardId);
 
     // Check in case board was deleted by other user after option to update was selected by current user
