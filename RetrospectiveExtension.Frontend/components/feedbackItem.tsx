@@ -227,22 +227,6 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
       }
     }
 
-    // if (allowCrossColumnGroups) {
-    //   console.log(`allow crosscolumn is true`)
-    //   if (this.props.id !== droppedItemId) { // TODO: hakenned - here? make sure destination column is same unless board is setup?
-    //     FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
-    //   }
-    // } else {
-    //   console.log(`cross column grouping is not allowed`)
-    //   console.log(`the column for ${droppedItemProps.title} is ${droppedItemProps.columnId}`)
-    //   console.log(`the column for ${this.props.title} is ${this.props.columnId}`)
-
-    //   if (this.props.id !== droppedItemId && this.props.columnId === droppedItemProps.originalColumnId) {
-    //     console.log(`this feedbackitem ${droppedItemProps.title} has the same column as ${this.props.title}`)
-    //     FeedbackItemHelper.handleDropFeedbackItemOnFeedbackItem(this.props, droppedItemId, this.props.id);
-    //   }
-    // }
-
     e.stopPropagation();
   }
 
@@ -638,7 +622,8 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     const hideFeedbackItems = this.props.hideFeedbackItems && (this.props.userIdRef !== getUserIdentity().id);
     const curTimerState = this.props.timerState;
     const originalColumnId = this.props.originalColumnId;
-    const originalColumnTitle = originalColumnId ? this.props.columns[originalColumnId].columnProperties.title : 'TOOT'; //only a problem for older boards who don't have this property
+    const originalColumnTitle = originalColumnId ? this.props.columns[originalColumnId].columnProperties.title : 'n/a';
+    // showing `n/a` will be for older boards who don't have this property
 
     return (
       <div

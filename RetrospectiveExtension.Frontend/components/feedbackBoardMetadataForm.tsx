@@ -233,7 +233,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
 
   private handleColumnsTemplateChange = (event: ChangeEvent<HTMLSelectElement>) => {
     switch (event.target.value) {
-      case '4ls':
+      case '4ls': // The 4 Ls - Like, Learned, Lacked, Longed For
         this.setState({
           columnCards: [
             {
@@ -275,7 +275,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
           ]
         });
         break;
-      case '1to1':
+      case '1to1': // 1-to-1 - Good, So-so, Improve, Done
         this.setState({
           columnCards: [
             {
@@ -317,7 +317,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
           ]
         });
         break;
-      case 'daki':
+      case 'daki': // Drop, Add, Keep, Improve
         this.setState({
           columnCards: [
             {
@@ -425,7 +425,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
           ]
         });
         break;
-      case 'kalm':
+      case 'kalm': // Keep, Add, Less, More
         this.setState({
           columnCards: [
             {
@@ -542,7 +542,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
           ]
         });
         break;
-      case 'wlai':
+      case 'wlai': // Went Well, Learned, Impediments, Accelerators
         this.setState({
           columnCards: [
             {
@@ -685,7 +685,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
         <section className="board-metadata-form-board-settings hide-mobile">
           <h3 className="board-metadata-form-section-header">Board Settings</h3>
           <div className="board-metadata-form-section-information">
-            <i className="fas fa-exclamation-circle"></i> Note:<br />Some of these settings cannot be modified after board creation.
+            <i className="fas fa-exclamation-circle"></i>&nbsp;Some of these settings cannot be modified after board creation.
           </div>
           <div className="board-metadata-form-section-subheader">
             <label htmlFor="title-input-container">Title:</label>
@@ -697,7 +697,9 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
               value={this.state.title}
               maxLength={100}
               onChange={this.handleInputChange} />
-            {this.state.isBoardNameTaken && <span className="input-validation-message">A board with this name already exists. Please choose a different name.</span>}
+            {this.state.isBoardNameTaken &&
+              <span className="input-validation-message">A board with this name already exists. Please choose a different name.</span>
+            }
           </div>
           <hr></hr>
           <div className="board-metadata-form-section-subheader">
@@ -736,7 +738,7 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
           <div className="board-metadata-form-section-subheader">
             <Checkbox
               label="Display 'Retrospective Prime Directive'"
-              ariaLabel="Display 'Retrospective Prime Directive'"
+              ariaLabel="Display 'Retrospective Prime Directive.' This selection cannot be modified after board creation."
               boxSide="start"
               defaultChecked={this.state.displayPrimeDirective}
               disabled={!this.props.isNewBoardCreation}
@@ -744,10 +746,10 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
             />
           </div>
 
-          <div className="board-metadata-form-section-subheader board-settings-checkbox">
+          <div className="board-metadata-form-section-subheader">
             <Checkbox
               label="Group feedback across columns"
-              ariaLabel="Group Feedback Across Columns"
+              ariaLabel="Group Feedback Across Columns. This selection cannot be modified after board creation."
               boxSide="start"
               defaultChecked={this.state.allowCrossColumnGroups}
               disabled={!this.props.isNewBoardCreation}
@@ -773,11 +775,11 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
         <section className="board-metadata-edit-column-settings hide-mobile">
           <h3 className="board-metadata-form-section-header">Column Settings</h3>
           <div className="board-metadata-form-section-information">
-            <i className="fas fa-exclamation-circle"></i> Note:<br />You can create a maximum of {this.maxColumnCount} columns in a retrospective.
+            <i className="fas fa-exclamation-circle"></i>&nbsp;You can create a maximum of {this.maxColumnCount} columns in a retrospective.
           </div>
           {!this.props.isNewBoardCreation &&
             <div className="board-metadata-form-section-information warning-information">
-              <i className="fas fa-exclamation-triangle"></i> Warning:
+              <i className="fas fa-exclamation-triangle"></i>&nbsp;Warning:
               <br />Existing feedbacks may not be available after changing board template!
             </div>
           }

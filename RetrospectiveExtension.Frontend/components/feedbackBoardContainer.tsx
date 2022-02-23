@@ -896,7 +896,6 @@ class FeedbackBoardContainer extends React.Component<FeedbackBoardContainerProps
           maxvotesPerUser={this.state.maxvotesPerUser}
           placeholderText={placeholderText}
           initialValue={initialValue}
-          // allowCrossColumnGroups={this.state.allowCrossColumnGroups}
           onFormSubmit={onSubmit}
           onFormCancel={onCancel} />
       </Dialog>);
