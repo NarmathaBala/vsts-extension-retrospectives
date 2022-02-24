@@ -148,7 +148,7 @@ export const testColumnProps = mocked({
   isBoardAnonymous: false,
   shouldFocusOnCreateFeedback: false,
   hideFeedbackItems: false,
-  allowCrossColumnGroups: true, //TODO: worth testing when true
+  allowCrossColumnGroups: true,
   onVoteCasted: jest.fn(() => { }),
   addFeedbackItems: jest.fn(() => { }),
   removeFeedbackItemFromColumn: jest.fn(() => { }),
