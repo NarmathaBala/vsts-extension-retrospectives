@@ -204,7 +204,7 @@ class FeedbackItem extends React.Component<IFeedbackItemProps, IFeedbackItemStat
     this.setState({ isBeingDragged: true });
   }
 
-  private dragFeedbackItemEnd = async () => {
+  private dragFeedbackItemEnd = () => {
     if (this.props.groupedItemProps) {
       this.props.groupedItemProps.setIsGroupBeingDragged(false);
     }
