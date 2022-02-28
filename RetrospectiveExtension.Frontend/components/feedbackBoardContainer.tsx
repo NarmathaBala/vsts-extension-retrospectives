@@ -1403,7 +1403,6 @@ class FeedbackBoardContainer extends React.Component<FeedbackBoardContainerProps
                         this.state.currentBoard.activePhase == WorkflowPhase.Collect && this.state.currentBoard.shouldShowFeedbackAfterCollect :
                         false
                       }
-                      //hideFeedbackItems={true}
                       userId={this.state.currentUserId}
                     />
                   </div>

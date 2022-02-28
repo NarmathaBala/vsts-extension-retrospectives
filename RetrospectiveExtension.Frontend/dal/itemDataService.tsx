@@ -29,6 +29,8 @@ class ItemDataService {
       timerSecs: 0,
       timerstate: false,
       timerId: null,
+      groupTitles: [],
+      isGroupedCarouselItem: false
     };
 
     const createdItem: IFeedbackItemDocument =

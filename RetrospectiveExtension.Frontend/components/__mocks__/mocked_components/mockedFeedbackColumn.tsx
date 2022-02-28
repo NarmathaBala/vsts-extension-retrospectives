@@ -57,6 +57,8 @@ export const testFeedbackItem = mocked({
   timerSecs: Math.floor(Math.random() * 60),
   timerstate: false,
   timerId: uuid(),
+  groupTitles: ['example one', 'example two'],
+  isGroupedCarouselItem: false,
 });
 export const testColumnItem = mocked({
   feedbackItem: testFeedbackItem,
@@ -149,6 +151,8 @@ export const testColumnProps = mocked({
   shouldFocusOnCreateFeedback: false,
   hideFeedbackItems: false,
   allowCrossColumnGroups: true,
+  groupTitles: ['example one', 'example two'],
+  isFocusModalHidden: false,
   onVoteCasted: jest.fn(() => { }),
   addFeedbackItems: jest.fn(() => { }),
   removeFeedbackItemFromColumn: jest.fn(() => { }),

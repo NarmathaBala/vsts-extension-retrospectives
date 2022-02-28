@@ -418,13 +418,15 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
         isBoardAnonymous: this.props.isAnonymous,
         shouldFocusOnCreateFeedback: this.state.columns[columnId].shouldFocusOnCreateFeedback ? true : false,
         hideFeedbackItems: this.props.hideFeedbackItems,
+        isFocusModalHidden: true,
         onVoteCasted: () => {
           itemDataService.getBoardItem(this.props.team.id, this.props.board.id).then((boardItem: IFeedbackBoardDocument) => {
             const voteCollection = boardItem.boardVoteCollection;
 
             this.setState({ currentVoteCount: voteCollection === undefined ? "0" : voteCollection[this.props.userId] === undefined ? "0" : voteCollection[this.props.userId].toString() });
           });
-        }
+        },
+        groupTitles: []
       };
     });
 
@@ -443,16 +445,19 @@ class FeedbackBoard extends React.Component<FeedbackBoardProps, FeedbackBoardSta
           onDismiss={this.props.hideCarouselDialog}
           minWidth={900}
           dialogContentProps={{
-            type: DialogType.normal,
+            type: DialogType.close,
             title: 'Focus Mode',
             subText: 'Now is the time to focus! Discuss one feedback item at a time and create actionable work items',
           }}
           modalProps={{
             containerClassName: 'retrospectives-carousel-dialog',
             className: 'retrospectives-carousel-dialog-modal hide-mobile',
+            isBlocking: true
           }}>
           <FeedbackItemCarousel
-            feedbackColumnPropsList={feedbackColumnPropsList} isFeedbackAnonymous={this.props.isAnonymous} />
+            feedbackColumnPropsList={feedbackColumnPropsList} isFeedbackAnonymous={this.props.isAnonymous}
+            isFocusModalHidden={this.props.isCarouselDialogHidden}
+          />
         </Dialog>
       </div>);
   }

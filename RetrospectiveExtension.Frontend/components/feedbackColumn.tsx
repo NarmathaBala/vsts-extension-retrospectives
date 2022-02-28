@@ -35,6 +35,7 @@ export interface FeedbackColumnProps {
   isBoardAnonymous: boolean;
   shouldFocusOnCreateFeedback: boolean;
   hideFeedbackItems: boolean;
+  groupTitles: String[];
   onVoteCasted: () => void;
 
   addFeedbackItems: (
@@ -94,6 +95,8 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       timerSecs: 0,
       timerstate: false,
       timerId: null,
+      groupTitles: [],
+      isGroupedCarouselItem: false
     };
 
     this.props.addFeedbackItems(
@@ -190,7 +193,12 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
       shouldHaveFocus: columnItem.shouldHaveFocus ? true : false,
       hideFeedbackItems: columnProps.hideFeedbackItems,
       userIdRef: columnItem.feedbackItem.userIdRef,
-      onVoteCasted: columnProps.onVoteCasted
+      onVoteCasted: columnProps.onVoteCasted,
+      groupCount: columnItem.feedbackItem.childFeedbackItemIds ? columnItem.feedbackItem.childFeedbackItemIds.length : 0,
+      isGroupedCarouselItem: columnItem.feedbackItem.isGroupedCarouselItem,
+      groupTitles: columnItem.feedbackItem.groupTitles,
+      isShowingGroupedChildrenTitles: false,
+      isFocusModalHidden: true
     }
   }
 
@@ -273,7 +281,9 @@ export default class FeedbackColumn extends React.Component<FeedbackColumnProps,
                 <i className="fa fa-caret-down" />}
             </div>
             <div className="feedback-column-name">
-              {this.props.columnName}
+              {this.props.columnName}&nbsp;
+              <i className={this.props.iconClass}
+                style={{ color: this.props.accentColor }}></i>
             </div>
           </div>
         </div>
