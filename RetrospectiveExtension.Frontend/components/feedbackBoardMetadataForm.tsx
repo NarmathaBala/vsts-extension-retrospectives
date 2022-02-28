@@ -92,8 +92,10 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
             markedForDeletion: false,
           };
         }),
-      isIncludeTeamEffectivenessMeasurement: this.props.isNewBoardCreation ? false : (this.props.currentBoard.isIncludeTeamEffectivenessMeasurement ? this.props.currentBoard.isIncludeTeamEffectivenessMeasurement : false),
-      isBoardAnonymous: this.props.isNewBoardCreation ? false : (this.props.currentBoard.isAnonymous ? this.props.currentBoard.isAnonymous : false),
+      isIncludeTeamEffectivenessMeasurement: !this.props.isNewBoardCreation &&
+        this.props.currentBoard.isIncludeTeamEffectivenessMeasurement,
+      isBoardAnonymous: !this.props.isNewBoardCreation &&
+        this.props.currentBoard.isAnonymous,
       maxVotesPerUser: this.props.isNewBoardCreation ? 5 : this.props.currentBoard.maxVotesPerUser,
       isBoardNameTaken: false,
       isChooseColumnAccentColorDialogHidden: true,
@@ -102,22 +104,12 @@ class FeedbackBoardMetadataForm extends React.Component<IFeedbackBoardMetadataFo
       placeholderText: this.props.placeholderText,
       selectedAccentColorKey: undefined,
       selectedIconKey: undefined,
-      displayPrimeDirective: this.props.isNewBoardCreation ?
-        false :
-        (
-          this.props.currentBoard.displayPrimeDirective ?
-            this.props.currentBoard.displayPrimeDirective : false
-        ),
-      shouldShowFeedbackAfterCollect: this.props.isNewBoardCreation ?
-        false :
-        (
-          this.props.currentBoard.shouldShowFeedbackAfterCollect ?
-            this.props.currentBoard.shouldShowFeedbackAfterCollect : false
-        ),
-      allowCrossColumnGroups: this.props.isNewBoardCreation ? false :
-        (
-          this.props.currentBoard.allowCrossColumnGroups ? this.props.currentBoard.allowCrossColumnGroups : false
-        ),
+      displayPrimeDirective: !this.props.isNewBoardCreation &&
+        this.props.currentBoard.displayPrimeDirective,
+      shouldShowFeedbackAfterCollect: !this.props.isNewBoardCreation &&
+        this.props.currentBoard.shouldShowFeedbackAfterCollect,
+      allowCrossColumnGroups: !this.props.isNewBoardCreation &&
+        this.props.currentBoard.allowCrossColumnGroups,
       title: this.props.initialValue
     };
   }
