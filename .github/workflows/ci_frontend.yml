@@ -42,7 +42,7 @@ jobs:
         shell: bash
         working-directory: 'RetrospectiveExtension.Frontend'
 
-      - if: steps.changes.outputs.src == 'true' && github.event_name != 'pull_request'
+      - if: steps.changes.outputs.src == 'true'
         name: Upload test report
         uses: dorny/test-reporter@v1.5.0
         with:
