@@ -50,7 +50,7 @@ jobs:
           path: reports/jest-*.xml
           reporter: jest-junit
           working-directory: 'RetrospectiveExtension.Frontend'
-        
+
       - if: steps.changes.outputs.src == 'true'
         name: Get Coverage for badge
         working-directory: 'RetrospectiveExtension.Frontend'
@@ -72,7 +72,7 @@ jobs:
           # process.env.BRANCH = 'pull_27';
           echo "BRANCH=$(echo ${BRANCH_NAME})" >> $GITHUB_ENV
 
-      - if: steps.changes.outputs.src == 'true' && github.event_name != 'pull_request'
+      - if: steps.changes.outputs.src == 'true'
         name: Create the Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
@@ -83,11 +83,11 @@ jobs:
           message: ${{ env.COVERAGE }}
           color: green
           namedLogo: jest
-        
-      - if: steps.changes.outputs.src == 'true' && github.event_name != 'pull_request'
+      
+      # We do not leave a PR Comment when merging since there is no PR
+      - if: steps.changes.outputs.src == 'true' && github.event.pull_request.merged == false
         name: Test Coverage PR comment
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: "Test Coverage! ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhassaninmsft/b414faf6b91eaaa6ec7d82882be36935/raw/retrotool__${{ env.BRANCH }}.json)"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
