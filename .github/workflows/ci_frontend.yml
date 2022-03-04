@@ -1,16 +1,16 @@
-name: 'CI - Frontend'
+name: "CI - Frontend"
 
 on:
   push:
     branches:
       - master
       - dev
-      - 'releases/**'
+      - "releases/**"
   pull_request:
     branches:
       - master
       - dev
-      - 'releases/**'
+      - "releases/**"
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v2
         name: Setup node
         with:
-          node-version: '16'
+          node-version: "16"
 
       - uses: dorny/paths-filter@v2
         id: changes
@@ -40,7 +40,7 @@ jobs:
           scripts/ci.sh
         name: Build and Test (CI script)
         shell: bash
-        working-directory: 'RetrospectiveExtension.Frontend'
+        working-directory: "RetrospectiveExtension.Frontend"
 
       - if: steps.changes.outputs.src == 'true'
         name: Upload test report
@@ -49,11 +49,11 @@ jobs:
           name: JEST Tests
           path: reports/jest-*.xml
           reporter: jest-junit
-          working-directory: 'RetrospectiveExtension.Frontend'
-        
+          working-directory: "RetrospectiveExtension.Frontend"
+
       - if: steps.changes.outputs.src == 'true'
         name: Get Coverage for badge
-        working-directory: 'RetrospectiveExtension.Frontend'
+        working-directory: "RetrospectiveExtension.Frontend"
         run: |
           SUMMARY="$(npm test -- --coverageReporters='text-summary' | tail -2 | head -1)"
           TOKENS=($SUMMARY)
@@ -72,7 +72,7 @@ jobs:
           # process.env.BRANCH = 'pull_27';
           echo "BRANCH=$(echo ${BRANCH_NAME})" >> $GITHUB_ENV
 
-      - if: steps.changes.outputs.src == 'true' && github.event_name != 'pull_request'
+      - if: steps.changes.outputs.src == 'true'
         name: Create the Badge
         uses: schneegans/dynamic-badges-action@v1.0.0
         with:
@@ -83,11 +83,10 @@ jobs:
           message: ${{ env.COVERAGE }}
           color: green
           namedLogo: jest
-        
-      - if: steps.changes.outputs.src == 'true' && github.event_name != 'pull_request'
+      # We do not leave a PR Comment when merging since there is no PR
+      - if: steps.changes.outputs.src == 'true' && github.event.pull_request.merged == false
         name: Test Coverage PR comment
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: "Test Coverage! ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mhassaninmsft/b414faf6b91eaaa6ec7d82882be36935/raw/retrotool__${{ env.BRANCH }}.json)"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
