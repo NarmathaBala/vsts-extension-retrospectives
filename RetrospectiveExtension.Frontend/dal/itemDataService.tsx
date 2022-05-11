@@ -98,13 +98,17 @@ class ItemDataService {
       return undefined;
     }
 
+    if(feedbackItem && feedbackItem.upvotes > 0) {
+      console.log(`Cannot delete a feedback item which has upvotes. Board: ${boardId} Item: ${feedbackItemId}`);
+      return undefined;
+    }
+
     if (feedbackItem.parentFeedbackItemId) {
-      const parentFeedbackItem: IFeedbackItemDocument =
-        await ExtensionDataService.readDocument<IFeedbackItemDocument>(boardId, feedbackItem.parentFeedbackItemId);
+      const parentFeedbackItem: IFeedbackItemDocument = await ExtensionDataService.readDocument<IFeedbackItemDocument>(boardId, feedbackItem.parentFeedbackItemId);
 
       parentFeedbackItem.childFeedbackItemIds = parentFeedbackItem.childFeedbackItemIds.filter(id => id !== feedbackItemId);
-      updatedParentFeedbackItem = await this.updateFeedbackItem(boardId, parentFeedbackItem);
 
+      updatedParentFeedbackItem = await this.updateFeedbackItem(boardId, parentFeedbackItem);
     }
     else if (feedbackItem.childFeedbackItemIds) {
       const childFeedbackItemPromises = feedbackItem.childFeedbackItemIds.map((childFeedbackItemId) => {

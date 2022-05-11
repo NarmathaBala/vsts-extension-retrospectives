@@ -486,9 +486,41 @@ and run the test command. On test run completion, new snapshots should be
 created. Please check the newly created snapshot file, to ensure that the
 expected changes are present, and include the snapshot in your pull request.
 
-## Backend Development
+To enable real time updates from your test extension you will need to deploy
+the backend to Azure specifying your publisher id and the unique key of your
+extension. **Note:** If you are part of a team working on the retro tool you can
+deploy a single backend to support multiple developer test extensions.
 
-### Backend Style Guide
+1. Copy `/deploy/.env.template` to `/deploy/.env` and make the following
+changes:
+   - Add the Service Principal values used by the `env_setup.sh` script.
+   [Instructions on how to create a Service Principal](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli#password-based-authentication).
+   - Add the `RESOURCE_NAME_SUFFIX` value. This will be used for naming
+   all Azure resources including the App Service name - `https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
+   **Note:** The app name must be globally unique so select something accordingly.
+   - Add the `LOCATION `value i.e. "eastus", "westus", etc.
+1. Copy `/allowed_origins.json.template` to `/allowed_origins.json` and replace
+the `<publisher id>` with your publisher id. This id uniquely identifies your
+publisher in the Visual Studio Marketplace. If you are part of a team working
+on the retro tool you can add additional allowed origins. There should be two
+allowed origins per publisher id. Remember to increment the name index as you
+add additional origins.
+1. Copy `/dev_certs.json.template` to `/dev_certs.json` and replace the
+`<extension secret>` with your secret. [Instructions on how to download the
+unique key](https://docs.microsoft.com/en-us/azure/devops/extend/develop/auth?view=vsts#get-your-extensions-key).
+If you are part of a team working on the retro tool you can add additional
+secrets. Remember to increment the name index to add additional secrets.
+1. Run the `deploy/env_setup.sh` script.
+1. Once the script completes, it will output the url of the backend service. You can navigate to the [Azure Portal](https://portal.azure.com)
+and validate that the `rg-<RESOURCE_NAME_SUFFIX>` resource group exists and
+contains the App Service, App Service Plan and SignalR resources.
+1. Update the `RetrospectiveExtension.FrontEnd/config/environment.tsx` to reflect changes to:
+   - `CollaborationStateServiceUrl` value to the App Service URL -
+`https://<RESOURCE_NAME_SUFFIX>.azurewebsites.net`.
+   - `AppInsightsInstrumentKey` value to Application Insights' Instrumentation Key for the resource `ai-<RESOURCE_NAME_SUFFIX>`.
+1. After updating the above values redeploy the extension.
+
+## Style Guidelines for Backend Project
 
 Follow the coding guidelines here - [C# Coding Conventions (C# Programming Guide)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions).
 

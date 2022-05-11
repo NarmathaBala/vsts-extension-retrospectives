@@ -33,7 +33,7 @@ The extension can be installed from [Azure DevOps Marketplace](https://marketpla
 
 ## Use
 
-1. Navigate to the Azure 'Boards' tab in your account. Select the 'Retrospectives' tab under boards.
+1. Navigate to the Azure 'Boards' tab in your account. Select the 'Retrospectives' tab under 'Boards'.
 
     ![A screenshot of the Azure Devops lefthand navigation. Under the Boards heading, the extension for
     the retrospective is circled in red.](https://github.com/microsoft/vsts-extension-retrospectives/raw/master/RetrospectiveExtension.Frontend/images/usage/boardandretrospectivestab.png)
