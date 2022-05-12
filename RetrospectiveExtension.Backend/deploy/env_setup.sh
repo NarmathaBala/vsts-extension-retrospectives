@@ -27,7 +27,7 @@
 
     # Set email for alerts
     alert_recipient_email=${ALERT_RECIPIENT_EMAIL}
-    
+
     # Login to Azure via Service Principal
 
     # Set service principal information
@@ -86,7 +86,7 @@
     dashboard_file="./deploy/ai-dashboard.json"
 
     cp ./deploy/ai-dashboard.json.template ${dashboard_file}
-  
+
     perl -pi -e s,VARRGNAME,${resource_group},g ${dashboard_file}
     perl -pi -e s,VARSUBSCRIPTIONID,${subscription_id},g ${dashboard_file}
     perl -pi -e s,VARAIRESOURCENAME,ai-${resource_name_suffix},g ${dashboard_file}
@@ -96,7 +96,7 @@
         --name "dashboard-${resource_name_suffix}" \
         --resource-group ${resource_group} --input-path ${dashboard_file}
 
-    
+
     # https://docs.azure.cn/en-us/cli/webapp?view=azure-cli-latest#az_webapp_create
     # Create WebApp
     az webapp create \

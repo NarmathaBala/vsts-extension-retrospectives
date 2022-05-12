@@ -12,7 +12,7 @@ import { reactPlugin } from '../utilities/external/telemetryClient';
 export interface EffectivenessMeasurementRowProps {
   title: string;
   tooltip: JSX.Element;
-  questionId?: string;
+  questionId?: number;
   votes?: ITeamEffectivenessMeasurementVoteCollection[];
   selected?: number;
 
